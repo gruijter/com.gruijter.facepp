@@ -1,0 +1,179 @@
+{
+  "id": "com.gruijter.facepp",
+  "version": "1.0.0",
+  "compatibility": ">=3.0.0",
+  "sdk": 2,
+  "name": {
+    "en": "Face++"
+  },
+  "description": {
+    "en": "Homey has face recognition!"
+  },
+  "category": [ "localization", "security", "video" ],
+  "tags": {
+    "en": [ "face recognition", "video", "analytics", "biometrics" ]
+  },
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.jpg",
+    "small": "/assets/images/small.jpg"
+  },
+  "author": {
+    "name": "Robin Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Robin de Gruijter",
+        "email": "gruijter@hotmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇬🇧 Robin"
+      }
+    ]
+  },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "gruijter"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.facepp/issues"
+  },
+  "homeyCommunityTopicId": 29058,
+  "source": "https://github.com/gruijter/com.gruijter.facepp",
+  "homepage": "https://github.com/gruijter/com.gruijter.facepp/blob/master/README.md",
+  "support": "https://community.athom.com/t/29058",
+
+  "flow": {
+    "triggers": [
+      {
+        "id": "face_detected",
+        "title": {
+          "en": "Face detected"
+        },
+        "tokens": [
+          {
+            "name": "origin",
+            "type": "string",
+            "title": {
+              "en": "origin"
+            },
+            "example": "Ring camera"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "title": {
+              "en": "label"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "confidence",
+            "type": "number",
+            "title": {
+              "en": "confidence"
+            },
+            "example": 96.35
+          },
+          {
+            "name": "token",
+            "type": "string",
+            "title": {
+              "en": "token"
+            },
+            "example": {
+              "en": "0d32892fad08a6b2b4f0fb92c814ad8c"
+            }
+          },
+          {
+            "name": "quality",
+            "type": "number",
+            "title": {
+              "en": "quality"
+            },
+            "example": 92.12
+          },
+          {
+            "name": "gender",
+            "type": "string",
+            "title": {
+              "en": "gender"
+            },
+            "example": {
+              "en": "Male"
+            }
+          },
+          {
+            "name": "age",
+            "type": "number",
+            "title": {
+              "en": "age"
+            },
+            "example": 34
+          },
+          {
+            "name": "emotion",
+            "type": "string",
+            "title": {
+              "en": "emotion"
+            },
+            "example": {
+              "en": "neutral"
+            }
+          },
+          {
+            "name": "normalglass",
+            "type": "boolean",
+            "title": {
+              "en": "normal glasses"
+            },
+            "example": true
+          },
+          {
+            "name": "sunglass",
+            "type": "boolean",
+            "title": {
+              "en": "sun glasses"
+            },
+            "example": false
+          },
+          {
+            "name": "mask",
+            "type": "boolean",
+            "title": {
+              "en": "mask"
+            },
+            "example": false
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "search_faces",
+        "title": {
+            "en": "Search faces"
+        },
+        "droptoken": "image",
+        "args": [
+          {
+            "name": "origin",
+            "type": "text",
+            "placeholder": {
+              "en": "Origin Label"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

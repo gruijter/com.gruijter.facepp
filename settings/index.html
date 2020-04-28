@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<head>
+		<!-- The '/homey.js' script must be included in your settings view to work -->
+		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+		<script type="text/javascript" src="settings.js" data-origin="settings"></script>
+		<link rel="stylesheet" type="text/css" href="./styles.css" />
+	</head>
+	<body>
+		<div id="app">
+			<div class="rTable tabs">
+				<div class="rTableRow">
+					<div id="tabb1" class="tab tab-inactive" onclick="showTab(1)" data-i18n="settings.tab1.title">Instructions</div>
+					<div id="tabb3" class="tab tab-inactive" onclick="showTab(3)" data-i18n="settings.tab3.title">Settings</div>
+					<div id="tabb4" class="tab tab-inactive" onclick="showTab(4)" data-i18n="settings.tab4.title">Manage Faces</div>
+					<div id="tabb2" class="tab tab-inactive" onclick="showTab(2)" data-i18n="settings.tab2.title">Log</div>
+				</div>
+			</div>
+
+			<div class="tab-content">
+				<div style="height:8px" class="panel"></div>
+				<!-- Instructions panel -->
+				<div id="tab1" class="panel">
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.warningTitle">WARNING</legend>
+						<p data-i18n="settings.tab1.warningInstructions" class="instructions">Instructions</p>
+					</fieldset>
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.registerTitle">Register</legend>
+						<p data-i18n="settings.tab1.registerInstructions" class="instructions">Instructions</p>
+					</fieldset>
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.manageTitle">Manage</legend>
+						<p data-i18n="settings.tab1.manageInstructions" class="instructions">Instructions</p>
+          </fieldset>
+          <fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.useTitle">Use</legend>
+						<p data-i18n="settings.tab1.useInstructions" class="instructions">Instructions</p>
+					</fieldset>
+				</div>
+				<!-- Logging panel -->
+				<div id="tab2" class="panel">
+					<div class="setting">
+						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab2.deletelogs">Delete</button>
+						<div id="loglines" class="instructions"></div>
+					</div>
+				</div>
+				<!-- Settings panel -->
+				<div id="tab3" class="panel">
+					<div class="setting">
+						<fieldset class="listContainer">
+							<legend data-i18n="settings.tab3.instructionsLegend">API Key</legend>
+							<p data-i18n="settings.tab3.instructions" class="instructions">Instructions</p>
+						</fieldset>
+
+						<label class="settings-item-description" data-i18n="settings.tab3.api_key">API KEY</label>
+						<div class="settings-itemgroup">
+							<input id="api_key" type="text" value="">
+						</div>
+						<label class="settings-item-description" data-i18n="settings.tab3.api_secret">API SECRET</label>
+						<div class="settings-itemgroup">
+							<input id="api_secret" type="password" value="">
+						</div>
+
+						<label class="settings-item-description" data-i18n="settings.tab3.threshold">MATCH THRESHOLD</label>
+						<div class="settings-itemgroup">
+							<input id="threshold" type="number" value=65>
+						</div>
+
+
+						<label class="settings-item-description" data-i18n="settings.tab3.save">SAVE</label>
+						<button id="saveKey" class="btn" onclick="saveSettings()" data-i18n="settings.tab3.save">SAVE</button>
+					</div>
+				</div>
+				<!-- Manage Faces panel -->
+				<div id="tab4" class="panel">
+					<div class="setting">
+						<fieldset class="listContainer">
+							<legend data-i18n="settings.tab4.instructionsLegend">Instructions</legend>
+							<p data-i18n="settings.tab4.instructions" class="instructions">Instructions</p>
+						</fieldset>
+
+						<label class="settings-item-description" data-i18n="settings.tab4.select">SELECT</label>
+						<div class="settings-itemgroup">
+							<select id="faceList" style="width: 250px" onchange="faceSelected()" ></select>
+						</div>
+
+						<label class="settings-item-description" data-i18n="settings.tab4.label">LABEL</label>
+						<div class="settings-itemgroup">
+							<input id="label" type="text" value="" placeholder="enter name">
+						</div>
+
+						<!-- <label class="settings-item-description" data-i18n="settings.tab4.load">LOAD</label> -->
+						<br/>
+						<input id="file" type="file" accept="image/*" name="image" onchange="loadFile(event)">
+						<br/>
+						<p><img id="preview" height="200" /></p>
+
+
+						<label class="settings-item-description" data-i18n="settings.tab4.faceToken">FACE TOKEN</label>
+						<div class="settings-itemgroup">
+							<input id="faceToken" type="text" value="" readonly>
+						</div>
+						<label class="settings-item-description" data-i18n="settings.tab4.facequality">FACE QUALITY</label>
+						<div class="settings-itemgroup">
+							<input id="facequality" type="number" readonly>
+						</div>
+						<label class="settings-item-description" data-i18n="settings.tab4.gender">GENDER</label>
+						<div class="settings-itemgroup">
+							<input id="gender" type="text" value="" readonly>
+						</div>
+						<label class="settings-item-description" data-i18n="settings.tab4.age">AGE</label>
+						<div class="settings-itemgroup">
+							<input id="age" type="number" readonly>
+						</div>
+						<label class="settings-item-description" data-i18n="settings.tab4.glass">GLASS</label>
+						<div class="settings-itemgroup">
+							<input id="glass" type="text" readonly>
+						</div>
+
+
+						<label class="settings-item-description" data-i18n="settings.tab4.addFace">SAVE</label>
+						<button id="saveFace" class="btn" onclick="saveFace()" data-i18n="settings.tab4.saveFace">SAVE</button>
+
+						<label class="settings-item-description" data-i18n="settings.tab4.deleteFace">DELETE</label>
+						<button id="deleteFace" class="btn" onclick="deleteFace()" data-i18n="settings.tab4.deleteFace">DELETE</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

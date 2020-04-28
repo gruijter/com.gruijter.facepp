@@ -1,0 +1,47 @@
+{
+    "settings": {
+		"tab1": {
+            "title": "Instructions",
+            "warningTitle": "WARNING",
+            "warningInstructions": "Using the Face++ service has severe privacy implications. Use at own risk. Read and understand your local privacy legislation, and the terms of use from Face++",
+			"registerTitle": "Register API Key",
+			"registerInstructions": "For a free API key, go to https://console.faceplusplus.com/register.",
+			"manageTitle": "Manage known faces",
+			"manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
+			"useTitle": "How to use in a flow",
+			"useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and large enough (>75 pixels wide)."
+		},
+		"tab2": {
+			"title": "Logs",
+			"logs": "Logs",
+			"deletelogs": "Delete logs",
+			"deleteWarning": "Delete all logs?",
+			"deleted": "Logs deleted!"
+		},
+		"tab3": {
+			"title": "Settings",
+			"instructionsLegend": "API Key and Secret",
+			"instructions": "Enter the API Key and API Secret that you obtained from the Face++ website.<br>A higher threshold will reduce false face matches.",
+			"api_key": "API Key",
+			"api_secret": "API Secret",
+			"threshold": "Face Match Threshold",
+			"save": "Save"
+		},
+		"tab4": {
+			"title": "Faces",
+			"instructionsLegend": "Manage known faces",
+			"instructions": "Each reference image must contain only one face. Minimum 250x250px, max 500KB file. The label you add will be used in flows on detection.",
+			"select": "Select Face",
+			"newFace": "***Add a new face***",
+			"load": "Load image",
+			"label": "Label this person",
+			"faceToken": "Face Token",
+			"facequality": "Detection quality",
+			"gender": "Estimated gender",
+			"age": "Estimated age",
+			"glass": "Glasses",
+			"saveFace": "Save",
+			"deleteFace": "Delete"
+		}
+	}
+}
