@@ -44,12 +44,16 @@ class FaceApp extends Homey.App {
 		try {
 			if (!this.logger) this.logger = new Logger('log', 200);
 			this.settings = Homey.ManagerSettings.get('settings') || {};
-			const apiKey = (Homey.env && Homey.env.API_KEY) ? Homey.env.API_KEY : this.settings.apiKey;
-			const apiSecret = (Homey.env && Homey.env.API_SECRET) ? Homey.env.API_SECRET : this.settings.apiSecret;
+			const { apiKey } = this.settings;
+			const { apiSecret } = this.settings;
 			const options = {
 				key: apiKey,
 				secret: apiSecret,
 			};
+			if (!apiKey || !apiSecret) {
+				this.log('No API key entered in app settings');
+				return;
+			}
 			this.FAPI = new FacePP(options);
 			this.log('Face++ is running...');
 

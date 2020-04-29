@@ -1,6 +1,6 @@
 {
   "id": "com.gruijter.facepp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
@@ -9,9 +9,18 @@
   "description": {
     "en": "Homey has face recognition!"
   },
-  "category": [ "localization", "security", "video" ],
+  "category": [
+    "localization",
+    "security",
+    "video"
+  ],
   "tags": {
-    "en": [ "face recognition", "video", "analytics", "biometrics" ]
+    "en": [
+      "face recognition",
+      "video",
+      "analytics",
+      "biometrics"
+    ]
   },
   "permissions": [],
   "images": {
@@ -51,7 +60,6 @@
   "source": "https://github.com/gruijter/com.gruijter.facepp",
   "homepage": "https://github.com/gruijter/com.gruijter.facepp/blob/master/README.md",
   "support": "https://community.athom.com/t/29058",
-
   "flow": {
     "triggers": [
       {
@@ -161,15 +169,15 @@
       {
         "id": "search_faces",
         "title": {
-            "en": "Search faces"
+          "en": "Search faces"
         },
         "droptoken": "image",
         "args": [
           {
-            "name": "origin",
             "type": "text",
+            "name": "origin",
             "placeholder": {
-              "en": "Origin Label"
+              "en": "Origin Label (e.g. Cam1)"
             }
           }
         ]

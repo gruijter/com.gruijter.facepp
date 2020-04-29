@@ -42,7 +42,8 @@ class captureLogs {
 	getLogs() {
 		fs.readFile(this.logFile, 'utf8', (err, data) => {
 			if (err) {
-				Homey.app.error('error reading logfile: ', err.message);
+				Homey.app.log('Logfile could not be read.');
+				// Homey.app.error('error reading logfile: ', err.message);
 				return [];
 			}
 			try {

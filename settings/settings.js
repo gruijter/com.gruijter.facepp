@@ -51,8 +51,8 @@ function showInfo3() {
 }
 
 function saveSettings() {
-	const apiKey = $('#api_key').val();
-	const apiSecret = $('#api_secret').val();
+	const apiKey = $('#apiKey').val();
+	const apiSecret = $('#apiSecret').val();
 	const threshold = $('#threshold').val();
 	Homey.set('settings', { apiKey, apiSecret, threshold }, (err, result) => {
 		if (err) {
@@ -155,7 +155,10 @@ function detectFace(img) {
 			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
 		}
 		if (!result.face_num) return Homey.alert('No face detected', 'error');
-		if (result.face_num > 1) return Homey.alert(`${result.face_num} faces detected`, 'error');
+		if (result.face_num > 1) {
+			clearInfo();
+			return Homey.alert(`${result.face_num} faces detected, but only one allowed`, 'error');
+		}
 		faceInfo = result.faces[0] || {};
 		showInfo(faceInfo, true);
 		return result;

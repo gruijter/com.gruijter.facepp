@@ -1,9 +1,28 @@
 {
   "name": "com.gruijter.facepp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "app.js",
   "dependencies": {
     "fixture-stdout": "^0.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "description": "Use snapshots from a camera connected to Homey, and let Face++ do AI based face recognition. For every face the app detects, a flow will be triggered. Homey will automatically try to match the faces to a set of known faces that you can upload yourself. The app will also estimate gender, age, emotion, and whether the person is wearing (sun)glasses or a mask.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gruijter/com.gruijter.facepp.git"
+  },
+  "keywords": [
+    "Homey",
+    "Face++",
+    "Recognition"
+  ],
+  "author": "gruijter@hotmail.com",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.facepp/issues"
+  },
+  "homepage": "https://github.com/gruijter/com.gruijter.facepp#readme"
 }
