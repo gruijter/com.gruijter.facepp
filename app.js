@@ -50,6 +50,13 @@ class FaceApp extends Homey.App {
 				key: apiKey,
 				secret: apiSecret,
 			};
+			Homey.ManagerSettings
+				.on('set', (key) => {
+					if (key !== 'settings') return;
+					this.log('app settings changed, reloading app now');
+					this.logger.saveLogs();
+					this.onInit();
+				});
 			if (!apiKey || !apiSecret) {
 				this.log('No API key entered in app settings');
 				return;
@@ -72,13 +79,6 @@ class FaceApp extends Homey.App {
 				})
 				.on('memwarn', () => {
 					this.log('memwarn!');
-				});
-			Homey.ManagerSettings
-				.on('set', (key) => {
-					if (key !== 'settings') return;
-					this.log('app settings changed, reloading app now');
-					this.logger.saveLogs();
-					this.onInit();
 				});
 
 			// register flows

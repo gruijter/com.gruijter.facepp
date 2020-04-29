@@ -1,3 +1,4 @@
+v1.0.3  29.04.2020 App init and frontend bugfixes.
 v1.0.2  29.04.2020 Homey Appstore compliancy.
 v1.0.1  29.04.2020 Several small fixes.
 v1.0.0  28.04.2020 First release.

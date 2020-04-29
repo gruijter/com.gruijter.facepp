@@ -150,15 +150,10 @@ async function fillDropdown() {
 // detect face info
 function detectFace(img) {
 	Homey.api('POST', 'detectface/', { img }, (err, result) => {
-		if (err) {
-			clearInfo();
-			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
-		}
+		clearInfo();
+		if (err) return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
 		if (!result.face_num) return Homey.alert('No face detected', 'error');
-		if (result.face_num > 1) {
-			clearInfo();
-			return Homey.alert(`${result.face_num} faces detected, but only one allowed`, 'error');
-		}
+		if (result.face_num > 1) return Homey.alert(`${result.face_num} faces detected, but only one allowed`, 'error');
 		faceInfo = result.faces[0] || {};
 		showInfo(faceInfo, true);
 		return result;
@@ -213,8 +208,8 @@ function updateFace() {
 }
 
 function saveFace() {
-	// const faceToken = $('#faceToken').val();
 	faceInfo.label = $('#label').val();
+	faceInfo.face_token = $('#faceToken').val();
 	if (!faceInfo.face_token || faceInfo.face_token.length !== 32) return Homey.alert('Invalid face token. Upload a valid face image.', 'error');
 	// check if new face, or only updated label
 	if (Object.prototype.hasOwnProperty.call(faceSet, faceInfo.face_token)) {
