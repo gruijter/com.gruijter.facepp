@@ -10,5 +10,8 @@
   },
   "1.0.3": {
     "en": "App init and frontend bugfixes."
+  },
+  "1.0.4": {
+    "en": "Added test image. Fixed unhandledRejection errors. Added API check. Improved app logs. Removed INVALID_OUTER_ID log."
   }
 }
