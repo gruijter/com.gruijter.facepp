@@ -81,8 +81,9 @@ class FaceApp extends Homey.App {
 					this.log('memwarn!');
 				});
 
-			// register flows
+			// register flows and tokens
 			this.registerFlowCards();
+			this.registerFlowTokens();
 
 			// sync Face++ set and local .img files
 			await this.syncFaceset();
@@ -156,11 +157,11 @@ class FaceApp extends Homey.App {
 					}
 				}
 				this.log(tokens);
-				searchResult.push(Promise.resolve(tokens));
 				this.flows.faceDetectedTrigger.trigger(tokens);
+				searchResult.push(Promise.resolve(tokens));
 				// await setTimeoutPromise(1 * 1000, 'waiting is done');
 			}
-			if (searchResult.length === 0) this.log('no faces found in image');
+			if (searchResult.length === 0) this.log(`no faces found in image ${origin}`);
 			return Promise.all(searchResult);
 		} catch (error) {
 			return Promise.reject(error);
@@ -177,7 +178,10 @@ class FaceApp extends Homey.App {
 				face_tokens: 'RemoveAllFaceTokens',
 			};
 			await this.FAPI.fsRemoveFace(options)
-				.catch(this.log);
+				.catch((error) => {
+					if (error.message.includes('INVALID_OUTER_ID')) return;
+					this.error(error);
+				});
 
 			// add all face tokens from Homey set
 			const faces = Object.keys(homeySet);
@@ -229,9 +233,9 @@ class FaceApp extends Homey.App {
 			faceSet[body.faceInfo.face_token] = body.faceInfo;
 			Homey.ManagerSettings.set('face_set', faceSet);
 
-			Promise.resolve(true);
+			return Promise.resolve(true);
 		} catch (error) {
-			Promise.reject(error);
+			return Promise.reject(error);
 		}
 	}
 
@@ -253,9 +257,9 @@ class FaceApp extends Homey.App {
 				face_tokens: body.face_token,
 			};
 			await this.FAPI.fsRemoveFace(options);
-			Promise.resolve(true);
+			return Promise.resolve(true);
 		} catch (error) {
-			Promise.reject(error);
+			return Promise.reject(error);
 		}
 	}
 
@@ -297,10 +301,31 @@ class FaceApp extends Homey.App {
 				imageStream.on('data', (chunk) => {
 					chunks.push(chunk); // push data chunk to array
 				});
-
 				return true;
 			});
+	}
 
+	// register global flow tokens
+	registerFlowTokens() {
+		// register the test image
+		const testImage = new Homey.Image();
+		testImage.setPath('/assets/images/test.jpg');
+		testImage.register()
+			.then(() => {
+				// create a token & register it
+				const testImageToken = new Homey.FlowToken('test_image_token', {
+					type: 'image',
+					title: 'Test Image',
+				});
+				testImageToken
+					.register()
+					.then(() => {
+						testImageToken.setValue(testImage)
+							.catch(this.error);
+					})
+					.catch(this.error.bind(this, 'testImageToken.register'));
+			})
+			.catch(this.error);
 	}
 
 }

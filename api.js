@@ -29,9 +29,13 @@ module.exports = [
 		path: '/getfaces/',
 		requires_authorization: true,
 		role: 'owner',
-		fn: async function fn(args, callback) {
-			const result = await Homey.app.getFaceSet();
-			callback(null, result);
+		fn: function fn(args, callback) {
+			Homey.app.getFaceSet()
+				.then((result) => callback(null, result))
+				.catch((error) => {
+					Homey.app.error(error);
+					callback(error, null);
+				});
 		},
 	},
 	{
@@ -40,10 +44,14 @@ module.exports = [
 		path: '/detectface/',
 		requires_authorization: true,
 		role: 'owner',
-		fn: async function fn(args, callback) {
-			await Homey.app.detect(args.body.img)
+		fn: function fn(args, callback) {
+			Homey.app.log('Analyzing new image from app settings');
+			Homey.app.detect(args.body.img)
 				.then((result) => callback(null, result))
-				.catch((error) => callback(error, null));
+				.catch((error) => {
+					Homey.app.error(error);
+					callback(error, null);
+				});
 		},
 	},
 	{
@@ -53,9 +61,13 @@ module.exports = [
 		requires_authorization: true,
 		role: 'owner',
 		fn: async function fn(args, callback) {
-			await Homey.app.addFace(args.body)
+			Homey.app.log('Adding new face from app settings');
+			Homey.app.addFace(args.body)
 				.then((result) => callback(null, result))
-				.catch((error) => callback(error, null));
+				.catch((error) => {
+					Homey.app.error(error);
+					callback(error, null);
+				});
 		},
 	},
 	{
@@ -64,10 +76,14 @@ module.exports = [
 		path: '/deleteface/',
 		requires_authorization: true,
 		role: 'owner',
-		fn: async function fn(args, callback) {
-			await Homey.app.deleteFace(args.body)
+		fn: function fn(args, callback) {
+			Homey.app.log('Deleting face from app settings');
+			Homey.app.deleteFace(args.body)
 				.then((result) => callback(null, result))
-				.catch((error) => callback(error, null));
+				.catch((error) => {
+					Homey.app.error(error);
+					callback(error, null);
+				});
 		},
 	},
 ];

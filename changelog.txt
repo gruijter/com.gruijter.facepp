@@ -1,3 +1,4 @@
+v1.0.4  01.05.2020 Added test image. Fixed unhandledRejection errors. Added API check. Improved app logs. Removed INVALID_OUTER_ID log.
 v1.0.3  29.04.2020 App init and frontend bugfixes.
 v1.0.2  29.04.2020 Homey Appstore compliancy.
 v1.0.1  29.04.2020 Several small fixes.

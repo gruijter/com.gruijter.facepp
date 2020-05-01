@@ -12,7 +12,7 @@ function updateLogs() {
 			if (!err) {
 				let lines = '';
 				for (let i = (result.length - 1); i >= 0; i -= 1) {
-					const logLine = result[i].replace('[log] [ManagerDrivers]', '');
+					const logLine = result[i].replace(' [FaceApp]', '');
 					lines += `${logLine}<br />`;
 				}
 				displayLogs(lines);
@@ -41,6 +41,15 @@ function deleteLogs() {
 }
 
 // tab 3 stuff here
+function checkKeys() {
+	Homey.get('settings', (error, set) => {
+		if (error || !set) return Homey.alert('API Key and Secret are not saved!', 'error');
+		if (!set.apiKey || set.apiKey.length < 10
+			|| !set.apiSecret || set.apiSecret.length < 10) return Homey.alert('API Key and Secret are not correctly saved!', 'error');
+		return true;
+	});
+}
+
 function showInfo3() {
 	Homey.get('settings', (err, set) => {
 		if (err || !set) return;
@@ -178,7 +187,6 @@ function loadFile(event) {
 	};
 }
 
-
 function addFace() {
 	// const img = $('#preview').attr('src');
 	const img = document.getElementById('preview').src;
@@ -233,7 +241,10 @@ function deleteFace() {
 // generic stuff here
 function showTab(tab) {
 	if (tab === 2) updateLogs();
-	if (tab === 3) showInfo3();
+	if (tab === 3) {
+		checkKeys();
+		showInfo3();
+	}
 	if (tab === 4) fillDropdown();
 	$('.tab').removeClass('tab-active');
 	$('.tab').addClass('tab-inactive');
@@ -245,6 +256,7 @@ function showTab(tab) {
 
 function onHomeyReady(homeyReady) {
 	Homey = homeyReady;
+	showInfo3();
 	showTab(1);
 	Homey.ready();
 }
