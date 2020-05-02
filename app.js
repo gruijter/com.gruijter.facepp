@@ -124,10 +124,9 @@ class FaceApp extends Homey.App {
 	// returns a formatted array of recognised faces, and triggers flowCards
 	async search(imgBase64, origin) {
 		try {
-			const searchResult = [];
 			const homeySet = Homey.ManagerSettings.get('face_set') || {};
 			const { faces } = await this.detect(imgBase64);
-			Object.keys(faces).forEach(async (fce) => {
+			const searchResult = Object.keys(faces).map(async (fce) => {
 				const face = faces[fce];
 				const tokens = {
 					origin: origin || 'undefined',
@@ -157,10 +156,11 @@ class FaceApp extends Homey.App {
 				}
 				this.log(tokens);
 				this.flows.faceDetectedTrigger.trigger(tokens);
-				searchResult.push(Promise.resolve(tokens));
+				return tokens;
 			});
-			if (Promise.all(searchResult).length === 0) this.log(`no faces found in image ${origin}`);
-			return Promise.all(searchResult);
+			await Promise.all(searchResult);
+			if (searchResult.length === 0) this.log(`no faces found in image ${origin}`);
+			return searchResult;
 		} catch (error) {
 			return Promise.reject(error);
 		}
@@ -182,13 +182,14 @@ class FaceApp extends Homey.App {
 				});
 
 			// add all face tokens from Homey set to Face++ set
-			Object.keys(homeySet).forEach(async (face) => {
+			const ready = Object.keys(homeySet).map((face) => {
 				const opts = {
 					outer_id: 'homey',
 					face_tokens: face,
 				};
-				await this.FAPI.fsAddFace(opts);
+				return this.FAPI.fsAddFace(opts);
 			});
+			await Promise.all(ready);
 
 			// purge all img files that are not in homeySet
 			const files = fs.readdirSync('./userdata');
@@ -202,6 +203,7 @@ class FaceApp extends Homey.App {
 			});
 			this.log('ready syncing face set with cloud');
 		} catch (error) {
+			this.error('CRITICAL: FACE SET CLOUD SYNC FAILED!');
 			this.error(error);
 		}
 	}
