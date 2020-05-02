@@ -200,7 +200,7 @@ class FaceApp extends Homey.App {
 					}
 				}
 			});
-			this.log('ready syncing faceset from Homey to Face++ cloud');
+			this.log('ready syncing face set with cloud');
 		} catch (error) {
 			this.error(error);
 		}
