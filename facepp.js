@@ -22,19 +22,20 @@ along with com.gruijter.facepp.  If not, see <http://www.gnu.org/licenses/>.
 
 const https = require('https');
 const qs = require('querystring');
+const Queue = require('smart-request-balancer');
 // const util = require('util');
 
 // const sample = 'https://www.gannett-cdn.com/presto/2019/02/05/USAT/9a0923f6-7dc1-4eec-8513-a366ab28d426-148805_1608r1.jpg';
 const APIHost = 'api-us.faceplusplus.com';
 const detectEP = '/facepp/v3/detect';
-// const compareEP = '/facepp/v3/compare';
 const searchEP = '/facepp/v3/search';
-// const fsGetSetsEP = '/facepp/v3/faceset/getfacesets';
 const fsCreateEP = '/facepp/v3/faceset/create';
+const fsRemoveFaceEP = '/facepp/v3/faceset/removeface';
+// const compareEP = '/facepp/v3/compare';
+// const fsGetSetsEP = '/facepp/v3/faceset/getfacesets';
 // const fsDeleteEP = '/facepp/v3/faceset/delete';
 // const fsGetDetailEP = '/facepp/v3/faceset/getdetail';
 // const fsAddFaceEP = '/facepp/v3/faceset/addface';
-const fsRemoveFaceEP = '/facepp/v3/faceset/removeface';
 
 const parse = (data) => {
 	try {
@@ -55,9 +56,49 @@ class FacePP {
 		this.lastResponse = undefined;
 		this.key = opts.key;
 		this.secret = opts.secret;
+		this.initQueue();
 	}
 
-	// detect, compare and find
+	// queue stuff
+	initQueue() {
+		const config = {
+			rules: {					// Describing our rules by rule name
+				common: {				// Common rule. Will be used if you won't provide rule argument
+					rate: 3,			// Allow to send 3 messages
+					limit: 1,			// per 1 second
+					priority: 1,	// Rule priority. The lower priority is, the higher chance that this rule will execute faster
+				},
+				faceSet: {
+					rate: 2,
+					limit: 1,
+					priority: 5,
+				},
+			},
+			overall: {				// Overall queue rates and limits
+				rate: 10,
+				limit: 1,
+			},
+			retryTime: 3,		// Default retry time (seconds). Can be configured in retry fn
+			ignoreOverallOverheat: true,	// Should we ignore overheat of queue itself
+		};
+		this.queue = new Queue(config);
+	}
+
+	queueMessage(path, msg, rule) {
+		const key = 'homey';
+		const requestHandler = (retry) => this._makeRequest(path, msg)
+			.then((response) => response)
+			.catch((error) => {
+				if (error.message && error.message.includes('CONCURRENCY_LIMIT_EXCEEDED')) {
+					return retry();
+				}
+				throw error;
+			});
+		return this.queue.request(requestHandler, key, rule);
+	}
+
+
+	// Face detect and search
 
 	// returns an array of detected fases with face_token and attributes
 	async detect(opts) {
@@ -67,25 +108,13 @@ class FacePP {
 				// headpose,ethnicity,blur
 			};
 			Object.assign(postData, opts);
-			const result = await this._makeRequest(detectEP, postData);
+			// const result = await this._makeRequest(detectEP, postData);
+			const result = await this.queueMessage(detectEP, postData);
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
 		}
 	}
-
-	// returns the confidence that two images contain the same person
-	// async compare(opts) {
-	// 	try {
-	// 		const postData = {
-	// 		};
-	// 		Object.assign(postData, opts);
-	// 		const result = await this._makeRequest(compareEP, postData);
-	// 		return Promise.resolve(result);
-	// 	} catch (error) {
-	// 		return Promise.reject(error);
-	// 	}
-	// }
 
 	// returns most similar faces from Faceset
 	async search(opts) {
@@ -93,27 +122,14 @@ class FacePP {
 			const postData = {
 			};
 			Object.assign(postData, opts);
-			const result = await this._makeRequest(searchEP, postData);
+			const result = await this.queueMessage(searchEP, postData);
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
 		}
 	}
 
-	// face set related commands: fsGetSets, fsAddFace, fsRemoveFace, fsGetFaces, fsDelete
-
-	// Returns all facesets for this user
-	// async fsGetSets(opts) {
-	// 	try {
-	// 		const postData = {
-	// 		};
-	// 		Object.assign(postData, opts);
-	// 		const result = await this._makeRequest(fsGetSetsEP, postData);
-	// 		return Promise.resolve(result);
-	// 	} catch (error) {
-	// 		return Promise.reject(error);
-	// 	}
-	// }
+	// face set related commands
 
 	// Add face_tokens to a faceset, and create a new faseSet if needed. returns faceset_token
 	async fsAddFace(opts) {
@@ -122,7 +138,7 @@ class FacePP {
 				force_merge: 1,
 			};
 			Object.assign(postData, opts);
-			const result = await this._makeRequest(fsCreateEP, postData);
+			const result = await this.queueMessage(fsCreateEP, postData, 'faceSet');
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
@@ -135,26 +151,14 @@ class FacePP {
 			const postData = {
 			};
 			Object.assign(postData, opts);
-			const result = await this._makeRequest(fsRemoveFaceEP, postData);
+			const result = await this.queueMessage(fsRemoveFaceEP, postData, 'faceSet');
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
 		}
 	}
 
-	// Returns face_tokens in a faceset
-	// async fsGetDetail(opts) {
-	// 	try {
-	// 		const postData = {
-	// 		};
-	// 		Object.assign(postData, opts);
-	// 		const result = await this._makeRequest(fsGetDetailEP, postData);
-	// 		// console.log(util.inspect(result, true, 10, true));
-	// 		return Promise.resolve(result);
-	// 	} catch (error) {
-	// 		return Promise.reject(error);
-	// 	}
-	// }
+	// HTTPS request
 
 	async _makeRequest(path, msg) {
 		try {

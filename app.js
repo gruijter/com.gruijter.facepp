@@ -127,8 +127,8 @@ class FaceApp extends Homey.App {
 			const searchResult = [];
 			const homeySet = Homey.ManagerSettings.get('face_set') || {};
 			const { faces } = await this.detect(imgBase64);
-			for (let idx = 0; idx < faces.length; idx += 1) {	// check each face sequentially
-				const face = faces[idx];
+			Object.keys(faces).forEach(async (fce) => {
+				const face = faces[fce];
 				const tokens = {
 					origin: origin || 'undefined',
 					label: 'NO_MATCH',
@@ -146,7 +146,6 @@ class FaceApp extends Homey.App {
 					outer_id: 'homey',
 					face_token: face.face_token,
 				};
-				// eslint-disable-next-line no-await-in-loop
 				const result = await this.FAPI.search(options);
 				if (result.results) {
 					const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
@@ -159,9 +158,8 @@ class FaceApp extends Homey.App {
 				this.log(tokens);
 				this.flows.faceDetectedTrigger.trigger(tokens);
 				searchResult.push(Promise.resolve(tokens));
-				// await setTimeoutPromise(1 * 1000, 'waiting is done');
-			}
-			if (searchResult.length === 0) this.log(`no faces found in image ${origin}`);
+			});
+			if (Promise.all(searchResult).length === 0) this.log(`no faces found in image ${origin}`);
 			return Promise.all(searchResult);
 		} catch (error) {
 			return Promise.reject(error);
@@ -183,17 +181,14 @@ class FaceApp extends Homey.App {
 					this.error(error);
 				});
 
-			// add all face tokens from Homey set
-			const faces = Object.keys(homeySet);
-			for (let idx = 0; idx < faces.length; idx += 1) {	// add each face sequentially
-				// add face to set in Face++
+			// add all face tokens from Homey set to Face++ set
+			Object.keys(homeySet).forEach(async (face) => {
 				const opts = {
 					outer_id: 'homey',
-					face_tokens: faces[idx],
+					face_tokens: face,
 				};
-				// eslint-disable-next-line no-await-in-loop
 				await this.FAPI.fsAddFace(opts);
-			}
+			});
 
 			// purge all img files that are not in homeySet
 			const files = fs.readdirSync('./userdata');
@@ -205,6 +200,7 @@ class FaceApp extends Homey.App {
 					}
 				}
 			});
+			this.log('ready syncing faceset from Homey to Face++ cloud');
 		} catch (error) {
 			this.error(error);
 		}
