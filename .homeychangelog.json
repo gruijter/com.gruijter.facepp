@@ -19,5 +19,14 @@
   },
   "1.1.1": {
     "en": "Added clickable registration link. Added log filters. Fixed flowtoken_already_exists. Fixed ENOENT: no such file or directory."
+  },
+  "1.1.2": {
+    "en": "Fix not able to add faces. Add warning that each Homey needs own API key."
+  },
+  "1.1.3": {
+    "en": "Fix not able to add faces. Add warning that each Homey needs own API key."
+  },
+  "1.1.4": {
+    "en": "New settings and face set scheme. Minor fixes."
   }
 }

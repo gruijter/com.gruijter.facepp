@@ -5,7 +5,7 @@
             "warningTitle": "WARNING",
             "warningInstructions": "Using the Face++ service has severe privacy implications. Use at own risk. Read and understand your local privacy legislation, and the terms of use from Face++",
 			"registerTitle": "Register API Key",
-			"registerInstructions": "For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
+			"registerInstructions": "Each Homey must use a different key. For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
 			"manageTitle": "Manage known faces",
 			"manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
 			"useTitle": "How to use in a flow",
@@ -20,12 +20,15 @@
 		},
 		"tab3": {
 			"title": "Settings",
-			"instructionsLegend": "API Key and Secret",
-			"instructions": "Enter the API Key and API Secret that you obtained from the Face++ website.<br>A higher threshold will reduce false face matches.",
+			"instructionsLegendKey": "API Key and Secret",
+			"instructionsKey": "Enter the API Key and API Secret that you obtained from the Face++ website. Each Homey must use a different key!<br>A higher threshold will reduce false face matches.",
 			"api_key": "API Key",
 			"api_secret": "API Secret",
-			"threshold": "Face Match Threshold",
-			"save": "Save"
+			"saveSettingsKey": "Save API Key",
+			"instructionsLegendMatch": "Face Match",
+			"instructionsMatch": "A higher confidence threshold will reduce incorrect face matches.",
+			"threshold": "Confidence Threshold",
+			"saveSettingsMatch": "Save Face Match Settings"
 		},
 		"tab4": {
 			"title": "Faces",

@@ -46,7 +46,7 @@ module.exports = [
 		role: 'owner',
 		fn: function fn(args, callback) {
 			Homey.app.log('Analyzing new image from app settings');
-			Homey.app.detect(args.body.img)
+			Homey.app.detectFaces(args.body.img)
 				.then((result) => callback(null, result))
 				.catch((error) => {
 					Homey.app.error(error);

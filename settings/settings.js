@@ -55,7 +55,7 @@ function deleteLogs() {
 
 // tab 3 stuff here
 function checkKeys() {
-	Homey.get('settings', (error, set) => {
+	Homey.get('settingsKey', (error, set) => {
 		if (error || !set) return Homey.alert('API Key and Secret are not saved!', 'error');
 		if (!set.apiKey || set.apiKey.length < 10
 			|| !set.apiSecret || set.apiSecret.length < 10) return Homey.alert('API Key and Secret are not correctly saved!', 'error');
@@ -64,19 +64,31 @@ function checkKeys() {
 }
 
 function showInfo3() {
-	Homey.get('settings', (err, set) => {
+	Homey.get('settingsKey', (err, set) => {
 		if (err || !set) return;
 		$('#apiKey').val(set.apiKey);
 		$('#apiSecret').val(set.apiSecret);
+	});
+	Homey.get('settingsMatch', (err, set) => {
+		if (err || !set) return;
 		$('#threshold').val(set.threshold);
 	});
 }
 
-function saveSettings() {
+function saveSettingsKey() {
 	const apiKey = $('#apiKey').val();
 	const apiSecret = $('#apiSecret').val();
+	Homey.set('settingsKey', { apiKey, apiSecret }, (err, result) => {
+		if (err) {
+			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+		}
+		return Homey.alert('API Keys are saved!', 'info');
+	});
+}
+
+function saveSettingsMatch() {
 	const threshold = $('#threshold').val();
-	Homey.set('settings', { apiKey, apiSecret, threshold }, (err, result) => {
+	Homey.set('settingsMatch', { threshold }, (err, result) => {
 		if (err) {
 			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
 		}
@@ -258,7 +270,10 @@ function showTab(tab) {
 		checkKeys();
 		showInfo3();
 	}
-	if (tab === 4) fillDropdown();
+	if (tab === 4) {
+		checkKeys();
+		fillDropdown();
+	}
 	$('.tab').removeClass('tab-active');
 	$('.tab').addClass('tab-inactive');
 	$(`#tabb${tab}`).removeClass('tab-inactive');

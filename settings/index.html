@@ -67,8 +67,8 @@
 				<div id="tab3" class="panel">
 					<div class="setting">
 						<fieldset class="listContainer">
-							<legend data-i18n="settings.tab3.instructionsLegend">API Key</legend>
-							<p data-i18n="settings.tab3.instructions" class="instructions">Instructions</p>
+							<legend data-i18n="settings.tab3.instructionsLegendKey">API Key</legend>
+							<p data-i18n="settings.tab3.instructionsKey" class="instructions">Instructions</p>
 						</fieldset>
 
 						<label class="settings-item-description" data-i18n="settings.tab3.api_key">API KEY</label>
@@ -80,14 +80,29 @@
 							<input id="apiSecret" type="password" value="">
 						</div>
 
+						<br>
+						<!-- <label class="settings-item-description" data-i18n="settings.tab3.saveKey">SAVE KEY</label> -->
+						<button id="saveSettingsKey" class="btn" onclick="saveSettingsKey()" data-i18n="settings.tab3.saveSettingsKey">SAVE KEY</button>
+						<br>
+
+						<br>
+						<fieldset class="listContainer">
+							<legend data-i18n="settings.tab3.instructionsLegendMatch">FACE MATCH</legend>
+							<p data-i18n="settings.tab3.instructionsMatch" class="instructions">Instructions</p>
+						</fieldset>
+
 						<label class="settings-item-description" data-i18n="settings.tab3.threshold">MATCH THRESHOLD</label>
 						<div class="settings-itemgroup">
-							<input id="threshold" type="number" value=65>
+							<input id="threshold" type="number" min="1" max="100" value=65>
 						</div>
+<!-- 
+						<div class="slidecontainer">
+							<input type="range" min="1" max="100" value="65" class="slider" id="myRange">
+						</div> -->
 
-
-						<label class="settings-item-description" data-i18n="settings.tab3.save">SAVE</label>
-						<button id="saveKey" class="btn" onclick="saveSettings()" data-i18n="settings.tab3.save">SAVE</button>
+						<br>
+						<!-- <label class="settings-item-description" data-i18n="settings.tab3.saveSettings">SAVE</label> -->
+						<button id="saveSettingsMatch" class="btn" onclick="saveSettingsMatch()" data-i18n="settings.tab3.saveSettingsMatch">SAVE MATCH SETTINGS</button>
 					</div>
 				</div>
 				<!-- Manage Faces panel -->

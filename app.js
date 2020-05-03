@@ -22,6 +22,7 @@ along with com.gruijter.facepp.  If not, see <http://www.gnu.org/licenses/>.
 
 const Homey = require('homey');
 const fs = require('fs');
+const { networkInterfaces } = require('os');
 // const util = require('util');
 const Logger = require('./captureLogs.js');
 const FacePP = require('./facepp.js');
@@ -43,24 +44,40 @@ class FaceApp extends Homey.App {
 	async onInit() {
 		try {
 			if (!this.logger) this.logger = new Logger('log', 200);
-			this.settings = Homey.ManagerSettings.get('settings') || {};
-			const { apiKey } = this.settings;
-			const { apiSecret } = this.settings;
+			// migrate old setting (<1.1.3)
+			const oldSettings = Homey.ManagerSettings.get('settings');
+			if (oldSettings) {
+				this.log('migrating old app settings to new scheme');
+				this.migrating = true;
+				Homey.ManagerSettings.set('settingsKey', { apiKey: oldSettings.apiKey, apiSecret: oldSettings.apiSecret });
+				Homey.ManagerSettings.set('settingsMatch', { threshold: oldSettings.threshold });
+				Homey.ManagerSettings.unset('settings');
+			}
+			this.keySettings = Homey.ManagerSettings.get('settingsKey') || {}; // apiKey, apiSecret
+			this.matchSettings = Homey.ManagerSettings.get('settingsMatch') || {}; // threshold
+			const { apiKey } = this.keySettings;
+			const { apiSecret } = this.keySettings;
 			const options = {
 				key: apiKey,
 				secret: apiSecret,
 			};
 			Homey.ManagerSettings
 				.on('set', (key) => {
-					if (key !== 'settings') return;
-					this.log('app settings changed, reloading app now');
-					this.logger.saveLogs();
-					this.onInit();
+					if (key === 'settingsMatch') {
+						this.log('Face Match settings changed');
+						return;
+					}
+					if (key === 'settingsKey') {
+						this.log('app Key settings changed, reloading app now');
+						this.logger.saveLogs();
+						this.onInit();
+					}
 				});
 			if (!apiKey || !apiSecret) {
 				this.log('No API key entered in app settings');
 				return;
 			}
+			this.outerID = `homey_${networkInterfaces().wlan0[0].mac}`;
 			this.FAPI = new FacePP(options);
 			this.log('Face++ is running...');
 
@@ -189,13 +206,13 @@ class FaceApp extends Homey.App {
 					mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
 				};
 				const options = {
-					outer_id: 'homey',
+					outer_id: this.outerID,
 					face_token: face.face_token,
 				};
 				const result = await this.FAPI.searchFaces(options);
 				if (result.results) {
 					const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
-					if (bestMatch.confidence > (this.settings.threshold || 65)) {
+					if (bestMatch.confidence > (this.matchSettings.threshold || 65)) {
 						tokens.label = homeySet[bestMatch.face_token].label;
 						tokens.confidence = bestMatch.confidence;
 						tokens.token = homeySet[bestMatch.face_token].face_token;
@@ -216,10 +233,25 @@ class FaceApp extends Homey.App {
 	// sync the Homey set with Face++ set and userdata/*.img
 	async syncFaceset() {
 		try {
+			// migrating from old sceme
+			if (this.migrating) {
+				this.log('migrating Face++ face set to new scheme');
+				const options = {
+					outer_id: 'homey',
+					face_tokens: 'RemoveAllFaceTokens',
+				};
+				await this.FAPI.fsRemoveFace(options)
+					.catch((error) => {
+						if (error.message.includes('INVALID_OUTER_ID')) return;
+						this.error(error);
+					});
+				this.migrating = false;
+			}
+
 			const homeySet = Homey.ManagerSettings.get('face_set') || {};
 			// remove all face tokens in Face++ set
 			const options = {
-				outer_id: 'homey',
+				outer_id: this.outerID,
 				face_tokens: 'RemoveAllFaceTokens',
 			};
 			await this.FAPI.fsRemoveFace(options)
@@ -231,7 +263,7 @@ class FaceApp extends Homey.App {
 			// add all face tokens from Homey set to Face++ set
 			const ready = Object.keys(homeySet).map((face) => {
 				const opts = {
-					outer_id: 'homey',
+					outer_id: this.outerID,
 					face_tokens: face,
 				};
 				return this.FAPI.fsAddFace(opts);
@@ -268,7 +300,7 @@ class FaceApp extends Homey.App {
 
 			// add face to set in Face++
 			const options = {
-				outer_id: 'homey',
+				outer_id: this.outerID,
 				face_tokens: body.faceInfo.face_token,
 			};
 			await this.FAPI.fsAddFace(options);
@@ -298,7 +330,7 @@ class FaceApp extends Homey.App {
 
 			// delete face from set in Face++
 			const options = {
-				outer_id: 'homey',
+				outer_id: this.outerID,
 				face_tokens: body.face_token,
 			};
 			await this.FAPI.fsRemoveFace(options);
