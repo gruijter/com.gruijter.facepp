@@ -16,5 +16,8 @@
   },
   "1.1.0": {
     "en": "Added cloud queueing and rate limiting."
+  },
+  "1.1.1": {
+    "en": "Added clickable registration link. Added log filters. Fixed flowtoken_already_exists. Fixed ENOENT: no such file or directory."
   }
 }
