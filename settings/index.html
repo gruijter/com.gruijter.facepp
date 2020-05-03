@@ -43,6 +43,23 @@
 				<div id="tab2" class="panel">
 					<div class="setting">
 						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab2.deletelogs">Delete</button>
+						<br>
+						<label class="form-switch">
+							log
+							<input type="checkbox" name="logs" id="show_logs" onchange="updateLogs()" checked/>
+							<i></i>
+						</label>
+						<label class="form-switch">
+							error
+							<input type="checkbox" name="errors" id="show_errors" onchange="updateLogs()" checked/>
+							<i></i>
+						</label>
+						<label class="form-switch">
+							No_detect
+							<input type="checkbox" name="no_detect" id="show_no_detections" onchange="updateLogs()" checked/>
+							<i></i>
+						</label>
+
 						<div id="loglines" class="instructions"></div>
 					</div>
 				</div>

@@ -5,7 +5,7 @@
             "warningTitle": "WARNING",
             "warningInstructions": "Using the Face++ service has severe privacy implications. Use at own risk. Read and understand your local privacy legislation, and the terms of use from Face++",
 			"registerTitle": "Register API Key",
-			"registerInstructions": "For a free API key, go to https://console.faceplusplus.com/register.",
+			"registerInstructions": "For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
 			"manageTitle": "Manage known faces",
 			"manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
 			"useTitle": "How to use in a flow",

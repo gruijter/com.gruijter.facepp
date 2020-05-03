@@ -1,3 +1,4 @@
+v1.1.1  03.05.2020 Added clickable registration link. Added log filters. Fixed flowtoken_already_exists. Fixed ENOENT: no such file or directory.
 v1.1.0  02.05.2020 Added cloud queueing and rate limiting.
 v1.0.4  01.05.2020 Added test image. Fixed unhandledRejection errors. Added API check. Improved app logs. Removed INVALID_OUTER_ID log.
 v1.0.3  29.04.2020 App init and frontend bugfixes.

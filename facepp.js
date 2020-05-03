@@ -26,9 +26,14 @@ const Queue = require('smart-request-balancer');
 // const util = require('util');
 
 // const sample = 'https://www.gannett-cdn.com/presto/2019/02/05/USAT/9a0923f6-7dc1-4eec-8513-a366ab28d426-148805_1608r1.jpg';
+// const APIHostCN = 'api-cn.faceplusplus.com';
+// const detectLPlate = '/imagepp/v1/licenseplate';
+const detectObjectEP = '/imagepp/beta/detectsceneandobject';
+// const detectText = '/imagepp/v1/recognizetext';
+
 const APIHost = 'api-us.faceplusplus.com';
-const detectEP = '/facepp/v3/detect';
-const searchEP = '/facepp/v3/search';
+const detectFaceEP = '/facepp/v3/detect';
+const searchFaceEP = '/facepp/v3/search';
 const fsCreateEP = '/facepp/v3/faceset/create';
 const fsRemoveFaceEP = '/facepp/v3/faceset/removeface';
 // const compareEP = '/facepp/v3/compare';
@@ -98,18 +103,34 @@ class FacePP {
 	}
 
 
+	// object detection
+
+	// returns an array of detected scenes and objects
+	async detectObjects(opts) {
+		try {
+			const postData = {
+			};
+			Object.assign(postData, opts);
+			// this.host = APIHostCN;
+			const result = await this.queueMessage(detectObjectEP, postData);
+			return Promise.resolve(result);
+		} catch (error) {
+			return Promise.reject(error);
+		}
+	}
+
+
 	// Face detect and search
 
-	// returns an array of detected fases with face_token and attributes
-	async detect(opts) {
+	// returns an array of detected faces with face_token and attributes
+	async detectFaces(opts) {
 		try {
 			const postData = {
 				return_attributes: 'gender,age,smiling,facequality,eyestatus,emotion,beauty,mouthstatus,eyegaze,skinstatus',
 				// headpose,ethnicity,blur
 			};
 			Object.assign(postData, opts);
-			// const result = await this._makeRequest(detectEP, postData);
-			const result = await this.queueMessage(detectEP, postData);
+			const result = await this.queueMessage(detectFaceEP, postData);
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
@@ -117,12 +138,12 @@ class FacePP {
 	}
 
 	// returns most similar faces from Faceset
-	async search(opts) {
+	async searchFaces(opts) {
 		try {
 			const postData = {
 			};
 			Object.assign(postData, opts);
-			const result = await this.queueMessage(searchEP, postData);
+			const result = await this.queueMessage(searchFaceEP, postData);
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
@@ -677,6 +698,15 @@ module.exports = FacePP;
   ],
   image_id: '0D4w+ulFAz+fFR5hqyjbHA==',
   face_num: 5
+}
+
+
+{
+  time_used: 4013,
+  scenes: [ { confidence: 90.085, value: 'Bus Station' } ],
+  image_id: 'Dm42RTiw71Grfk+6z4TmxA==',
+  objects: [ { confidence: 42.322, value: 'Suv' } ],
+  request_id: '1588444059,341ed615-edfe-42b0-a23b-81b44909d718'
 }
 
 */
