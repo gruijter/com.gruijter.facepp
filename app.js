@@ -108,13 +108,61 @@ class FaceApp extends Homey.App {
 		return this.logger.logArray;
 	}
 
-	// returns an array of detected fases plus attributes
-	async detect(imgBase64) {
+	// returns an array of detected scenes and objects
+	async detectObjects(imgBase64) {
+		try {
+			const options = {
+				image_base64: imgBase64,
+				// image_url: 'https://www.touristserver.nl/img/100015-1501858701/B1200X1200/Parkeerplaats+Kloosterstraat+1.JPG',
+			};
+			const result = await this.FAPI.detectObjects(options);
+			return Promise.resolve(result);
+		} catch (error) {
+			return Promise.reject(error);
+		}
+	}
+
+	// returns a formatted array of recognised objects, and triggers flowCards
+	async searchObjects(imgBase64, origin) {
+		try {
+			const { scenes, objects } = await this.detectObjects(imgBase64);
+
+			const scene = {
+				value: 'undefined',
+				confidence: 0,
+			};
+			if (scenes.length > 0) {
+				const bestScene = scenes.sort((a, b) => b.confidence - a.confidence)[0];
+				scene.value = bestScene.value;
+				scene.confidence = bestScene.confidence;
+			}
+			const objectResult = objects.map(async (obj) => {
+				const tokens = {
+					origin: origin || 'undefined',
+					scene: scene.value,
+					scene_confidence: scene.confidence,
+					object: obj.value,
+					object_confidence: obj.confidence,
+				};
+				this.log(tokens);
+				// this.flows.objectDetectedTrigger.trigger(tokens);
+				return tokens;
+			});
+			await Promise.all(objectResult);
+			if (objectResult.length === 0) this.log(`no objects found in image ${origin}`);
+			return objectResult;
+		} catch (error) {
+			return Promise.reject(error);
+		}
+	}
+
+	// returns an array of detected faces plus attributes
+	async detectFaces(imgBase64) {
 		try {
 			const options = {
 				image_base64: imgBase64,
 			};
-			const result = await this.FAPI.detect(options);
+			const result = await this.FAPI.detectFaces(options);
 			return Promise.resolve(result);
 		} catch (error) {
 			return Promise.reject(error);
@@ -122,12 +170,11 @@ class FaceApp extends Homey.App {
 	}
 
 	// returns a formatted array of recognised faces, and triggers flowCards
-	async search(imgBase64, origin) {
+	async searchFaces(imgBase64, origin) {
 		try {
 			const homeySet = Homey.ManagerSettings.get('face_set') || {};
-			const { faces } = await this.detect(imgBase64);
-			const searchResult = Object.keys(faces).map(async (fce) => {
-				const face = faces[fce];
+			const { faces } = await this.detectFaces(imgBase64);
+			const searchResult = faces.map(async (face) => {
 				const tokens = {
 					origin: origin || 'undefined',
 					label: 'NO_MATCH',
@@ -145,7 +192,7 @@ class FaceApp extends Homey.App {
 					outer_id: 'homey',
 					face_token: face.face_token,
 				};
-				const result = await this.FAPI.search(options);
+				const result = await this.FAPI.searchFaces(options);
 				if (result.results) {
 					const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
 					if (bestMatch.confidence > (this.settings.threshold || 65)) {
@@ -294,7 +341,7 @@ class FaceApp extends Homey.App {
 				// File is done being read
 				imageStream.once('end', () => {
 					const imgBuffer = Buffer.concat(chunks);
-					this.search(base64Encode(imgBuffer), args.origin);
+					this.searchFaces(base64Encode(imgBuffer), args.origin);
 				});
 				imageStream.on('data', (chunk) => {
 					chunks.push(chunk); // push data chunk to array
@@ -305,20 +352,24 @@ class FaceApp extends Homey.App {
 
 	// register global flow tokens
 	registerFlowTokens() {
+		// unregister tokens first
+		if (!this.tokens) this.tokens = {};
+		Object.keys(this.tokens).forEach((token) => Homey.ManagerFlow.unregisterToken(this.tokens[token]));
+
 		// register the test image
 		const testImage = new Homey.Image();
 		testImage.setPath('/assets/images/test.jpg');
 		testImage.register()
 			.then(() => {
 				// create a token & register it
-				const testImageToken = new Homey.FlowToken('test_image_token', {
+				this.tokens.testImageToken = new Homey.FlowToken('test_image_token', {
 					type: 'image',
 					title: 'Test Image',
 				});
-				testImageToken
+				this.tokens.testImageToken
 					.register()
 					.then(() => {
-						testImageToken.setValue(testImage)
+						this.tokens.testImageToken.setValue(testImage)
 							.catch(this.error);
 					})
 					.catch(this.error.bind(this, 'testImageToken.register'));

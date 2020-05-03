@@ -8,10 +8,23 @@ function displayLogs(lines) {
 
 function updateLogs() {
 	try {
+		displayLogs('');
+		const showLogs = $('#show_logs').prop('checked');
+		const showErrors = $('#show_errors').prop('checked');
+		const showNoDetects = $('#show_no_detections').prop('checked');
 		Homey.api('GET', 'getlogs/', null, (err, result) => {
 			if (!err) {
 				let lines = '';
 				for (let i = (result.length - 1); i >= 0; i -= 1) {
+					if (!showLogs) {
+						if (result[i].includes('[log]')) return;
+					}
+					if (!showErrors) {
+						if (result[i].includes('[err]')) return;
+					}
+					if (!showNoDetects) {
+						if (result[i].includes('no objects found in image')) return;
+					}
 					const logLine = result[i].replace(' [FaceApp]', '');
 					lines += `${logLine}<br />`;
 				}
