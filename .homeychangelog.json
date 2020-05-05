@@ -28,5 +28,8 @@
   },
   "1.1.4": {
     "en": "New settings and face set scheme. Minor fixes."
+  },
+  "1.1.5": {
+    "en": "Stability improvements. Added toggle API Secret view in app settings. Fix threshold settings."
   }
 }

@@ -15,19 +15,22 @@ function updateLogs() {
 		Homey.api('GET', 'getlogs/', null, (err, result) => {
 			if (!err) {
 				let lines = '';
-				for (let i = (result.length - 1); i >= 0; i -= 1) {
-					if (!showLogs) {
-						if (result[i].includes('[log]')) return;
-					}
-					if (!showErrors) {
-						if (result[i].includes('[err]')) return;
-					}
-					if (!showNoDetects) {
-						if (result[i].includes('no objects found in image')) return;
-					}
-					const logLine = result[i].replace(' [FaceApp]', '');
-					lines += `${logLine}<br />`;
-				}
+				result
+					.reverse()
+					.forEach((line) => {
+						if (!showLogs) {
+							if (line.includes('[log]')) return;
+						}
+						if (!showErrors) {
+							if (line.includes('[err]')) return;
+						}
+						if (!showNoDetects) {
+							if (line.includes(' found in image')) return;
+						}
+						const logLine = line.replace(' [FaceApp]', '');
+						lines += `${logLine}<br />`;
+
+					});
 				displayLogs(lines);
 			} else {
 				displayLogs(err);
@@ -64,6 +67,8 @@ function checkKeys() {
 }
 
 function showInfo3() {
+	const x = document.getElementById('apiSecret');
+	x.type = 'password';
 	Homey.get('settingsKey', (err, set) => {
 		if (err || !set) return;
 		$('#apiKey').val(set.apiKey);
@@ -75,14 +80,24 @@ function showInfo3() {
 	});
 }
 
+function togglePasswordView() {
+	const x = document.getElementById('apiSecret');
+	if (x.type === 'password') {
+		x.type = 'text';
+	} else {
+		x.type = 'password';
+	}
+}
+
 function saveSettingsKey() {
 	const apiKey = $('#apiKey').val();
 	const apiSecret = $('#apiSecret').val();
 	Homey.set('settingsKey', { apiKey, apiSecret }, (err, result) => {
 		if (err) {
-			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			return;
 		}
-		return Homey.alert('API Keys are saved!', 'info');
+		Homey.alert('API Keys are saved!', 'info');
 	});
 }
 
@@ -90,9 +105,10 @@ function saveSettingsMatch() {
 	const threshold = $('#threshold').val();
 	Homey.set('settingsMatch', { threshold }, (err, result) => {
 		if (err) {
-			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			return;
 		}
-		return Homey.alert('Settings are saved!', 'info');
+		Homey.alert('Settings are saved!', 'info');
 	});
 }
 
@@ -217,10 +233,11 @@ function addFace() {
 	const img = document.getElementById('preview').src;
 	return Homey.api('POST', 'addface/', { img, faceInfo }, (err, result) => {
 		if (err) {
-			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			return;
 		}
 		fillDropdown();
-		return Homey.alert('Face is saved!', 'info');
+		Homey.alert('Face is saved!', 'info');
 	});
 }
 
@@ -232,7 +249,7 @@ function updateFace() {
 			Homey.set('face_set', fset, (error) => {
 				if (error) throw error;
 				faceSet = fset;
-				return Homey.alert('Face label is updated!', 'info');
+				Homey.alert('Face label is updated!', 'info');
 			});
 		})
 		.catch((error) => {
@@ -256,10 +273,11 @@ function deleteFace() {
 	if (selectedFace === ('null' || 'undefined')) return;
 	Homey.api('POST', 'deleteface/', { faceInfo: { face_token: selectedFace } }, (err, result) => {
 		if (err) {
-			return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
+			return;
 		}
 		fillDropdown();
-		return Homey.alert('Face is deleted!', 'info');
+		Homey.alert('Face is deleted!', 'info');
 	});
 }
 

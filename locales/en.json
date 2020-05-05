@@ -21,9 +21,9 @@
 		"tab3": {
 			"title": "Settings",
 			"instructionsLegendKey": "API Key and Secret",
-			"instructionsKey": "Enter the API Key and API Secret that you obtained from the Face++ website. Each Homey must use a different key!<br>A higher threshold will reduce false face matches.",
+			"instructionsKey": "Enter the API Key and API Secret that you obtained from the Face++ website. Each Homey must use a different key!",
 			"api_key": "API Key",
-			"api_secret": "API Secret",
+			"api_secret": "API Secret &#128065;",
 			"saveSettingsKey": "Save API Key",
 			"instructionsLegendMatch": "Face Match",
 			"instructionsMatch": "A higher confidence threshold will reduce incorrect face matches.",

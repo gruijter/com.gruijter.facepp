@@ -54,9 +54,8 @@ class FaceApp extends Homey.App {
 				Homey.ManagerSettings.unset('settings');
 			}
 			this.keySettings = Homey.ManagerSettings.get('settingsKey') || {}; // apiKey, apiSecret
-			this.matchSettings = Homey.ManagerSettings.get('settingsMatch') || {}; // threshold
-			const { apiKey } = this.keySettings;
-			const { apiSecret } = this.keySettings;
+			this.matchSettings = Homey.ManagerSettings.get('settingsMatch') || { threshold: 70 }; // threshold
+			const { apiKey, apiSecret } = this.keySettings;
 			const options = {
 				key: apiKey,
 				secret: apiSecret,
@@ -210,9 +209,10 @@ class FaceApp extends Homey.App {
 					face_token: face.face_token,
 				};
 				const result = await this.FAPI.searchFaces(options);
+				const threshold = Homey.ManagerSettings.get('settingsMatch').threshold || 70;
 				if (result.results) {
 					const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
-					if (bestMatch.confidence > (this.matchSettings.threshold || 65)) {
+					if (bestMatch.confidence > threshold) {
 						tokens.label = homeySet[bestMatch.face_token].label;
 						tokens.confidence = bestMatch.confidence;
 						tokens.token = homeySet[bestMatch.face_token].face_token;
@@ -224,9 +224,8 @@ class FaceApp extends Homey.App {
 			});
 			await Promise.all(searchResult);
 			if (searchResult.length === 0) this.log(`no faces found in image ${origin}`);
-			return searchResult;
 		} catch (error) {
-			return Promise.reject(error);
+			this.error(error);
 		}
 	}
 
@@ -341,10 +340,11 @@ class FaceApp extends Homey.App {
 	}
 
 	// register flow cards
-	registerFlowCards() {
+	async registerFlowCards() {
 		// unregister cards first
 		if (!this.flows) this.flows = {};
-		Object.keys(this.flows).forEach((flow) => Homey.ManagerFlow.unregisterCard(this.flows[flow]));
+		const ready = Object.keys(this.flows).map((flow) => Promise.resolve(Homey.ManagerFlow.unregisterCard(this.flows[flow])));
+		await Promise.resolve(ready);
 
 		// add trigggers
 		this.flows.faceDetectedTrigger = new Homey.FlowCardTrigger('face_detected')
@@ -383,10 +383,11 @@ class FaceApp extends Homey.App {
 	}
 
 	// register global flow tokens
-	registerFlowTokens() {
+	async registerFlowTokens() {
 		// unregister tokens first
 		if (!this.tokens) this.tokens = {};
-		Object.keys(this.tokens).forEach((token) => Homey.ManagerFlow.unregisterToken(this.tokens[token]));
+		const ready = Object.keys(this.tokens).map((token) => Promise.resolve(Homey.ManagerFlow.unregisterToken(this.tokens[token])));
+		await Promise.resolve(ready);
 
 		// register the test image
 		const testImage = new Homey.Image();
