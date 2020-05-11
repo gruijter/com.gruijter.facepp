@@ -31,5 +31,8 @@
   },
   "1.1.5": {
     "en": "Stability improvements. Added toggle API Secret view in app settings. Fix threshold settings."
+  },
+  "1.1.6": {
+    "en": "Fix not able to send to Telegram on NO_MATCH. Fix app settings pop-up messages."
   }
 }

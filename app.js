@@ -44,41 +44,40 @@ class FaceApp extends Homey.App {
 	async onInit() {
 		try {
 			if (!this.logger) this.logger = new Logger('log', 200);
-			// migrate old setting (<1.1.3)
-			const oldSettings = Homey.ManagerSettings.get('settings');
-			if (oldSettings) {
-				this.log('migrating old app settings to new scheme');
-				this.migrating = true;
-				Homey.ManagerSettings.set('settingsKey', { apiKey: oldSettings.apiKey, apiSecret: oldSettings.apiSecret });
-				Homey.ManagerSettings.set('settingsMatch', { threshold: oldSettings.threshold });
-				Homey.ManagerSettings.unset('settings');
+
+			// first remove settings events listener
+			if (this.listeners && this.listeners.set) {
+				Homey.ManagerSettings.removeListener('set', this.listeners.set);
 			}
-			this.keySettings = Homey.ManagerSettings.get('settingsKey') || {}; // apiKey, apiSecret
-			this.matchSettings = Homey.ManagerSettings.get('settingsMatch') || { threshold: 70 }; // threshold
-			const { apiKey, apiSecret } = this.keySettings;
-			const options = {
-				key: apiKey,
-				secret: apiSecret,
+
+			// listen to change settings events
+			this.listeners.set = (key) => {
+				if (key === 'settingsMatch') {
+					this.log('Face Match settings changed:', JSON.stringify(Homey.ManagerSettings.get('settingsMatch')));
+				}
+				if (key === 'settingsKey') {
+					this.log('API Key settings changed, reloading app now');
+				}
+				this.logger.saveLogs();
+				this.log('Re-initing app now');
+				this.onInit();
 			};
 			Homey.ManagerSettings
-				.on('set', (key) => {
-					if (key === 'settingsMatch') {
-						this.log('Face Match settings changed');
-						return;
-					}
-					if (key === 'settingsKey') {
-						this.log('app Key settings changed, reloading app now');
-						this.logger.saveLogs();
-						this.onInit();
-					}
-				});
+				.on('set', this.listeners.set);
+
+			this.matchSettings = Homey.ManagerSettings.get('settingsMatch') || { threshold: 75 }; // threshold
+			const { apiKey, apiSecret } = Homey.ManagerSettings.get('settingsKey') || {}; // apiKey, apiSecret
 			if (!apiKey || !apiSecret) {
 				this.log('No API key entered in app settings');
 				return;
 			}
+
 			this.outerID = `homey_${networkInterfaces().wlan0[0].mac}`;
+			const options = {
+				key: apiKey,
+				secret: apiSecret,
+			};
 			this.FAPI = new FacePP(options);
-			this.log('Face++ is running...');
 
 			// register some listeners
 			process.on('unhandledRejection', (error) => {
@@ -103,6 +102,8 @@ class FaceApp extends Homey.App {
 
 			// sync Face++ set and local .img files
 			await this.syncFaceset();
+
+			this.log('Face++ is running...');
 
 			// do garbage collection every 10 minutes
 			// this.intervalIdGc = setInterval(() => {
@@ -193,7 +194,7 @@ class FaceApp extends Homey.App {
 			const searchResult = faces.map(async (face) => {
 				const tokens = {
 					origin: origin || 'undefined',
-					label: 'NO_MATCH',
+					label: 'NOMATCH',
 					confidence: 0,
 					token: face.face_token,
 					quality: face.attributes.facequality.value,
@@ -341,73 +342,81 @@ class FaceApp extends Homey.App {
 
 	// register flow cards
 	async registerFlowCards() {
-		// unregister cards first
-		if (!this.flows) this.flows = {};
-		const ready = Object.keys(this.flows).map((flow) => Promise.resolve(Homey.ManagerFlow.unregisterCard(this.flows[flow])));
-		await Promise.resolve(ready);
+		try {
+			// unregister cards first
+			if (!this.flows) this.flows = {};
+			const ready = Object.keys(this.flows).map((flow) => Promise.resolve(Homey.ManagerFlow.unregisterCard(this.flows[flow])));
+			await Promise.all(ready);
 
-		// add trigggers
-		this.flows.faceDetectedTrigger = new Homey.FlowCardTrigger('face_detected')
-			.register();
+			// add trigggers
+			this.flows.faceDetectedTrigger = new Homey.FlowCardTrigger('face_detected')
+				.register();
 
-		// add actions
-		this.flows.analyzeImageAction = new Homey.FlowCardAction('search_faces')
-			.register()
-			.registerRunListener(async (args) => {
-				// get the contents of the image
-				const image = args.droptoken;
-				if (!image || !image.getStream) return false;
-				// if (typeof image === 'undefined' || image == null) return false;
-				const imageStream = await image.getStream();
+			// add actions
+			this.flows.analyzeImageAction = new Homey.FlowCardAction('search_faces')
+				.register()
+				.registerRunListener(async (args) => {
+					// get the contents of the image
+					const image = args.droptoken;
+					if (!image || !image.getStream) return false;
+					// if (typeof image === 'undefined' || image == null) return false;
+					const imageStream = await image.getStream();
 
-				// save the image to userdata
-				// this.log('saving ', imageStream.contentType);
-				// const targetFile = fs.createWriteStream('./userdata/incoming.img');
-				// imageStream.pipe(targetFile);
+					// save the image to userdata
+					// this.log('saving ', imageStream.contentType);
+					// const targetFile = fs.createWriteStream('./userdata/incoming.img');
+					// imageStream.pipe(targetFile);
 
-				// load image in memory
-				imageStream.once('error', (err) => {
-					this.error(err);
+					// load image in memory
+					imageStream.once('error', (err) => {
+						this.error(err);
+					});
+					const chunks = [];
+					// File is done being read
+					imageStream.once('end', () => {
+						const imgBuffer = Buffer.concat(chunks);
+						this.searchFaces(base64Encode(imgBuffer), args.origin);
+					});
+					imageStream.on('data', (chunk) => {
+						chunks.push(chunk); // push data chunk to array
+					});
+					return true;
 				});
-				const chunks = [];
-				// File is done being read
-				imageStream.once('end', () => {
-					const imgBuffer = Buffer.concat(chunks);
-					this.searchFaces(base64Encode(imgBuffer), args.origin);
-				});
-				imageStream.on('data', (chunk) => {
-					chunks.push(chunk); // push data chunk to array
-				});
-				return true;
-			});
+		} catch (error) {
+			this.error(error);
+		}
 	}
 
 	// register global flow tokens
 	async registerFlowTokens() {
-		// unregister tokens first
-		if (!this.tokens) this.tokens = {};
-		const ready = Object.keys(this.tokens).map((token) => Promise.resolve(Homey.ManagerFlow.unregisterToken(this.tokens[token])));
-		await Promise.resolve(ready);
+		try {
+			// unregister tokens first
+			if (!this.tokens) this.tokens = {};
+			const ready = Object.keys(this.tokens).map((token) => Promise.resolve(Homey.ManagerFlow.unregisterToken(this.tokens[token])));
+			await Promise.all(ready);
 
-		// register the test image
-		const testImage = new Homey.Image();
-		testImage.setPath('/assets/images/test.jpg');
-		testImage.register()
-			.then(() => {
-				// create a token & register it
-				this.tokens.testImageToken = new Homey.FlowToken('test_image_token', {
-					type: 'image',
-					title: 'Test Image',
-				});
-				this.tokens.testImageToken
-					.register()
-					.then(() => {
-						this.tokens.testImageToken.setValue(testImage)
-							.catch(this.error);
-					})
-					.catch(this.error.bind(this, 'testImageToken.register'));
-			})
-			.catch(this.error);
+			// register the test image
+			const testImage = new Homey.Image();
+			testImage.setPath('/assets/images/test.jpg');
+			testImage.register()
+				.then(() => {
+					// create a token & register it
+					this.tokens.testImageToken = new Homey.FlowToken('test_image_token', {
+						type: 'image',
+						title: 'Test Image',
+					});
+					this.tokens.testImageToken
+						.register()
+						.then(() => {
+							this.tokens.testImageToken.setValue(testImage)
+								.catch(this.error);
+						})
+						.catch(this.error.bind(this, 'testImageToken.register'));
+				})
+				.catch(this.error);
+		} catch (error) {
+			this.error(error);
+		}
 	}
 
 }

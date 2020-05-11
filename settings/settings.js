@@ -89,27 +89,26 @@ function togglePasswordView() {
 	}
 }
 
-function saveSettingsKey() {
-	const apiKey = $('#apiKey').val();
-	const apiSecret = $('#apiSecret').val();
-	Homey.set('settingsKey', { apiKey, apiSecret }, (err, result) => {
-		if (err) {
-			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
-			return;
-		}
-		Homey.alert('API Keys are saved!', 'info');
-	});
+async function saveSettingsKey() {
+	try {
+		const apiKey = $('#apiKey').val();
+		const apiSecret = $('#apiSecret').val();
+		await Homey.set('settingsKey', { apiKey, apiSecret });
+		return Homey.alert('API Keys are saved!', 'info');
+	} catch (error) {
+		return Homey.alert(error.message, 'error');
+	}
 }
 
-function saveSettingsMatch() {
-	const threshold = $('#threshold').val();
-	Homey.set('settingsMatch', { threshold }, (err, result) => {
-		if (err) {
-			Homey.alert(err.message, 'error'); // [, String icon], Function callback )
-			return;
-		}
-		Homey.alert('Settings are saved!', 'info');
-	});
+async function saveSettingsMatch() {
+	try {
+		const threshold = $('#threshold').val();
+		if (threshold < 0 || threshold > 100) throw Error('Threshold must be between 0 and 100');
+		await Homey.set('settingsMatch', { threshold });
+		return Homey.alert('Settings are saved!', 'info');
+	} catch (error) {
+		return Homey.alert(error.message, 'error');
+	}
 }
 
 // tab 4 stuff here
@@ -198,16 +197,23 @@ async function fillDropdown() {
 }
 
 // detect face info
-function detectFace(img) {
-	Homey.api('POST', 'detectface/', { img }, (err, result) => {
-		clearInfo();
-		if (err) return Homey.alert(err.message, 'error'); // [, String icon], Function callback )
-		if (!result.face_num) return Homey.alert('No face detected', 'error');
-		if (result.face_num > 1) return Homey.alert(`${result.face_num} faces detected, but only one allowed`, 'error');
-		faceInfo = result.faces[0] || {};
+async function detectFace(img) {
+	try {
+		const faces = await new Promise((resolve, reject) => {
+			Homey.api('POST', 'detectface/', { img }, (err, result) => {
+				clearInfo();
+				if (err) return reject(err);
+				if (!result.face_num) return reject(Error('No face detected'));
+				if (result.face_num > 1) return reject(Error(`${result.face_num} faces detected, but only one allowed`));
+				return resolve(result);
+			});
+		});
+		faceInfo = faces.faces[0] || {};
 		showInfo(faceInfo, true);
-		return result;
-	});
+		return faces;
+	} catch (error) {
+		return Homey.alert(error.message, 'error');
+	}
 }
 
 // load image file
@@ -241,20 +247,15 @@ function addFace() {
 	});
 }
 
-function updateFace() {
-	getFaceSet()
-		.then((set) => {
-			const fset = set;
-			fset[faceInfo.face_token] = faceInfo;
-			Homey.set('face_set', fset, (error) => {
-				if (error) throw error;
-				faceSet = fset;
-				Homey.alert('Face label is updated!', 'info');
-			});
-		})
-		.catch((error) => {
-			Homey.alert(error.message, 'error');
-		});
+async function updateFace() {
+	try {
+		const fset = await getFaceSet();
+		fset[faceInfo.face_token] = faceInfo;
+		await Homey.set('face_set', fset);
+		Homey.alert('Face label is updated!', 'info');
+	} catch (error) {
+		Homey.alert(error.message, 'error');
+	}
 }
 
 function saveFace() {
