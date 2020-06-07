@@ -34,5 +34,8 @@
   },
   "1.1.6": {
     "en": "Fix not able to send to Telegram on NO_MATCH. Fix app settings pop-up messages."
+  },
+  "1.1.7": {
+    "en": "Fix INVALID_OUTER_ID when no face added. Fix THRESHOLD error after clean install."
   }
 }

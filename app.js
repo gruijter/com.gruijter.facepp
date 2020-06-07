@@ -205,18 +205,20 @@ class FaceApp extends Homey.App {
 					sunglass: face.attributes.glass.value === 'Dark',
 					mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
 				};
-				const options = {
-					outer_id: this.outerID,
-					face_token: face.face_token,
-				};
-				const result = await this.FAPI.searchFaces(options);
-				const threshold = Homey.ManagerSettings.get('settingsMatch').threshold || 70;
-				if (result.results) {
-					const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
-					if (bestMatch.confidence > threshold) {
-						tokens.label = homeySet[bestMatch.face_token].label;
-						tokens.confidence = bestMatch.confidence;
-						tokens.token = homeySet[bestMatch.face_token].face_token;
+				if (Object.keys(homeySet).length > 0) {
+					const options = {
+						outer_id: this.outerID,
+						face_token: face.face_token,
+					};
+					const result = await this.FAPI.searchFaces(options);
+					const { threshold } = this.matchSettings;
+					if (result.results) {
+						const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
+						if (bestMatch.confidence > threshold) {
+							tokens.label = homeySet[bestMatch.face_token].label;
+							tokens.confidence = bestMatch.confidence;
+							tokens.token = homeySet[bestMatch.face_token].face_token;
+						}
 					}
 				}
 				this.log(tokens);
