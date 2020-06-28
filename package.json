@@ -1,6 +1,6 @@
 {
   "name": "com.gruijter.facepp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "app.js",
   "dependencies": {
     "fixture-stdout": "^0.2.1",

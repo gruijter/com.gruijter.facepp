@@ -1,6 +1,6 @@
 {
   "id": "com.gruijter.facepp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
@@ -166,9 +166,9 @@
             "name": "face_image_token",
             "type": "image",
             "title": {
-              "en": "Face snapshot"
+              "en": "face snapshot"
             },
-            "example": "/assets/images/test.jpg"
+            "example": "07662a84-5fec-40ee-8860-66f1af0799d9"
           }
         ]
       }

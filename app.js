@@ -72,6 +72,7 @@ const getFaceToken = async (imgBuffer, bounds) => {
 		const faceImage = new Homey.Image();
 		faceImage.setStream(imgFunct);
 		await faceImage.register();
+		setTimeout(() => { faceImage.unregister(); }, 1000 * 60 * 3); // image stream is available for 3 minutes
 		return faceImage;
 	} catch (error) {
 		return error;
@@ -151,9 +152,7 @@ class FaceApp extends Homey.App {
 			this.log('Face++ is running...');
 
 			// do garbage collection every 10 minutes
-			// this.intervalIdGc = setInterval(() => {
-			// 	global.gc();
-			// }, 1000 * 60 * 10);
+			// this.intervalIdGc = setInterval(() => {	global.gc(); }, 1000 * 60 * 10);
 
 		} catch (error) {
 			this.error(error);
@@ -239,7 +238,7 @@ class FaceApp extends Homey.App {
 			const { faces } = await this.detectFaces(imgBase64);
 			const homeySet = Homey.ManagerSettings.get('face_set') || {};
 			const searchResult = faces.map(async (face) => {
-				const faceImage = await getFaceToken(imgBuffer, face.face_rectangle);
+				const snapshot = await getFaceToken(imgBuffer, face.face_rectangle);
 				const tokens = {
 					origin: origin || 'undefined',
 					label: 'NOMATCH',
@@ -252,7 +251,7 @@ class FaceApp extends Homey.App {
 					normalglass: face.attributes.glass.value === 'Normal',
 					sunglass: face.attributes.glass.value === 'Dark',
 					mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
-					face_image_token: faceImage,
+					face_image_token: snapshot,
 				};
 				if (Object.keys(homeySet).length > 0) {
 					const options = {
@@ -443,11 +442,11 @@ class FaceApp extends Homey.App {
 			this.tokens.testImageToken.setValue(testImage);
 
 			// register the faceImageToken
-			this.tokens.faceImageToken = new Homey.FlowToken('face_image_token', {
-				type: 'image',
-				title: 'Face Image',
-			});
-			await this.tokens.faceImageToken.register();
+			// this.tokens.faceImageToken = new Homey.FlowToken('face_image_token', {
+			// 	type: 'image',
+			// 	title: 'New face snapshot',
+			// });
+			// await this.tokens.faceImageToken.register();
 			// this.tokens.faceImageToken.setValue(testImage);
 
 			return Promise.resolve(this.tokens);
