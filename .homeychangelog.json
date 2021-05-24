@@ -37,5 +37,11 @@
   },
   "1.1.7": {
     "en": "Fix INVALID_OUTER_ID when no face added. Fix THRESHOLD error after clean install."
+  },
+  "1.2.0": {
+    "en": "Added cropped face image tag in trigger card. Small fixes."
+  },
+  "1.2.1": {
+    "en": "Added cropped face image tag in trigger card. Small fixes."
   }
 }

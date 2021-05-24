@@ -1,3 +1,4 @@
+v1.2.1  28.06.2020 Added cropped face image tag in trigger card. Small fixes.
 v1.1.7  07.06.2020 Fix INVALID_OUTER_ID when no face added. Fix THRESHOLD error after clean install.
 v1.1.6  11.05.2020 Fix not able to send to Telegram on NO_MATCH. Fix app settings pop-up messages.
 v1.1.5  05.05.2020 Stability improvements. Added toggle API Secret view in app settings. Fix threshold settings.
