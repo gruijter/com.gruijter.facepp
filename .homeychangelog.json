@@ -43,5 +43,8 @@
   },
   "1.2.1": {
     "en": "Added cropped face image tag in trigger card. Small fixes."
+  },
+  "1.2.2": {
+    "en": "Fix HTTP(S) timeout. Improved logger. jimp@0.16.1"
   }
 }

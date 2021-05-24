@@ -1,8 +1,9 @@
 {
   "id": "com.gruijter.facepp",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "compatibility": ">=3.0.0",
   "sdk": 2,
+  "brandColor": "#df2d20",
   "name": {
     "en": "Face++"
   },

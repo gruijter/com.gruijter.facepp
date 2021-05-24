@@ -1,6 +1,5 @@
-
 /*
-Copyright 2020, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2020 - 2021, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.facepp.
 
@@ -89,7 +88,7 @@ class FaceApp extends Homey.App {
 
 	async onInit() {
 		try {
-			if (!this.logger) this.logger = new Logger('log', 200);
+			if (!this.logger) this.logger = new Logger({ name: 'log', length: 200, homey: this });
 
 			// first remove settings events listener
 			if (this.listeners && this.listeners.set) {
@@ -159,7 +158,6 @@ class FaceApp extends Homey.App {
 		}
 
 	}
-
 
 	//  stuff for frontend API
 	deleteLogs() {
@@ -458,7 +456,6 @@ class FaceApp extends Homey.App {
 }
 
 module.exports = FaceApp;
-
 
 /*
   {
