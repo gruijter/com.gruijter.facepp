@@ -1,6 +1,5 @@
-
 /*
-Copyright 2020, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2020 - 2021, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.facepp.
 
@@ -102,7 +101,6 @@ class FacePP {
 		return this.queue.request(requestHandler, key, rule);
 	}
 
-
 	// object detection
 
 	// returns an array of detected scenes and objects
@@ -118,7 +116,6 @@ class FacePP {
 			return Promise.reject(error);
 		}
 	}
-
 
 	// Face detect and search
 
@@ -212,9 +209,11 @@ class FacePP {
 		}
 	}
 
-	_makeHttpsRequest(options, postData) {
+	_makeHttpsRequest(options, postData, timeout) {
 		return new Promise((resolve, reject) => {
-			const req = https.request(options, (res) => {
+			const opts = options;
+			opts.timeout = timeout || this.timeout;
+			const req = https.request(opts, (res) => {
 				let resBody = '';
 				res.on('data', (chunk) => {
 					resBody += chunk;
@@ -227,12 +226,12 @@ class FacePP {
 					return resolve(res); // resolve the request
 				});
 			});
-			req.once('error', (e) => {
-				req.abort();
+			req.on('error', (e) => {
+				req.destroy();
 				return reject(e);
 			});
-			req.setTimeout(this.timeout, () => {
-				req.abort();
+			req.on('timeout', () => {
+				req.destroy();
 			});
 			// req.write(postData);
 			req.end(postData);
@@ -298,7 +297,6 @@ module.exports = FacePP;
     "image_id": "0D4w+ulFAz+fFR5hqyjbHA==",
     "face_num": 5
 }
-
 
 {
   request_id: '1586793557,d5ebdf50-57ba-4a00-8be4-9e95356d542e',
@@ -699,7 +697,6 @@ module.exports = FacePP;
   image_id: '0D4w+ulFAz+fFR5hqyjbHA==',
   face_num: 5
 }
-
 
 {
   time_used: 4013,

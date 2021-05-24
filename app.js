@@ -1,6 +1,5 @@
-
 /*
-Copyright 2020, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2020 - 2021, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.facepp.
 
@@ -23,15 +22,61 @@ along with com.gruijter.facepp.  If not, see <http://www.gnu.org/licenses/>.
 const Homey = require('homey');
 const fs = require('fs');
 const { networkInterfaces } = require('os');
+const { Duplex } = require('stream');
+const Jimp = require('jimp');
 // const util = require('util');
 const Logger = require('./captureLogs.js');
 const FacePP = require('./facepp.js');
 
 // const setTimeoutPromise = util.promisify(setTimeout);
 
-// convert binary data to base64 encoded string
+// convert buffer to/from base64 encoded string
 const base64Encode = (img) => Buffer.from(img).toString('base64');
 const base64Decode = (base64) => Buffer.from(base64, 'base64');
+
+const bufferToStream = (buffer) => {
+	const stream = new Duplex();
+	stream.push(buffer);
+	stream.push(null);
+	return stream;
+};
+
+const streamToBuffer = (stream) => new Promise((resolve, reject) => {
+	const buffers = [];
+	stream.on('error', reject);
+	stream.on('data', (data) => buffers.push(data));
+	stream.on('end', () => resolve(Buffer.concat(buffers)));
+});
+
+// image crop
+const crop = async (imgBuffer, region) => {	// returns image buffer
+	try {
+		const image = await Jimp.read(imgBuffer);
+		image.crop(region.left, region.top, region.width, region.height);
+		return image.getBufferAsync(image.getMIME());
+	} catch (error) {
+		return error;
+	}
+};
+
+// get faceImageToken Stream
+const getFaceToken = async (imgBuffer, bounds) => {
+	try {
+		const croppedFace = await crop(imgBuffer, bounds);
+
+		const imgFunct = async (stream) => {
+			const imgStream = await bufferToStream(croppedFace);
+			imgStream.pipe(stream);
+		};
+		const faceImage = new Homey.Image();
+		faceImage.setStream(imgFunct);
+		await faceImage.register();
+		setTimeout(() => { faceImage.unregister(); }, 1000 * 60 * 3); // image stream is available for 3 minutes
+		return faceImage;
+	} catch (error) {
+		return error;
+	}
+};
 
 const getEmotion = (emotions) => {
 	const emotionsArray = Object.keys(emotions).map((emotion) => ({ emotion, value: emotions[emotion] }));
@@ -43,7 +88,7 @@ class FaceApp extends Homey.App {
 
 	async onInit() {
 		try {
-			if (!this.logger) this.logger = new Logger('log', 200);
+			if (!this.logger) this.logger = new Logger({ name: 'log', length: 200, homey: this });
 
 			// first remove settings events listener
 			if (this.listeners && this.listeners.set) {
@@ -97,8 +142,8 @@ class FaceApp extends Homey.App {
 				});
 
 			// register flows and tokens
-			this.registerFlowCards();
-			this.registerFlowTokens();
+			await this.registerFlowCards();
+			await this.registerFlowTokens();
 
 			// sync Face++ set and local .img files
 			await this.syncFaceset();
@@ -106,9 +151,7 @@ class FaceApp extends Homey.App {
 			this.log('Face++ is running...');
 
 			// do garbage collection every 10 minutes
-			// this.intervalIdGc = setInterval(() => {
-			// 	global.gc();
-			// }, 1000 * 60 * 10);
+			// this.intervalIdGc = setInterval(() => {	global.gc(); }, 1000 * 60 * 10);
 
 		} catch (error) {
 			this.error(error);
@@ -130,7 +173,6 @@ class FaceApp extends Homey.App {
 		try {
 			const options = {
 				image_base64: imgBase64,
-				// image_url: 'https://www.touristserver.nl/img/100015-1501858701/B1200X1200/Parkeerplaats+Kloosterstraat+1.JPG',
 			};
 			const result = await this.FAPI.detectObjects(options);
 			return Promise.resolve(result);
@@ -187,11 +229,14 @@ class FaceApp extends Homey.App {
 	}
 
 	// returns a formatted array of recognised faces, and triggers flowCards
-	async searchFaces(imgBase64, origin) {
+	async searchFaces(imgStream, origin) {
 		try {
-			const homeySet = Homey.ManagerSettings.get('face_set') || {};
+			const imgBuffer = await streamToBuffer(imgStream);
+			const imgBase64 = base64Encode(imgBuffer);
 			const { faces } = await this.detectFaces(imgBase64);
+			const homeySet = Homey.ManagerSettings.get('face_set') || {};
 			const searchResult = faces.map(async (face) => {
+				const snapshot = await getFaceToken(imgBuffer, face.face_rectangle);
 				const tokens = {
 					origin: origin || 'undefined',
 					label: 'NOMATCH',
@@ -204,6 +249,7 @@ class FaceApp extends Homey.App {
 					normalglass: face.attributes.glass.value === 'Normal',
 					sunglass: face.attributes.glass.value === 'Dark',
 					mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
+					face_image_token: snapshot,
 				};
 				if (Object.keys(homeySet).length > 0) {
 					const options = {
@@ -221,8 +267,9 @@ class FaceApp extends Homey.App {
 						}
 					}
 				}
-				this.log(tokens);
 				this.flows.faceDetectedTrigger.trigger(tokens);
+				tokens.face_image_token = tokens.face_image_token.cloudUrl;
+				this.log(tokens);
 				return tokens;
 			});
 			await Promise.all(searchResult);
@@ -278,7 +325,7 @@ class FaceApp extends Homey.App {
 				if (file.includes('.img')) {
 					const token = file.split('.')[0];
 					if (!Object.keys(homeySet).includes(token)) {
-						fs.unlinkSync(file);
+						fs.unlinkSync(`./userdata/${file}`);
 					}
 				}
 			});
@@ -361,31 +408,13 @@ class FaceApp extends Homey.App {
 					// get the contents of the image
 					const image = args.droptoken;
 					if (!image || !image.getStream) return false;
-					// if (typeof image === 'undefined' || image == null) return false;
-					const imageStream = await image.getStream();
-
-					// save the image to userdata
-					// this.log('saving ', imageStream.contentType);
-					// const targetFile = fs.createWriteStream('./userdata/incoming.img');
-					// imageStream.pipe(targetFile);
-
-					// load image in memory
-					imageStream.once('error', (err) => {
-						this.error(err);
-					});
-					const chunks = [];
-					// File is done being read
-					imageStream.once('end', () => {
-						const imgBuffer = Buffer.concat(chunks);
-						this.searchFaces(base64Encode(imgBuffer), args.origin);
-					});
-					imageStream.on('data', (chunk) => {
-						chunks.push(chunk); // push data chunk to array
-					});
+					const imgStream = await image.getStream();
+					this.searchFaces(imgStream, args.origin);
 					return true;
 				});
+			return Promise.resolve(this.flows);
 		} catch (error) {
-			this.error(error);
+			return Promise.resolve(error);
 		}
 	}
 
@@ -400,27 +429,151 @@ class FaceApp extends Homey.App {
 			// register the test image
 			const testImage = new Homey.Image();
 			testImage.setPath('/assets/images/test.jpg');
-			testImage.register()
-				.then(() => {
-					// create a token & register it
-					this.tokens.testImageToken = new Homey.FlowToken('test_image_token', {
-						type: 'image',
-						title: 'Test Image',
-					});
-					this.tokens.testImageToken
-						.register()
-						.then(() => {
-							this.tokens.testImageToken.setValue(testImage)
-								.catch(this.error);
-						})
-						.catch(this.error.bind(this, 'testImageToken.register'));
-				})
-				.catch(this.error);
+			await testImage.register();
+
+			// register testImageToken and add testImage
+			this.tokens.testImageToken = new Homey.FlowToken('test_image_token', {
+				type: 'image',
+				title: 'Test Image',
+			});
+			await this.tokens.testImageToken.register();
+			this.tokens.testImageToken.setValue(testImage);
+
+			// register the faceImageToken
+			// this.tokens.faceImageToken = new Homey.FlowToken('face_image_token', {
+			// 	type: 'image',
+			// 	title: 'New face snapshot',
+			// });
+			// await this.tokens.faceImageToken.register();
+			// this.tokens.faceImageToken.setValue(testImage);
+
+			return Promise.resolve(this.tokens);
 		} catch (error) {
-			this.error(error);
+			return Promise.resolve(error);
 		}
 	}
 
 }
 
 module.exports = FaceApp;
+
+/*
+  {
+    face_token: '2485daa964b877b1a6c6b109f409b561',
+    face_rectangle: { top: 173, left: 218, width: 87, height: 87 },
+    attributes: {
+      gender: [Object],
+      age: [Object],
+      smile: [Object],
+      eyestatus: [Object],
+      emotion: [Object],
+      facequality: [Object],
+      beauty: [Object],
+      mouthstatus: [Object],
+      eyegaze: [Object],
+      skinstatus: [Object],
+      glass: [Object]
+    }
+  },
+
+  face_image_token: Image {
+    id: '75aa0755-e6de-4868-a4dd-9d16feb259a4',
+    __client: { emit: [Function: bound __onImageEmit] },
+    _type: 'buffer',
+    _source: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 00 00 01 00 01 00 00 ff db 00 84 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 ... 7556 more bytes>,
+    cloudUrl: 'https://5c4968afb1b00f14323059f6.connect.athom.com/image/75aa0755-e6de-4868-a4dd-9d16feb259a4/image',
+    localUrl: 'http://10.0.0.61/image/75aa0755-e6de-4868-a4dd-9d16feb259a4/image'
+  }
+
+  PassThrough {
+  _readableState: ReadableState {
+    objectMode: false,
+    highWaterMark: 16384,
+    buffer: BufferList { head: null, tail: null, length: 0 },
+    length: 0,
+    pipes: null,
+    pipesCount: 0,
+    flowing: null,
+    ended: false,
+    endEmitted: false,
+    reading: false,
+    sync: false,
+    needReadable: false,
+    emittedReadable: false,
+    readableListening: false,
+    resumeScheduled: false,
+    emitClose: true,
+    autoDestroy: false,
+    destroyed: false,
+    defaultEncoding: 'utf8',
+    awaitDrain: 0,
+    readingMore: false,
+    decoder: null,
+    encoding: null,
+    [Symbol(kPaused)]: null
+  },
+  readable: true,
+  _events: [Object: null prototype] {
+    end: [Function: bound onceWrapper] { listener: [Function: onend] },
+    prefinish: [Function: prefinish],
+    finish: [ [Function], [Function] ],
+    unpipe: [Function: onunpipe],
+    error: [Function: onerror],
+    close: [Function: bound onceWrapper] { listener: [Function: onclose] }
+  },
+  _eventsCount: 6,
+  _maxListeners: undefined,
+  _writableState: WritableState {
+    objectMode: false,
+    highWaterMark: 16384,
+    finalCalled: false,
+    needDrain: false,
+    ending: false,
+    ended: false,
+    finished: false,
+    destroyed: false,
+    decodeStrings: true,
+    defaultEncoding: 'utf8',
+    length: 0,
+    writing: false,
+    corked: 0,
+    sync: true,
+    bufferProcessing: false,
+    onwrite: [Function: bound onwrite],
+    writecb: null,
+    writelen: 0,
+    afterWriteTickInfo: null,
+    bufferedRequest: null,
+    lastBufferedRequest: null,
+    pendingcb: 0,
+    prefinished: false,
+    errorEmitted: false,
+    emitClose: true,
+    autoDestroy: false,
+    bufferedRequestCount: 0,
+    corkedRequestsFree: {
+      next: null,
+      entry: null,
+      finish: [Function: bound onCorkedFinish]
+    }
+  },
+  writable: true,
+  allowHalfOpen: false,
+  _transformState: {
+    afterTransform: [Function: bound afterTransform],
+    needTransform: false,
+    transforming: false,
+    writecb: null,
+    writechunk: null,
+    writeencoding: null
+  },
+  contentType: 'image/jpeg',
+  filename: '14a8d90d-6149-408a-b6d3-1c32dec81d82.jpg',
+  meta: {
+    contentType: 'image/jpeg',
+    filename: '14a8d90d-6149-408a-b6d3-1c32dec81d82.jpg'
+  },
+  [Symbol(kCapture)]: false
+}
+
+  */

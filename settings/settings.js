@@ -140,6 +140,7 @@ function showInfo(face, detected) {
 		$('#label').val('');
 		$('#file').show();
 		$('#preview').prop('src', '../assets/icon.svg');
+		$('#preview').prop('src', imgPath);
 		$('#saveFace').attr('disabled', true);
 		$('#deleteFace').attr('disabled', true);
 		clearInfo();

@@ -9,7 +9,7 @@
 			"manageTitle": "Manage known faces",
 			"manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
 			"useTitle": "How to use in a flow",
-			"useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and large enough (>75 pixels wide)."
+			"useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and detailed enough (>75 pixels wide)."
 		},
 		"tab2": {
 			"title": "Logs",
