@@ -1,8 +1,8 @@
 {
   "id": "com.gruijter.facepp",
-  "version": "1.2.2",
-  "compatibility": ">=3.0.0",
-  "sdk": 2,
+  "version": "2.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
   "brandColor": "#df2d20",
   "name": {
     "en": "Face++"
@@ -24,6 +24,32 @@
     ]
   },
   "permissions": [],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
+    },
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
+    },
+    "getFaceSet": {
+      "method": "post",
+      "path": "/getfaces/"
+    },
+    "detectFaces": {
+      "method": "post",
+      "path": "/detectface/"
+    },
+    "addFace": {
+      "method": "post",
+      "path": "/addface/"
+    },
+    "deleteFace": {
+      "method": "post",
+      "path": "/deleteface/"
+    }    
+  },
   "images": {
     "large": "/assets/images/large.jpg",
     "small": "/assets/images/small.jpg"

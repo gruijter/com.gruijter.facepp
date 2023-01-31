@@ -1,89 +1,32 @@
-const Homey = require('homey');
-
-module.exports = [
-	{
-		description: 'Show loglines',
-		method: 'GET',
-		path: '/getlogs/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: function fn(args, callback) {
-			const result = Homey.app.getLogs();
-			callback(null, result);
-		},
+module.exports = {
+	// retrieve logs
+	async getLogs({ homey }) {
+		const result = await homey.app.getLogs();
+		return result;
 	},
-	{
-		description: 'Delete logs',
-		method: 'GET',
-		path: '/deletelogs/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: function fn(args, callback) {
-			const result = Homey.app.deleteLogs();
-			callback(null, result);
-		},
+	// delete logs
+	async deleteLogs({ homey }) {
+		const result = await homey.app.deleteLogs();
+		return result;
 	},
-	{
-		description: 'Get Faces Set',
-		method: 'POST',
-		path: '/getfaces/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: function fn(args, callback) {
-			Homey.app.getFaceSet()
-				.then((result) => callback(null, result))
-				.catch((error) => {
-					Homey.app.error(error);
-					callback(error, null);
-				});
-		},
+	// Get Faces Set
+	async getFaceSet({ homey, body }) {
+		const result = await homey.app.getFaceSet(body);
+		return result;
 	},
-	{
-		description: 'Detect Face',
-		method: 'POST',
-		path: '/detectface/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: function fn(args, callback) {
-			Homey.app.log('Analyzing new image from app settings');
-			Homey.app.detectFaces(args.body.img)
-				.then((result) => callback(null, result))
-				.catch((error) => {
-					Homey.app.error(error);
-					callback(error, null);
-				});
-		},
+	// Detect Faces
+	async detectFaces({ homey, body }) {
+		const result = await homey.app.detectFaces(body.img); // body.img
+		return result;
 	},
-	{
-		description: 'Save Face',
-		method: 'POST',
-		path: '/addface/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: async function fn(args, callback) {
-			Homey.app.log('Adding new face from app settings');
-			Homey.app.addFace(args.body)
-				.then((result) => callback(null, result))
-				.catch((error) => {
-					Homey.app.error(error);
-					callback(error, null);
-				});
-		},
+	// Save Faces
+	async addFace({ homey, body }) {
+		const result = await homey.app.addFace(body);
+		return result;
 	},
-	{
-		description: 'Delete Face',
-		method: 'POST',
-		path: '/deleteface/',
-		requires_authorization: true,
-		role: 'owner',
-		fn: function fn(args, callback) {
-			Homey.app.log('Deleting face from app settings');
-			Homey.app.deleteFace(args.body)
-				.then((result) => callback(null, result))
-				.catch((error) => {
-					Homey.app.error(error);
-					callback(error, null);
-				});
-		},
+	// Delete Face
+	async deleteFace({ homey, body }) {
+		const result = await homey.app.deleteFace(body);
+		return result;
 	},
-];
+};
