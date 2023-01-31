@@ -1,0 +1,90 @@
+{
+  "id": "com.gruijter.facepp",
+  "version": "2.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#df2d20",
+  "name": {
+    "en": "Face++"
+  },
+  "description": {
+    "en": "Face recognition for Homey"
+  },
+  "category": [
+    "localization",
+    "security",
+    "video"
+  ],
+  "tags": {
+    "en": [
+      "face recognition",
+      "video",
+      "analytics",
+      "biometrics"
+    ]
+  },
+  "permissions": [],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
+    },
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
+    },
+    "getFaceSet": {
+      "method": "post",
+      "path": "/getfaces/"
+    },
+    "detectFaces": {
+      "method": "post",
+      "path": "/detectface/"
+    },
+    "addFace": {
+      "method": "post",
+      "path": "/addface/"
+    },
+    "deleteFace": {
+      "method": "post",
+      "path": "/deleteface/"
+    }
+  },
+  "images": {
+    "large": "/assets/images/large.jpg",
+    "small": "/assets/images/small.jpg"
+  },
+  "author": {
+    "name": "Robin Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Robin de Gruijter",
+        "email": "gruijter@hotmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇬🇧 Robin"
+      }
+    ]
+  },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "gruijter"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.facepp/issues"
+  },
+  "homeyCommunityTopicId": 29058,
+  "source": "https://github.com/gruijter/com.gruijter.facepp",
+  "homepage": "https://github.com/gruijter/com.gruijter.facepp/blob/master/README.md",
+  "support": "https://community.athom.com/t/29058"
+}

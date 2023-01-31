@@ -1,0 +1,16 @@
+{
+  "id": "search_faces",
+  "title": {
+    "en": "Search faces"
+  },
+  "droptoken": "image",
+  "args": [
+    {
+      "type": "text",
+      "name": "origin",
+      "placeholder": {
+        "en": "Origin Label (e.g. Cam1)"
+      }
+    }
+  ]
+}
