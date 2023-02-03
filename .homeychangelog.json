@@ -49,5 +49,8 @@
   },
   "2.0.0": {
     "en": "Rewrite to SDK3. jimp@0.16.2"
+  },
+  "2.0.1": {
+    "en": "Rewrite to SDK3. jimp@0.16.2. Fixed Homey2023 compatibility."
   }
 }

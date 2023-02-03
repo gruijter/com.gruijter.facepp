@@ -116,7 +116,8 @@ class FaceApp extends Homey.App {
 				return;
 			}
 
-			this.outerID = `homey_${networkInterfaces().wlan0[0].mac}`;
+			const mac = networkInterfaces().wlan0 ? networkInterfaces().wlan0[0].mac : networkInterfaces().eth0[0].mac;
+			this.outerID = `homey_${mac}`;
 			const options = {
 				key: apiKey,
 				secret: apiSecret,
@@ -335,12 +336,12 @@ class FaceApp extends Homey.App {
 			await Promise.all(ready);
 
 			// purge all img files that are not in homeySet
-			const files = fs.readdirSync('./userdata');
+			const files = fs.readdirSync('/userdata');
 			files.forEach((file) => {
 				if (file.includes('.img')) {
 					const token = file.split('.')[0];
 					if (!Object.keys(homeySet).includes(token)) {
-						fs.unlinkSync(`./userdata/${file}`);
+						fs.unlinkSync(`/userdata/${file}`);
 					}
 				}
 			});
@@ -357,7 +358,7 @@ class FaceApp extends Homey.App {
 			if (!body.faceInfo || !body.faceInfo.face_token) throw Error('No Face Token; cannot add face');
 
 			// save base64 file as jpeg/img
-			const filename = `./userdata/${body.faceInfo.face_token}.img`;
+			const filename = `/userdata/${body.faceInfo.face_token}.img`;
 			const file64 = body.img.replace(/^data:image\/(\w+);base64,/, '');
 			const file = base64Decode(file64);
 			fs.writeFileSync(filename, file);
@@ -384,7 +385,7 @@ class FaceApp extends Homey.App {
 	async deleteFace(body) {
 		try {
 			// remove img file
-			const filename = `./userdata/${body.faceInfo.face_token}.img`;
+			const filename = `/userdata/${body.faceInfo.face_token}.img`;
 			if (fs.existsSync(filename)) fs.unlinkSync(filename);
 
 			// remove face from in Homey

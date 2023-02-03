@@ -1,3 +1,4 @@
+v2.0.1  02.02.2023 Fixed Homey2023 compatibility.
 v2.0.0  31.01.2023 Rewrite to SDK3. jimp@0.16.2
 v1.2.2  24.05.2021 Fix HTTP(S) timeout. Improved logger. jimp@0.16.1
 v1.2.1  28.06.2020 Added cropped face image tag in trigger card. Small fixes.
