@@ -116,11 +116,26 @@ class FaceApp extends Homey.App {
 				return;
 			}
 
-			const mac = networkInterfaces().wlan0 ? networkInterfaces().wlan0[0].mac : networkInterfaces().eth0[0].mac;
+			const interfaces = networkInterfaces();
+			let mac = null;
+
+			if (interfaces.eth1 && interfaces.eth1[0].address) {
+			  mac = interfaces.eth1[0].mac;
+			  this.log('eth1 MAC:', mac);
+			} else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
+			  mac = interfaces.wlan0[0].mac;
+			  this.log('wlan0 MAC:', mac);
+			}
+
+			if (mac === null) {
+			  this.log('ERROR : No active network connection found.');
+			  // handle error case
+			}
+
 			this.outerID = `homey_${mac}`;
 			const options = {
-				key: apiKey,
-				secret: apiSecret,
+			  key: apiKey,
+			  secret: apiSecret,
 			};
 			this.FAPI = new FacePP(options);
 
