@@ -120,22 +120,18 @@ class FaceApp extends Homey.App {
 			let mac = null;
 
 			if (interfaces.eth1 && interfaces.eth1[0].address) {
-			  mac = interfaces.eth1[0].mac;
-			  this.log('eth1 MAC:', mac);
+				mac = interfaces.eth1[0].mac;
 			} else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
-			  mac = interfaces.wlan0[0].mac;
-			  this.log('wlan0 MAC:', mac);
+				mac = interfaces.wlan0[0].mac;
+			} else if (interfaces.eth0 && interfaces.eth0[0].address) {
+				mac = interfaces.eth0[0].mac;
 			}
-
-			if (mac === null) {
-			  this.log('ERROR : No active network connection found.');
-			  // handle error case
-			}
+			if (!mac) throw Error('No active network connection found.');
 
 			this.outerID = `homey_${mac}`;
 			const options = {
-			  key: apiKey,
-			  secret: apiSecret,
+				key: apiKey,
+				secret: apiSecret,
 			};
 			this.FAPI = new FacePP(options);
 
@@ -282,9 +278,11 @@ class FaceApp extends Homey.App {
 						}
 					}
 				}
+
 				const logTokens = { ...tokens };
 				logTokens.face_image_token = tokens.face_image_token.cloudUrl;
 				this.log(logTokens);
+
 				const faceDetectedTrigger = this.homey.flow.getTriggerCard('face_detected');
 				faceDetectedTrigger.trigger(tokens);
 				return tokens;
@@ -443,8 +441,9 @@ class FaceApp extends Homey.App {
 			await Promise.all(ready);
 
 			// register the test image
+			const fileName = this.homey.platformVersion === 2 ? '/app/assets/images/test.jpg' : '/assets/images/test.jpg';
 			const testImage = await this.homey.images.createImage();
-			testImage.setPath('/assets/images/test.jpg');
+			testImage.setPath(fileName);
 
 			// create a droptoken for test image
 			this.tokens.testImageToken = await this.homey.flow.createToken('test_image_token', {

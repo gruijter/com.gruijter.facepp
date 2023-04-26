@@ -4,7 +4,7 @@
   "main": "app.js",
   "dependencies": {
     "fixture-stdout": "^0.2.1",
-    "jimp": "^0.16.2",
+    "jimp": "^0.22.7",
     "smart-request-balancer": "^2.1.1"
   },
   "description": "Use snapshots from a camera connected to Homey, and let Face++ do AI based face recognition. For every face the app detects, a flow will be triggered. Homey will automatically try to match the faces to a set of known faces that you can upload yourself. The app will also estimate gender, age, emotion, and whether the person is wearing (sun)glasses or a mask.",
