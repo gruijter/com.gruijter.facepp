@@ -1,59 +1,82 @@
 {
   "1.0.0": {
-    "en": "First release"
+    "en": "First release",
+    "fr": "Première version"
   },
   "1.0.1": {
-    "en": "Several small fixes."
+    "en": "Several small fixes.",
+    "fr": "Plusieurs petites corrections."
   },
   "1.0.2": {
-    "en": "Homey Appstore compliancy."
+    "en": "Homey Appstore compliancy.",
+    "fr": "Conformité avec le magasin d'applications Homey."
   },
   "1.0.3": {
-    "en": "App init and frontend bugfixes."
+    "en": "App init and frontend bugfixes.",
+    "fr": "Corrections de bugs lors de l'initialisation et sur l'interface utilisateur."
   },
   "1.0.4": {
-    "en": "Added test image. Fixed unhandledRejection errors. Added API check. Improved app logs. Removed INVALID_OUTER_ID log."
+    "en": "Added test image. Fixed unhandledRejection errors. Added API check. Improved app logs. Removed INVALID_OUTER_ID log.",
+    "fr": "Ajout d'une image de test. Correction des erreurs unhandledRejection. Ajout de la vérification de l'API. Amélioration des journaux de l'application. Suppression du journal INVALID_OUTER_ID."
   },
   "1.1.0": {
-    "en": "Added cloud queueing and rate limiting."
+    "en": "Added cloud queueing and rate limiting.",
+    "fr": "Ajout de la mise en file d'attente dans le cloud et de la limitation du débit."
   },
   "1.1.1": {
-    "en": "Added clickable registration link. Added log filters. Fixed flowtoken_already_exists. Fixed ENOENT: no such file or directory."
+    "en": "Added clickable registration link. Added log filters. Fixed flowtoken_already_exists. Fixed ENOENT: no such file or directory.",
+    "fr": "Ajout d'un lien d'enregistrement cliquable. Ajout de filtres de journalisation. Correction de flowtoken_already_exists. Correction de l'erreur ENOENT : aucun fichier ou répertoire."
   },
   "1.1.2": {
-    "en": "Fix not able to add faces. Add warning that each Homey needs own API key."
+    "en": "Fix not able to add faces. Add warning that each Homey needs own API key.",
+    "fr": "Correction de l'impossibilité d'ajouter des visages. Ajout d'un avertissement indiquant que chaque Homey nécessite sa propre clé API."
   },
   "1.1.3": {
-    "en": "Fix not able to add faces. Add warning that each Homey needs own API key."
+    "en": "Fix not able to add faces. Add warning that each Homey needs own API key.",
+    "fr": "Correction de l'impossibilité d'ajouter des visages. Ajout d'un avertissement indiquant que chaque Homey nécessite sa propre clé API."
   },
   "1.1.4": {
-    "en": "New settings and face set scheme. Minor fixes."
+    "en": "New settings and face set scheme. Minor fixes.",
+    "fr": "Nouveaux paramètres et schéma de gestion des visages. Corrections mineures."
   },
   "1.1.5": {
-    "en": "Stability improvements. Added toggle API Secret view in app settings. Fix threshold settings."
+    "en": "Stability improvements. Added toggle API Secret view in app settings. Fix threshold settings.",
+    "fr": "Améliorations de la stabilité. Ajout d'une option pour afficher/masquer le secret API dans les paramètres de l'application. Correction des paramètres de seuil."
   },
   "1.1.6": {
-    "en": "Fix not able to send to Telegram on NO_MATCH. Fix app settings pop-up messages."
+    "en": "Fix not able to send to Telegram on NO_MATCH. Fix app settings pop-up messages.",
+    "fr": "Correction de l'impossibilité d'envoyer à Telegram sur NO_MATCH. Correction des messages contextuels dans les paramètres de l'application."
   },
   "1.1.7": {
-    "en": "Fix INVALID_OUTER_ID when no face added. Fix THRESHOLD error after clean install."
+    "en": "Fix INVALID_OUTER_ID when no face added. Fix THRESHOLD error after clean install.",
+    "fr": "Correction de INVALID_OUTER_ID lorsqu'aucun visage n'est ajouté. Correction de l'erreur THRESHOLD après une installation propre."
   },
   "1.2.0": {
-    "en": "Added cropped face image tag in trigger card. Small fixes."
+    "en": "Added cropped face image tag in trigger card. Small fixes.",
+    "fr": "Ajout d'une étiquette d'image de visage recadré dans la carte de déclenchement. Corrections mineures."
   },
   "1.2.1": {
-    "en": "Added cropped face image tag in trigger card. Small fixes."
+    "en": "Added cropped face image tag in trigger card. Small fixes.",
+    "fr": "Ajout d'une étiquette d'image de visage recadré dans la carte de déclenchement. Corrections mineures."
   },
   "1.2.2": {
-    "en": "Fix HTTP(S) timeout. Improved logger. jimp@0.16.1"
+    "en": "Fix HTTP(S) timeout. Improved logger. jimp@0.16.1",
+    "fr": "Correction des délais d'attente HTTP(S). Journal amélioré. jimp@0.16.1"
   },
   "2.0.0": {
-    "en": "Rewrite to SDK3. jimp@0.16.2"
+    "en": "Rewrite to SDK3. jimp@0.16.2",
+    "fr": "Réécriture pour SDK3. jimp@0.16.2"
   },
   "2.0.1": {
-    "en": "Rewrite to SDK3. jimp@0.16.2. Fixed Homey2023 compatibility."
+    "en": "Rewrite to SDK3. jimp@0.16.2. Fixed Homey2023 compatibility.",
+    "fr": "Réécriture pour SDK3. jimp@0.16.2. Correction de la compatibilité avec Homey2023."
   },
   "2.0.2": {
-    "en": "jimp@0.22.7. Partial fix Homey2023 compatibility"
+    "en": "jimp@0.22.7. Partial fix Homey2023 compatibility",
+    "fr": "jimp@0.22.7. Correction partielle de la compatibilité avec Homey2023"
+  },
+  "2.0.3": {
+    "en": "French language added. @Sylvestre22",
+    "fr": "La langue française a été ajoutée. @Sylvestre22"
   }
 }

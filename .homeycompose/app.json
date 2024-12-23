@@ -5,23 +5,17 @@
   "sdk": 3,
   "brandColor": "#df2d20",
   "name": {
-    "en": "Face++"
+    "en": "Face++",
+    "fr": "Face++"
   },
   "description": {
-    "en": "Face recognition for Homey"
+    "en": "Face recognition for Homey",
+    "fr": "Reconnaissance faciale pour Homey"
   },
-  "category": [
-    "localization",
-    "security",
-    "video"
-  ],
+  "category": ["localization", "security", "video"],
   "tags": {
-    "en": [
-      "face recognition",
-      "video",
-      "analytics",
-      "biometrics"
-    ]
+    "en": ["face recognition", "video", "analytics", "biometrics"],
+    "fr": ["reconnaissance faciale", "vidéo", "analyse", "biométrie"]
   },
   "permissions": [],
   "api": {
@@ -68,6 +62,9 @@
     "translators": [
       {
         "name": "🇬🇧 Robin"
+      },
+      {
+        "name": "🇫🇷 Traducteur Français"
       }
     ]
   },

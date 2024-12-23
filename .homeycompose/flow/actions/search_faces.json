@@ -1,7 +1,8 @@
 {
   "id": "search_faces",
   "title": {
-    "en": "Search faces"
+    "en": "Search faces",
+    "fr": "Rechercher des visages"
   },
   "droptoken": "image",
   "args": [
@@ -9,7 +10,8 @@
       "type": "text",
       "name": "origin",
       "placeholder": {
-        "en": "Origin Label (e.g. Cam1)"
+        "en": "Origin Label (e.g. Cam1)",
+        "fr": "Étiquette d'origine (par ex. Cam1)"
       }
     }
   ]

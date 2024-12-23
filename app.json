@@ -6,10 +6,12 @@
   "sdk": 3,
   "brandColor": "#df2d20",
   "name": {
-    "en": "Face++"
+    "en": "Face++",
+    "fr": "Face++"
   },
   "description": {
-    "en": "Face recognition for Homey"
+    "en": "Face recognition for Homey",
+    "fr": "Reconnaissance faciale pour Homey"
   },
   "category": [
     "localization",
@@ -22,6 +24,12 @@
       "video",
       "analytics",
       "biometrics"
+    ],
+    "fr": [
+      "reconnaissance faciale",
+      "vidéo",
+      "analyse",
+      "biométrie"
     ]
   },
   "permissions": [],
@@ -69,6 +77,9 @@
     "translators": [
       {
         "name": "🇬🇧 Robin"
+      },
+      {
+        "name": "🇫🇷 Traducteur Français"
       }
     ]
   },
@@ -93,30 +104,40 @@
       {
         "id": "face_detected",
         "title": {
-          "en": "Face detected"
+          "en": "Face detected",
+          "fr": "Visage détecté"
         },
         "tokens": [
           {
             "name": "origin",
             "type": "string",
             "title": {
-              "en": "origin"
+              "en": "origin",
+              "fr": "origine"
             },
-            "example": "Ring camera"
+            "example": {
+              "en": "Ring camera",
+              "fr": "Caméra Ring"
+            }
           },
           {
             "name": "label",
             "type": "string",
             "title": {
-              "en": "label"
+              "en": "label",
+              "fr": "étiquette"
             },
-            "example": "John Doe"
+            "example": {
+              "en": "John Doe",
+              "fr": "Jean Dupont"
+            }
           },
           {
             "name": "confidence",
             "type": "number",
             "title": {
-              "en": "confidence"
+              "en": "confidence",
+              "fr": "confiance"
             },
             "example": 96.35
           },
@@ -124,17 +145,20 @@
             "name": "token",
             "type": "string",
             "title": {
-              "en": "token"
+              "en": "token",
+              "fr": "jeton"
             },
             "example": {
-              "en": "0d32892fad08a6b2b4f0fb92c814ad8c"
+              "en": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "fr": "0d32892fad08a6b2b4f0fb92c814ad8c"
             }
           },
           {
             "name": "quality",
             "type": "number",
             "title": {
-              "en": "quality"
+              "en": "quality",
+              "fr": "qualité"
             },
             "example": 92.12
           },
@@ -142,17 +166,20 @@
             "name": "gender",
             "type": "string",
             "title": {
-              "en": "gender"
+              "en": "gender",
+              "fr": "genre"
             },
             "example": {
-              "en": "Male"
+              "en": "Male",
+              "fr": "Homme"
             }
           },
           {
             "name": "age",
             "type": "number",
             "title": {
-              "en": "age"
+              "en": "age",
+              "fr": "âge"
             },
             "example": 34
           },
@@ -160,17 +187,20 @@
             "name": "emotion",
             "type": "string",
             "title": {
-              "en": "emotion"
+              "en": "emotion",
+              "fr": "émotion"
             },
             "example": {
-              "en": "neutral"
+              "en": "neutral",
+              "fr": "neutre"
             }
           },
           {
             "name": "normalglass",
             "type": "boolean",
             "title": {
-              "en": "normal glasses"
+              "en": "normal glasses",
+              "fr": "lunettes normales"
             },
             "example": true
           },
@@ -178,7 +208,8 @@
             "name": "sunglass",
             "type": "boolean",
             "title": {
-              "en": "sun glasses"
+              "en": "sun glasses",
+              "fr": "lunettes de soleil"
             },
             "example": false
           },
@@ -186,7 +217,8 @@
             "name": "mask",
             "type": "boolean",
             "title": {
-              "en": "mask"
+              "en": "mask",
+              "fr": "masque"
             },
             "example": false
           },
@@ -194,7 +226,8 @@
             "name": "face_image_token",
             "type": "image",
             "title": {
-              "en": "face snapshot"
+              "en": "face snapshot",
+              "fr": "instantané du visage"
             }
           }
         ]
@@ -204,7 +237,8 @@
       {
         "id": "search_faces",
         "title": {
-          "en": "Search faces"
+          "en": "Search faces",
+          "fr": "Rechercher des visages"
         },
         "droptoken": "image",
         "args": [
@@ -212,7 +246,8 @@
             "type": "text",
             "name": "origin",
             "placeholder": {
-              "en": "Origin Label (e.g. Cam1)"
+              "en": "Origin Label (e.g. Cam1)",
+              "fr": "Étiquette d'origine (par ex. Cam1)"
             }
           }
         ]

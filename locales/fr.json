@@ -1,0 +1,50 @@
+{
+    "settings": {
+        "tab1": {
+            "title": "Instructions",
+            "warningTitle": "AVERTISSEMENT",
+            "warningInstructions": "L'utilisation du service Face++ comporte des implications graves en matière de confidentialité. Utilisez-le à vos propres risques. Lisez et comprenez la législation sur la confidentialité dans votre pays, ainsi que les conditions d'utilisation de Face++.",
+            "registerTitle": "Enregistrer une clé API",
+            "registerInstructions": "Chaque Homey doit utiliser une clé différente. Pour obtenir une clé API gratuite, rendez-vous sur <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
+            "manageTitle": "Gérer les visages connus",
+            "manageInstructions": "Après avoir ajouté les clés API dans l'onglet des paramètres, vous pouvez commencer à ajouter des photos de personnes connues. Ces photos seront utilisées pour la reconnaissance faciale.",
+            "useTitle": "Comment utiliser dans un flux",
+            "useInstructions": "Utilisez un flux pour envoyer une image de caméra à l'application. L'application essaiera de détecter des visages dans cette image et déclenchera une carte de flux pour chaque visage détecté. Notez que les visages ne seront détectés que s'ils sont (presque) de face et suffisamment détaillés (>75 pixels de large)."
+        },
+        "tab2": {
+            "title": "Journaux",
+            "logs": "Journaux",
+            "deletelogs": "Supprimer les journaux",
+            "deleteWarning": "Supprimer tous les journaux ?",
+            "deleted": "Journaux supprimés !"
+        },
+        "tab3": {
+            "title": "Paramètres",
+            "instructionsLegendKey": "Clé API et Secret",
+            "instructionsKey": "Entrez la clé API et le secret API que vous avez obtenus sur le site Face++. Chaque Homey doit utiliser une clé différente !",
+            "api_key": "Clé API",
+            "api_secret": "Secret API &#128065;",
+            "saveSettingsKey": "Enregistrer la clé API",
+            "instructionsLegendMatch": "Correspondance faciale",
+            "instructionsMatch": "Un seuil de confiance plus élevé réduira les correspondances faciales incorrectes.",
+            "threshold": "Seuil de confiance",
+            "saveSettingsMatch": "Enregistrer les paramètres de correspondance faciale"
+        },
+        "tab4": {
+            "title": "Visages",
+            "instructionsLegend": "Gérer les visages connus",
+            "instructions": "Chaque image de référence doit contenir un seul visage. Minimum 250x250px, fichier de 500 Ko maximum. L'étiquette que vous ajoutez sera utilisée dans les flux lors de la détection.",
+            "select": "Sélectionner un visage",
+            "newFace": "***Ajouter un nouveau visage***",
+            "load": "Charger l'image",
+            "label": "Étiqueter cette personne",
+            "faceToken": "Token de visage",
+            "facequality": "Qualité de détection",
+            "gender": "Genre estimé",
+            "age": "Âge estimé",
+            "glass": "Lunettes",
+            "saveFace": "Enregistrer",
+            "deleteFace": "Supprimer"
+        }
+    }
+}
