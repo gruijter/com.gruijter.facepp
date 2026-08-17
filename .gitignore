@@ -3,3 +3,6 @@ roadmap.txt
 
 # Added by Homey CLI
 /.homeybuild/
+.claude/
+.github/
+AGENTS.md
