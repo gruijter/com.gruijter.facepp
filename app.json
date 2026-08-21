@@ -207,6 +207,233 @@
   "flow": {
     "triggers": [
       {
+        "id": "face_added",
+        "title": {
+          "en": "New face added",
+          "nl": "Nieuw gezicht toegevoegd",
+          "de": "Neues Gesicht hinzugefügt",
+          "fr": "Nouveau visage ajouté",
+          "es": "Nueva cara añadida",
+          "it": "Nuovo volto aggiunto",
+          "da": "Nyt ansigt tilføjet",
+          "sv": "Nytt ansikte tillagt",
+          "no": "Nytt ansikt lagt til",
+          "pl": "Dodano nową twarz",
+          "ru": "Добавлено новое лицо",
+          "ar": "تمت إضافة وجه جديد",
+          "ko": "새 얼굴 추가됨"
+        },
+        "tokens": [
+          {
+            "name": "label",
+            "type": "string",
+            "title": {
+              "en": "label",
+              "nl": "label",
+              "de": "Bezeichnung",
+              "fr": "étiquette",
+              "es": "etiqueta",
+              "it": "etichetta",
+              "da": "etiket",
+              "sv": "etikett",
+              "no": "etikett",
+              "pl": "etykieta",
+              "ru": "метка",
+              "ar": "التسمية",
+              "ko": "라벨"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "token",
+            "type": "string",
+            "title": {
+              "en": "token",
+              "nl": "token",
+              "de": "Token",
+              "fr": "jeton",
+              "es": "token",
+              "it": "token",
+              "da": "token",
+              "sv": "token",
+              "no": "token",
+              "pl": "token",
+              "ru": "токен",
+              "ar": "الرمز المميز",
+              "ko": "토큰"
+            },
+            "example": {
+              "en": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "nl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "de": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "fr": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "es": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "it": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "da": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "sv": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "no": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "pl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ru": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ar": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ko": "0d32892fad08a6b2b4f0fb92c814ad8c"
+            }
+          },
+          {
+            "name": "quality",
+            "type": "number",
+            "title": {
+              "en": "quality",
+              "nl": "kwaliteit",
+              "de": "Qualität",
+              "fr": "qualité",
+              "es": "calidad",
+              "it": "qualità",
+              "da": "kvalitet",
+              "sv": "kvalitet",
+              "no": "kvalitet",
+              "pl": "jakość",
+              "ru": "качество",
+              "ar": "الجودة",
+              "ko": "품질"
+            },
+            "example": 92.12
+          },
+          {
+            "name": "gender",
+            "type": "string",
+            "title": {
+              "en": "gender",
+              "nl": "geslacht",
+              "de": "Geschlecht",
+              "fr": "sexe",
+              "es": "género",
+              "it": "genere",
+              "da": "køn",
+              "sv": "kön",
+              "no": "kjønn",
+              "pl": "płeć",
+              "ru": "пол",
+              "ar": "الجنس",
+              "ko": "성별"
+            },
+            "example": {
+              "en": "Male",
+              "nl": "Man",
+              "de": "Männlich",
+              "fr": "Homme",
+              "es": "Hombre",
+              "it": "Uomo",
+              "da": "Mand",
+              "sv": "Man",
+              "no": "Mann",
+              "pl": "Mężczyzna",
+              "ru": "Мужской",
+              "ar": "ذكر",
+              "ko": "남성"
+            }
+          },
+          {
+            "name": "age",
+            "type": "number",
+            "title": {
+              "en": "age",
+              "nl": "leeftijd",
+              "de": "Alter",
+              "fr": "âge",
+              "es": "edad",
+              "it": "età",
+              "da": "alder",
+              "sv": "ålder",
+              "no": "alder",
+              "pl": "wiek",
+              "ru": "возраст",
+              "ar": "العمر",
+              "ko": "나이"
+            },
+            "example": 34
+          },
+          {
+            "name": "normalglass",
+            "type": "boolean",
+            "title": {
+              "en": "normal glasses",
+              "nl": "normale bril",
+              "de": "normale Brille",
+              "fr": "lunettes normales",
+              "es": "gafas normales",
+              "it": "occhiali normali",
+              "da": "normale briller",
+              "sv": "vanliga glasögon",
+              "no": "vanlige briller",
+              "pl": "zwykłe okulary",
+              "ru": "обычные очки",
+              "ar": "نظارات عادية",
+              "ko": "일반 안경"
+            },
+            "example": true
+          },
+          {
+            "name": "sunglass",
+            "type": "boolean",
+            "title": {
+              "en": "sun glasses",
+              "nl": "zonnebril",
+              "de": "Sonnenbrille",
+              "fr": "lunettes de soleil",
+              "es": "gafas de sol",
+              "it": "occhiali da sole",
+              "da": "solbriller",
+              "sv": "solglasögon",
+              "no": "solbriller",
+              "pl": "okulary przeciwsłoneczne",
+              "ru": "солнцезащитные очки",
+              "ar": "نظارات شمسية",
+              "ko": "선글라스"
+            },
+            "example": false
+          },
+          {
+            "name": "autoAdded",
+            "type": "boolean",
+            "title": {
+              "en": "auto-added",
+              "nl": "automatisch toegevoegd",
+              "de": "automatisch hinzugefügt",
+              "fr": "ajouté automatiquement",
+              "es": "añadido automáticamente",
+              "it": "aggiunto automaticamente",
+              "da": "automatisk tilføjet",
+              "sv": "automatiskt tillagt",
+              "no": "automatisk lagt til",
+              "pl": "dodano automatycznie",
+              "ru": "добавлено автоматически",
+              "ar": "أضيف تلقائيًا",
+              "ko": "자동 추가됨"
+            },
+            "example": false
+          },
+          {
+            "name": "face_image_token",
+            "type": "image",
+            "title": {
+              "en": "face snapshot",
+              "nl": "gezichtsfoto",
+              "de": "Gesichtsfoto",
+              "fr": "photo du visage",
+              "es": "foto del rostro",
+              "it": "foto del volto",
+              "da": "ansigtsfoto",
+              "sv": "ansiktsfoto",
+              "no": "ansiktsfoto",
+              "pl": "zdjęcie twarzy",
+              "ru": "снимок лица",
+              "ar": "صورة الوجه",
+              "ko": "얼굴 스냅샷"
+            }
+          }
+        ]
+      },
+      {
         "id": "face_detected",
         "title": {
           "en": "Face detected",

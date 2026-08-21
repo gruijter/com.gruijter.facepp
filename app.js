@@ -274,7 +274,39 @@ class FaceApp extends Homey.App {
     faceSet[face.face_token] = faceInfo;
     this.homey.settings.set('face_set', faceSet);
     this.log('auto-added face', label);
+    await this.triggerFaceAdded(faceInfo, croppedFace);
     return faceInfo;
+  }
+
+  // fires the "New face added" trigger for a freshly added face_set entry - shared by
+  // autoAddFace() and addFace(). Same createImage/setStream pattern as getFaceToken(),
+  // rather than Image.setPath() on the /userdata/*.img file directly, since setStream is
+  // the one already proven to work reliably in this app.
+  async triggerFaceAdded(faceInfo, imgBuffer) {
+    const attributes = faceInfo.attributes || {};
+    const imgFunct = async (stream) => {
+      const imgStream = bufferToStream(imgBuffer);
+      imgStream.pipe(stream);
+    };
+    const faceImage = await this.homey.images.createImage();
+    faceImage.setStream(imgFunct);
+    setTimeout(() => {
+      faceImage.unregister();
+    }, 1000 * 60 * 3); // image stream is available for 3 minutes
+
+    const tokens = {
+      label: faceInfo.label,
+      token: faceInfo.face_token,
+      quality: attributes.facequality ? attributes.facequality.value : 0,
+      gender: attributes.gender ? attributes.gender.value : 'undefined',
+      age: attributes.age ? attributes.age.value : 0,
+      normalglass: attributes.glass ? attributes.glass.value === 'Normal' : false,
+      sunglass: attributes.glass ? attributes.glass.value === 'Dark' : false,
+      autoAdded: !!faceInfo.autoAdded,
+      face_image_token: faceImage,
+    };
+    const faceAddedTrigger = this.homey.flow.getTriggerCard('face_added');
+    await faceAddedTrigger.trigger(tokens).catch((error) => this.error('face_added trigger failed:', error));
   }
 
   // returns a formatted array of recognised faces, and triggers flowCards.
@@ -749,9 +781,11 @@ class FaceApp extends Homey.App {
 
     // store face persistent in Homey
     const faceSet = this.homey.settings.get('face_set') || {};
-    faceSet[body.faceInfo.face_token] = { ...body.faceInfo, addedAt: Date.now() };
+    const faceInfo = { ...body.faceInfo, addedAt: Date.now() };
+    faceSet[body.faceInfo.face_token] = faceInfo;
     this.homey.settings.set('face_set', faceSet);
     this.log('added face', options);
+    await this.triggerFaceAdded(faceInfo, file);
     return true;
   }
 
