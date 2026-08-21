@@ -35,7 +35,11 @@
             "threshold": "Seuil de confiance",
             "saveSettingsMatch": "Enregistrer les paramètres de correspondance",
             "thresholdInvalid": "Le seuil doit être compris entre 0 et 100",
-            "matchSaved": "Paramètres enregistrés !"
+            "matchSaved": "Paramètres enregistrés !",
+            "instructionsLegendCrop": "Recadrage du visage",
+            "instructionsCrop": "Ajoute une photo du visage détecté au déclencheur. Désactivez pour éviter le traitement d'image local - la détection et la correspondance fonctionnent toujours, mais la photo sera alors un espace réservé.",
+            "cropEnabled": "Inclure une photo du visage dans le déclencheur",
+            "saveSettingsCrop": "Enregistrer les paramètres de recadrage du visage"
         },
         "tab4": {
             "title": "Gérer les visages",

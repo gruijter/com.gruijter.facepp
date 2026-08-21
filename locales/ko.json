@@ -35,7 +35,11 @@
             "threshold": "신뢰도 임계값",
             "saveSettingsMatch": "얼굴 일치 설정 저장",
             "thresholdInvalid": "임계값은 0에서 100 사이여야 합니다",
-            "matchSaved": "설정이 저장되었습니다!"
+            "matchSaved": "설정이 저장되었습니다!",
+            "instructionsLegendCrop": "얼굴 크롭",
+            "instructionsCrop": "감지된 얼굴의 스냅샷 사진을 트리거에 추가합니다. 끄면 로컬 이미지 처리를 건너뜁니다 - 감지 및 매칭은 계속 작동하지만 사진은 자리 표시자 이미지가 됩니다.",
+            "cropEnabled": "트리거에 얼굴 스냅샷 포함",
+            "saveSettingsCrop": "얼굴 크롭 설정 저장"
         },
         "tab4": {
             "title": "얼굴 관리",

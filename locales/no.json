@@ -35,7 +35,11 @@
             "threshold": "Sikkerhetsterskel",
             "saveSettingsMatch": "Lagre innstillinger for ansiktsmatch",
             "thresholdInvalid": "Terskelen må være mellom 0 og 100",
-            "matchSaved": "Innstillinger lagret!"
+            "matchSaved": "Innstillinger lagret!",
+            "instructionsLegendCrop": "Ansiktsbeskjæring",
+            "instructionsCrop": "Legger til et bilde av det oppdagede ansiktet i utløseren. Slå av for å hoppe over lokal bildebehandling - oppdagelse og matching fungerer fortsatt, men bildet blir et plassholderbilde.",
+            "cropEnabled": "Inkluder et ansiktsbilde i utløseren",
+            "saveSettingsCrop": "Lagre innstillinger for ansiktsbeskjæring"
         },
         "tab4": {
             "title": "Administrer ansikter",

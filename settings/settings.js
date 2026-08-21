@@ -91,6 +91,11 @@ function showInfo3() {
     if (err || !set) return;
     document.getElementById('threshold').value = set.threshold;
   });
+  Homey.get('cropEnabled', (err, value) => {
+    if (err) return;
+    // undefined (never saved before) means the default: enabled
+    document.getElementById('cropEnabled').checked = value !== false;
+  });
 }
 
 function togglePasswordView() {
@@ -121,6 +126,16 @@ async function saveSettingsMatch() {
     const threshold = document.getElementById('threshold').value;
     if (threshold < 0 || threshold > 100) throw Error(Homey.__('settings.tab3.thresholdInvalid'));
     await Homey.set('settingsMatch', { threshold });
+    Homey.alert(Homey.__('settings.tab3.matchSaved'), 'info');
+  } catch (error) {
+    Homey.alert(errMsg(error), 'error');
+  }
+}
+
+async function saveSettingsCrop() {
+  try {
+    const cropEnabled = document.getElementById('cropEnabled').checked;
+    await Homey.set('cropEnabled', cropEnabled);
     Homey.alert(Homey.__('settings.tab3.matchSaved'), 'info');
   } catch (error) {
     Homey.alert(errMsg(error), 'error');

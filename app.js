@@ -21,11 +21,12 @@ along with com.gruijter.facepp.  If not, see <http://www.gnu.org/licenses/>.
 
 const Homey = require('homey');
 const fs = require('fs');
+const v8 = require('v8');
 const { networkInterfaces } = require('os');
 const Logger = require('./lib/captureLogs');
 const FacePP = require('./lib/FacePP');
 const {
-  base64Decode, stripDataUrlPrefix, bufferToStream, streamToBuffer, decodeJpeg, cropDecoded,
+  base64Decode, stripDataUrlPrefix, bufferToStream, streamToBuffer, decodeJpeg, scaleRegionToDecoded, cropDecoded,
 } = require('./lib/ImageHelpers');
 
 const getEmotion = (emotions) => {
@@ -120,9 +121,6 @@ class FaceApp extends Homey.App {
 
       this.log('Face++ is running...');
 
-      // do garbage collection every 10 minutes
-      // this.intervalIdGc = setInterval(() => { global.gc(); }, 1000 * 60 * 10);
-
     } catch (error) {
       this.error(error);
     }
@@ -146,6 +144,15 @@ class FaceApp extends Homey.App {
 
   getLogs() {
     return this.logger.logArray;
+  }
+
+  // TEMP diagnostics for the memwarn/crash investigation - remove once resolved.
+  // Sandbox-safe: process.memoryUsage() crashes inside Homey's V8 sandbox
+  // (ENOENT: no such file or directory, uv_resident_set_memory).
+  logHeapStats(label) {
+    const heap = v8.getHeapStatistics();
+    const mb = (bytes) => Math.round((bytes / 1024 / 1024) * 100) / 100;
+    this.log(`[MEM] ${label} | used: ${mb(heap.used_heap_size)}MB, total: ${mb(heap.total_heap_size)}MB, external: ${mb(heap.external_memory || 0)}MB, limit: ${mb(heap.heap_size_limit)}MB`);
   }
 
   // returns an array of detected scenes and objects
@@ -201,9 +208,12 @@ class FaceApp extends Homey.App {
     return this.FAPI.detectFaces(options);
   }
 
-  // get faceImageToken Stream
+  // get faceImageToken Stream. `bounds` (Face++'s face_rectangle) is in the original
+  // photo's native pixel coordinates - decodedImage may be downscaled (see
+  // ImageHelpers.decodeJpeg), so remap it onto the decoded raster first.
   async getFaceToken(decodedImage, bounds) {
-    const croppedFace = cropDecoded(decodedImage, bounds);
+    const scaledBounds = scaleRegionToDecoded(decodedImage, bounds);
+    const croppedFace = cropDecoded(decodedImage, scaledBounds);
     const imgFunct = async (stream) => {
       const imgStream = bufferToStream(croppedFace);
       imgStream.pipe(stream);
@@ -216,18 +226,53 @@ class FaceApp extends Homey.App {
     return faceImage;
   }
 
-  // returns a formatted array of recognised faces, and triggers flowCards
+  // face_image_token is a required "image"-type trigger token, so even with cropping
+  // turned off (settings.tab3 "Face Crop") it needs a valid Image - a single static
+  // placeholder, registered once and reused for every trigger, costs nothing per
+  // detection (no decode, no per-face image creation).
+  async getPlaceholderFaceImage() {
+    if (!this.noCropImage) {
+      const fileName = this.homey.platformVersion === 2 ? '/app/assets/images/no_crop.jpg' : `${__dirname}/assets/images/no_crop.jpg`;
+      this.noCropImage = await this.homey.images.createImage();
+      this.noCropImage.setPath(fileName);
+    }
+    return this.noCropImage;
+  }
+
+  // returns a formatted array of recognised faces, and triggers flowCards.
+  // Serialized across calls via _searchFaces so two trigger images arriving in quick
+  // succession never process at the same time - extra safety margin on top of
+  // ImageHelpers.decodeJpeg's own bounded (scaled) memory footprint.
   async searchFaces(imgStream, origin) {
+    this.searchQueue = (this.searchQueue || Promise.resolve())
+      .catch(() => {}) // don't let one failed run wedge the queue for the next
+      .then(() => this._searchFaces(imgStream, origin));
+    return this.searchQueue;
+  }
+
+  async _searchFaces(imgStream, origin) {
     try {
       const imgBuffer = await streamToBuffer(imgStream);
       const { faces } = await this.detectFaces(imgBuffer);
       // decode the JPEG once and reuse it for every face's crop, instead of each
-      // getFaceToken() call redoing a full-image decode of its own
-      const decodedImage = faces.length > 0 ? decodeJpeg(imgBuffer) : null;
+      // getFaceToken() call redoing a full-image decode of its own - skipped entirely
+      // when cropping is turned off (settings.tab3 "Face Crop"), not just left unused,
+      // so no local image processing happens at all in that case
+      const cropEnabled = this.homey.settings.get('cropEnabled') !== false;
+      const decodedImage = (cropEnabled && faces.length > 0) ? decodeJpeg(imgBuffer) : null;
+      // TEMP diagnostics for the memwarn/crash investigation - remove once resolved.
+      // process.memoryUsage() is NOT safe here: it crashes inside Homey's V8 sandbox
+      // (ENOENT: no such file or directory, uv_resident_set_memory) - v8.getHeapStatistics()
+      // is the sandbox-safe alternative.
+      if (decodedImage) {
+        this.logHeapStats(`decoded ${origin}: ${decodedImage.width}x${decodedImage.height}, before gc`);
+      }
       const homeySet = this.homey.settings.get('face_set') || {};
       const searchResult = await Promise.all(faces.map(async (face) => {
         try {
-          const snapshot = await this.getFaceToken(decodedImage, face.face_rectangle);
+          const snapshot = decodedImage
+            ? await this.getFaceToken(decodedImage, face.face_rectangle)
+            : await this.getPlaceholderFaceImage();
           const tokens = {
             origin: origin || 'undefined',
             label: 'NOMATCH',
@@ -277,6 +322,14 @@ class FaceApp extends Homey.App {
     } catch (error) {
       this.error(error);
       return [];
+    } finally {
+      // the raster decode above is a large buffer outside V8's JS heap; force it
+      // out of memory now instead of waiting on V8's heap-size-driven (not
+      // RSS-driven) GC heuristics, which run too infrequently for Homey's budget
+      const hasGc = typeof global.gc === 'function';
+      if (hasGc) global.gc();
+      // TEMP diagnostics for the memwarn/crash investigation - remove once resolved
+      this.logHeapStats(`_searchFaces done for ${origin}, global.gc available: ${hasGc}, after gc`);
     }
   }
 

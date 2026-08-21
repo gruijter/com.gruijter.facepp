@@ -35,7 +35,11 @@
             "threshold": "Betrouwbaarheidsdrempel",
             "saveSettingsMatch": "Gezichtsherkenning-instellingen opslaan",
             "thresholdInvalid": "Drempel moet tussen 0 en 100 liggen",
-            "matchSaved": "Instellingen zijn opgeslagen!"
+            "matchSaved": "Instellingen zijn opgeslagen!",
+            "instructionsLegendCrop": "Gezichtscrop",
+            "instructionsCrop": "Voegt een momentopname van het gedetecteerde gezicht toe aan de trigger. Zet uit om lokale beeldverwerking over te slaan - detectie en matching blijven werken, maar de foto wordt dan een placeholder.",
+            "cropEnabled": "Voeg een gezichtsfoto toe aan de trigger",
+            "saveSettingsCrop": "Bewaar gezichtscrop-instellingen"
         },
         "tab4": {
             "title": "Gezichten beheren",

@@ -67,6 +67,17 @@
 				</div>
 				<button id="saveSettingsMatch" class="homey-button-primary-full" onclick="saveSettingsMatch()" data-i18n="settings.tab3.saveSettingsMatch">SAVE MATCH SETTINGS</button>
 			</fieldset>
+
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab3.instructionsLegendCrop">FACE CROP</legend>
+				<p data-i18n="settings.tab3.instructionsCrop">Instructions</p>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="cropEnabled" data-i18n="settings.tab3.cropEnabled">Include a face snapshot in the trigger</label>
+					<input type="checkbox" id="cropEnabled" checked>
+				</div>
+				<button id="saveSettingsCrop" class="homey-button-primary-full" onclick="saveSettingsCrop()" data-i18n="settings.tab3.saveSettingsCrop">SAVE FACE CROP SETTINGS</button>
+			</fieldset>
 		</div>
 
 		<!-- Manage Faces panel -->

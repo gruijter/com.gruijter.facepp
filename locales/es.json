@@ -35,7 +35,11 @@
             "threshold": "Umbral de confianza",
             "saveSettingsMatch": "Guardar ajustes de coincidencia facial",
             "thresholdInvalid": "El umbral debe estar entre 0 y 100",
-            "matchSaved": "¡Configuración guardada!"
+            "matchSaved": "¡Configuración guardada!",
+            "instructionsLegendCrop": "Recorte de rostro",
+            "instructionsCrop": "Añade una foto del rostro detectado al disparador. Desactívalo para omitir el procesamiento de imagen local - la detección y la coincidencia siguen funcionando, pero la foto será un marcador de posición.",
+            "cropEnabled": "Incluir una foto del rostro en el disparador",
+            "saveSettingsCrop": "Guardar ajustes de recorte de rostro"
         },
         "tab4": {
             "title": "Gestionar rostros",

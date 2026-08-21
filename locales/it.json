@@ -35,7 +35,11 @@
             "threshold": "Soglia di affidabilità",
             "saveSettingsMatch": "Salva impostazioni corrispondenza volto",
             "thresholdInvalid": "La soglia deve essere compresa tra 0 e 100",
-            "matchSaved": "Impostazioni salvate!"
+            "matchSaved": "Impostazioni salvate!",
+            "instructionsLegendCrop": "Ritaglio del volto",
+            "instructionsCrop": "Aggiunge una foto del volto rilevato al trigger. Disattiva per saltare l'elaborazione delle immagini in locale - rilevamento e corrispondenza continuano a funzionare, ma la foto sarà un segnaposto.",
+            "cropEnabled": "Includi una foto del volto nel trigger",
+            "saveSettingsCrop": "Salva impostazioni ritaglio volto"
         },
         "tab4": {
             "title": "Gestisci volti",

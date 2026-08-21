@@ -35,7 +35,11 @@
             "threshold": "Säkerhetströskel",
             "saveSettingsMatch": "Spara inställningar för ansiktsmatchning",
             "thresholdInvalid": "Tröskeln måste vara mellan 0 och 100",
-            "matchSaved": "Inställningar sparade!"
+            "matchSaved": "Inställningar sparade!",
+            "instructionsLegendCrop": "Ansiktsbeskärning",
+            "instructionsCrop": "Lägger till ett foto av det identifierade ansiktet i utlösaren. Stäng av för att hoppa över lokal bildbehandling - identifiering och matchning fungerar fortfarande, men bilden blir en platshållare.",
+            "cropEnabled": "Inkludera ett ansiktsfoto i utlösaren",
+            "saveSettingsCrop": "Spara inställningar för ansiktsbeskärning"
         },
         "tab4": {
             "title": "Hantera ansikten",

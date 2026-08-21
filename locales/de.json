@@ -35,7 +35,11 @@
             "threshold": "Zuverlässigkeitsschwelle",
             "saveSettingsMatch": "Gesichtsabgleich-Einstellungen speichern",
             "thresholdInvalid": "Schwellenwert muss zwischen 0 und 100 liegen",
-            "matchSaved": "Einstellungen wurden gespeichert!"
+            "matchSaved": "Einstellungen wurden gespeichert!",
+            "instructionsLegendCrop": "Gesichtsausschnitt",
+            "instructionsCrop": "Fügt dem Trigger ein Foto des erkannten Gesichts hinzu. Ausschalten, um lokale Bildverarbeitung zu überspringen - Erkennung und Abgleich funktionieren weiterhin, aber das Foto ist dann ein Platzhalter.",
+            "cropEnabled": "Gesichtsfoto in den Trigger aufnehmen",
+            "saveSettingsCrop": "Gesichtsausschnitt-Einstellungen speichern"
         },
         "tab4": {
             "title": "Gesichter verwalten",

@@ -35,7 +35,11 @@
             "threshold": "Confidence Threshold",
             "saveSettingsMatch": "Save Face Match Settings",
             "thresholdInvalid": "Threshold must be between 0 and 100",
-            "matchSaved": "Settings are saved!"
+            "matchSaved": "Settings are saved!",
+            "instructionsLegendCrop": "Face Crop",
+            "instructionsCrop": "Adds a snapshot photo of the detected face to the trigger. Turn off to skip local image processing - detection and matching still work, but the photo will be a placeholder instead.",
+            "cropEnabled": "Include a face snapshot in the trigger",
+            "saveSettingsCrop": "Save Face Crop Settings"
         },
         "tab4": {
             "title": "Manage Faces",
