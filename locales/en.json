@@ -7,9 +7,9 @@
             "registerTitle": "Register API Key",
             "registerInstructions": "Each Homey must use a different key. For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Manage known faces",
-            "manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
+            "manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition. You can add faces by uploading a high quality image (preferred), or by auto-adding from camera snapshots.",
             "useTitle": "How to use in a flow",
-            "useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and detailed enough (>75 pixels wide). To improve hit-rate you can send 4 snapshots after another, each with 1s extra delay."
+            "useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and detailed enough (>75 pixels wide). To improve hit-rate try to send 4 snapshots after another, each with 1s extra delay."
         },
         "tab2": {
             "title": "Log",
@@ -65,7 +65,14 @@
             "faceUpdated": "Face label is updated!",
             "deleteFaceWarning": "Delete this face? This cannot be undone.",
             "unnamedFaceLabel": "Unnamed",
-            "unnamedFaceGlassesLabel": "glasses"
+            "unnamedFaceGlassesLabel": "glasses",
+            "instructionsLegendAutoAdd": "Auto-add Faces",
+            "instructionsAutoAdd": "Automatically registers a new face when no match is found and quality is above the threshold. Off by default.",
+            "autoAddEnabled": "Automatically add unmatched faces",
+            "autoAddThreshold": "Minimum quality (0-100)",
+            "autoAddMaxCount": "Maximum auto-added faces",
+            "saveSettingsAutoAdd": "Save Auto-add Settings",
+            "addedAt": "Added"
         },
         "tab5": {
             "title": "Manage Cloud",

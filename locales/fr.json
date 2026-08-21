@@ -7,9 +7,9 @@
             "registerTitle": "Enregistrer la clé API",
             "registerInstructions": "Chaque Homey doit utiliser une clé différente. Pour une clé API gratuite, rendez-vous sur <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Gérer les visages connus",
-            "manageInstructions": "Après avoir ajouté les clés API dans l'onglet Paramètres, vous pouvez commencer à ajouter des photos de personnes connues. Elles seront utilisées pour la reconnaissance faciale.",
+            "manageInstructions": "Après avoir ajouté les clés API dans l'onglet Paramètres, vous pouvez commencer à ajouter des photos de personnes connues. Elles seront utilisées pour la reconnaissance faciale. Vous pouvez ajouter des visages en téléchargeant une image de haute qualité (préférable), ou en les ajoutant automatiquement à partir d'instantanés de caméra.",
             "useTitle": "Utilisation dans un flow",
-            "useInstructions": "Utilisez un flow pour envoyer une image de caméra à l'application. L'application essaiera de trouver des visages dans cette image et déclenchera une flowcard pour chaque visage trouvé. Notez que les visages ne seront détectés que s'ils sont (presque) de face et suffisamment détaillés (>75 pixels de large). Pour améliorer le taux de réussite, vous pouvez envoyer 4 instantanés à la suite, chacun avec 1 s de délai supplémentaire."
+            "useInstructions": "Utilisez un flow pour envoyer une image de caméra à l'application. L'application essaiera de trouver des visages dans cette image et déclenchera une flowcard pour chaque visage trouvé. Notez que les visages ne seront détectés que s'ils sont (presque) de face et suffisamment détaillés (>75 pixels de large). Pour améliorer le taux de réussite, essayez d'envoyer 4 instantanés à la suite, chacun avec 1 s de délai supplémentaire."
         },
         "tab2": {
             "title": "Journal",
@@ -65,7 +65,14 @@
             "faceUpdated": "L'étiquette du visage est mise à jour !",
             "deleteFaceWarning": "Supprimer ce visage ? Cette action est irréversible.",
             "unnamedFaceLabel": "Sans nom",
-            "unnamedFaceGlassesLabel": "lunettes"
+            "unnamedFaceGlassesLabel": "lunettes",
+            "instructionsLegendAutoAdd": "Ajout automatique de visages",
+            "instructionsAutoAdd": "Enregistre automatiquement un nouveau visage lorsqu'aucune correspondance n'est trouvée et que la qualité dépasse le seuil. Désactivé par défaut.",
+            "autoAddEnabled": "Ajouter automatiquement les visages non reconnus",
+            "autoAddThreshold": "Qualité minimale (0-100)",
+            "autoAddMaxCount": "Nombre maximal de visages ajoutés automatiquement",
+            "saveSettingsAutoAdd": "Enregistrer les paramètres d'ajout automatique",
+            "addedAt": "Ajouté"
         },
         "tab5": {
             "title": "Gérer le cloud",

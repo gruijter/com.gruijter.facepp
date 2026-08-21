@@ -7,9 +7,9 @@
             "registerTitle": "Registrera API-nyckel",
             "registerInstructions": "Varje Homey måste använda en egen nyckel. För en gratis API-nyckel, gå till <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Hantera kända ansikten",
-            "manageInstructions": "När du har lagt till API-nycklarna på fliken Inställningar kan du börja lägga till foton på kända personer. Dessa används för ansiktsigenkänning.",
+            "manageInstructions": "När du har lagt till API-nycklarna på fliken Inställningar kan du börja lägga till foton på kända personer. Dessa används för ansiktsigenkänning. Du kan lägga till ansikten genom att ladda upp en bild av hög kvalitet (att föredra), eller genom att lägga till dem automatiskt från kamerans ögonblicksbilder.",
             "useTitle": "Så använder du det i ett flöde",
-            "useInstructions": "Använd ett flöde för att skicka en kamerabild till appen. Appen försöker hitta ansikten i bilden och utlöser ett flödeskort för varje ansikte den hittar. Observera att ansikten endast upptäcks när de är (nästan) rakt framifrån och tillräckligt detaljerade (>75 pixlar breda). För att förbättra träffsäkerheten kan du skicka 4 ögonblicksbilder efter varandra, var och en med 1 s extra fördröjning."
+            "useInstructions": "Använd ett flöde för att skicka en kamerabild till appen. Appen försöker hitta ansikten i bilden och utlöser ett flödeskort för varje ansikte den hittar. Observera att ansikten endast upptäcks när de är (nästan) rakt framifrån och tillräckligt detaljerade (>75 pixlar breda). För att förbättra träffsäkerheten, försök skicka 4 ögonblicksbilder efter varandra, var och en med 1 s extra fördröjning."
         },
         "tab2": {
             "title": "Logg",
@@ -65,7 +65,14 @@
             "faceUpdated": "Ansiktsetiketten är uppdaterad!",
             "deleteFaceWarning": "Radera det här ansiktet? Detta kan inte ångras.",
             "unnamedFaceLabel": "Namnlös",
-            "unnamedFaceGlassesLabel": "glasögon"
+            "unnamedFaceGlassesLabel": "glasögon",
+            "instructionsLegendAutoAdd": "Lägg till ansikten automatiskt",
+            "instructionsAutoAdd": "Registrerar automatiskt ett nytt ansikte när ingen matchning hittas och kvaliteten är över tröskelvärdet. Avstängt som standard.",
+            "autoAddEnabled": "Lägg till okända ansikten automatiskt",
+            "autoAddThreshold": "Lägsta kvalitet (0-100)",
+            "autoAddMaxCount": "Max antal automatiskt tillagda ansikten",
+            "saveSettingsAutoAdd": "Spara inställningar för automatisk tillägg",
+            "addedAt": "Tillagd"
         },
         "tab5": {
             "title": "Hantera moln",

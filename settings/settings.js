@@ -162,6 +162,7 @@ function clearInfo() {
   document.getElementById('gender').value = '';
   document.getElementById('age').value = 0;
   document.getElementById('glass').value = '';
+  document.getElementById('addedAt').value = '';
 }
 
 function showInfo(face, detected) {
@@ -201,6 +202,8 @@ function showInfo(face, detected) {
   document.getElementById('gender').value = attributes.gender ? attributes.gender.value : '';
   document.getElementById('age').value = attributes.age ? attributes.age.value : '';
   document.getElementById('glass').value = attributes.glass ? attributes.glass.value : '';
+  // older/imported faces may predate the addedAt field entirely - just show blank
+  document.getElementById('addedAt').value = face.addedAt ? new Date(face.addedAt).toLocaleString() : '';
 }
 
 function faceSelected() {
@@ -221,7 +224,14 @@ async function fillDropdown() {
   newOption.value = null;
   dropDown.add(newOption);
   faceSet = await getFaceSet();
-  Object.keys(faceSet).forEach((key) => {
+  // manually managed faces first (in their existing order), then auto-added ones
+  // (settings.tab4 "Auto-add Faces"), oldest-added first, so the ones still awaiting
+  // review sort together at the end instead of being mixed in alphabetically
+  const keys = Object.keys(faceSet);
+  const known = keys.filter((key) => !faceSet[key].autoAdded);
+  const autoAdded = keys.filter((key) => faceSet[key].autoAdded)
+    .sort((a, b) => (faceSet[a].addedAt || 0) - (faceSet[b].addedAt || 0));
+  [...known, ...autoAdded].forEach((key) => {
     const option = document.createElement('option');
     option.text = faceSet[key].label;
     option.value = faceSet[key].face_token;
@@ -292,6 +302,9 @@ function addFace() {
 async function updateFace() {
   try {
     const fset = await getFaceSet();
+    // a manual edit here means the user has now confirmed/named this face - it no
+    // longer counts against the auto-add max count in app.js's autoAddFace()
+    delete faceInfo.autoAdded;
     fset[faceInfo.face_token] = faceInfo;
     await Homey.set('face_set', fset);
     Homey.alert(Homey.__('settings.tab4.faceUpdated'), 'info');
@@ -331,6 +344,28 @@ function deleteFace() {
       Homey.alert(Homey.__('settings.tab4.faceDeleted'), 'info');
     });
   });
+}
+
+function showAutoAddSettings() {
+  Homey.get('settingsAutoAdd', (err, set) => {
+    if (err || !set) return;
+    document.getElementById('autoAddEnabled').checked = !!set.enabled;
+    if (set.threshold !== undefined) document.getElementById('autoAddThreshold').value = set.threshold;
+    if (set.maxCount !== undefined) document.getElementById('autoAddMaxCount').value = set.maxCount;
+  });
+}
+
+async function saveSettingsAutoAdd() {
+  try {
+    const enabled = document.getElementById('autoAddEnabled').checked;
+    const threshold = document.getElementById('autoAddThreshold').value;
+    const maxCount = document.getElementById('autoAddMaxCount').value;
+    if (threshold < 1 || threshold > 100) throw Error(Homey.__('settings.tab3.thresholdInvalid'));
+    await Homey.set('settingsAutoAdd', { enabled, threshold, maxCount });
+    Homey.alert(Homey.__('settings.tab3.matchSaved'), 'info');
+  } catch (error) {
+    Homey.alert(errMsg(error), 'error');
+  }
 }
 
 // "Import faces" (other-Homeys rows) and "Import faces from cloud" (own row, sourceOuterId
@@ -506,6 +541,7 @@ function showTab(tab) {
   if (tab === 4) {
     checkKeys();
     fillDropdown();
+    showAutoAddSettings();
   }
   if (tab === 5) {
     checkKeys();

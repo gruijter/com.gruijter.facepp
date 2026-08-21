@@ -7,9 +7,9 @@
             "registerTitle": "Registra chiave API",
             "registerInstructions": "Ogni Homey deve utilizzare una chiave diversa. Per una chiave API gratuita, vai su <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Gestisci volti conosciuti",
-            "manageInstructions": "Dopo aver aggiunto le chiavi API nella scheda impostazioni, puoi iniziare ad aggiungere foto di persone conosciute. Verranno utilizzate per il riconoscimento facciale.",
+            "manageInstructions": "Dopo aver aggiunto le chiavi API nella scheda impostazioni, puoi iniziare ad aggiungere foto di persone conosciute. Verranno utilizzate per il riconoscimento facciale. Puoi aggiungere volti caricando un'immagine di alta qualità (preferibile), oppure aggiungendoli automaticamente dalle istantanee della videocamera.",
             "useTitle": "Utilizzo in un flow",
-            "useInstructions": "Usa un flow per inviare un'immagine della telecamera all'app. L'app cercherà di trovare volti in questa immagine e attiverà una flowcard per ogni volto trovato. Nota che i volti verranno rilevati solo se (quasi) frontali e sufficientemente dettagliati (>75 pixel di larghezza). Per migliorare il tasso di successo, puoi inviare 4 istantanee una dopo l'altra, ciascuna con 1 s di ritardo aggiuntivo."
+            "useInstructions": "Usa un flow per inviare un'immagine della telecamera all'app. L'app cercherà di trovare volti in questa immagine e attiverà una flowcard per ogni volto trovato. Nota che i volti verranno rilevati solo se (quasi) frontali e sufficientemente dettagliati (>75 pixel di larghezza). Per migliorare il tasso di successo, prova a inviare 4 istantanee una dopo l'altra, ciascuna con 1 s di ritardo aggiuntivo."
         },
         "tab2": {
             "title": "Registro",
@@ -65,7 +65,14 @@
             "faceUpdated": "L'etichetta del volto è stata aggiornata!",
             "deleteFaceWarning": "Eliminare questo volto? Questa azione non può essere annullata.",
             "unnamedFaceLabel": "Senza nome",
-            "unnamedFaceGlassesLabel": "occhiali"
+            "unnamedFaceGlassesLabel": "occhiali",
+            "instructionsLegendAutoAdd": "Aggiunta automatica dei volti",
+            "instructionsAutoAdd": "Registra automaticamente un nuovo volto quando non viene trovata alcuna corrispondenza e la qualità supera la soglia. Disattivato per impostazione predefinita.",
+            "autoAddEnabled": "Aggiungi automaticamente i volti non riconosciuti",
+            "autoAddThreshold": "Qualità minima (0-100)",
+            "autoAddMaxCount": "Numero massimo di volti aggiunti automaticamente",
+            "saveSettingsAutoAdd": "Salva impostazioni di aggiunta automatica",
+            "addedAt": "Aggiunto"
         },
         "tab5": {
             "title": "Gestisci cloud",

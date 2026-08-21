@@ -7,9 +7,9 @@
             "registerTitle": "Registrer API-nøgle",
             "registerInstructions": "Hver Homey skal bruge en unik nøgle. For en gratis API-nøgle, gå til <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Administrer kendte ansigter",
-            "manageInstructions": "Når du har tilføjet API-nøglerne under fanen Indstillinger, kan du begynde at tilføje billeder af kendte personer. Disse bruges til ansigtsgenkendelse.",
+            "manageInstructions": "Når du har tilføjet API-nøglerne under fanen Indstillinger, kan du begynde at tilføje billeder af kendte personer. Disse bruges til ansigtsgenkendelse. Du kan tilføje ansigter ved at uploade et billede af høj kvalitet (foretrukket), eller ved automatisk tilføjelse fra kamera-øjebliksbilleder.",
             "useTitle": "Sådan bruges det i et flow",
-            "useInstructions": "Brug et flow til at sende et kamerabillede til appen. Appen vil forsøge at finde ansigter i billedet og udløse et flowkort for hvert ansigt, den finder. Bemærk, at ansigter kun genkendes, når de er (næsten) forfra og detaljerede nok (>75 pixels brede). For at forbedre træfsikkerheden kan du sende 4 øjebliksbilleder efter hinanden, hver med 1 sekunds ekstra forsinkelse."
+            "useInstructions": "Brug et flow til at sende et kamerabillede til appen. Appen vil forsøge at finde ansigter i billedet og udløse et flowkort for hvert ansigt, den finder. Bemærk, at ansigter kun genkendes, når de er (næsten) forfra og detaljerede nok (>75 pixels brede). For at forbedre træfsikkerheden, prøv at sende 4 øjebliksbilleder efter hinanden, hver med 1 sekunds ekstra forsinkelse."
         },
         "tab2": {
             "title": "Log",
@@ -65,7 +65,14 @@
             "faceUpdated": "Ansigtsetiket er opdateret!",
             "deleteFaceWarning": "Slet dette ansigt? Dette kan ikke fortrydes.",
             "unnamedFaceLabel": "Unavngivet",
-            "unnamedFaceGlassesLabel": "briller"
+            "unnamedFaceGlassesLabel": "briller",
+            "instructionsLegendAutoAdd": "Tilføj ansigter automatisk",
+            "instructionsAutoAdd": "Registrerer automatisk et nyt ansigt, når der ikke findes noget match, og kvaliteten er over grænseværdien. Fra som standard.",
+            "autoAddEnabled": "Tilføj ukendte ansigter automatisk",
+            "autoAddThreshold": "Minimumskvalitet (0-100)",
+            "autoAddMaxCount": "Maksimalt antal automatisk tilføjede ansigter",
+            "saveSettingsAutoAdd": "Gem indstillinger for automatisk tilføjelse",
+            "addedAt": "Tilføjet"
         },
         "tab5": {
             "title": "Administrer cloud",

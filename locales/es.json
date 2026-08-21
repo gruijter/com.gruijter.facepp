@@ -7,9 +7,9 @@
             "registerTitle": "Registrar clave API",
             "registerInstructions": "Cada Homey debe usar una clave diferente. Para obtener una clave API gratuita, vaya a <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Gestionar rostros conocidos",
-            "manageInstructions": "Después de agregar las claves API en la pestaña de configuración, puede comenzar a agregar fotos de personas conocidas. Se utilizarán para el reconocimiento facial.",
+            "manageInstructions": "Después de agregar las claves API en la pestaña de configuración, puede comenzar a agregar fotos de personas conocidas. Se utilizarán para el reconocimiento facial. Puedes añadir caras subiendo una imagen de alta calidad (preferible), o añadiéndolas automáticamente a partir de instantáneas de cámara.",
             "useTitle": "Uso en un flow",
-            "useInstructions": "Use un flow para enviar una imagen de cámara a la aplicación. La aplicación intentará encontrar caras en esta imagen y activará una flowcard por cada cara que encuentre. Tenga en cuenta que las caras solo se detectarán cuando estén (casi) de frente y con suficiente detalle (>75 píxeles de ancho). Para mejorar la tasa de acierto, puedes enviar 4 instantáneas seguidas, cada una con 1 s de retraso adicional."
+            "useInstructions": "Use un flow para enviar una imagen de cámara a la aplicación. La aplicación intentará encontrar caras en esta imagen y activará una flowcard por cada cara que encuentre. Tenga en cuenta que las caras solo se detectarán cuando estén (casi) de frente y con suficiente detalle (>75 píxeles de ancho). Para mejorar la tasa de acierto, intenta enviar 4 instantáneas seguidas, cada una con 1 s de retraso adicional."
         },
         "tab2": {
             "title": "Registro",
@@ -65,7 +65,14 @@
             "faceUpdated": "¡Etiqueta del rostro actualizada!",
             "deleteFaceWarning": "¿Eliminar esta cara? Esta acción no se puede deshacer.",
             "unnamedFaceLabel": "Sin nombre",
-            "unnamedFaceGlassesLabel": "gafas"
+            "unnamedFaceGlassesLabel": "gafas",
+            "instructionsLegendAutoAdd": "Añadir caras automáticamente",
+            "instructionsAutoAdd": "Registra automáticamente una cara nueva cuando no se encuentra coincidencia y la calidad supera el umbral. Desactivado por defecto.",
+            "autoAddEnabled": "Añadir automáticamente caras no reconocidas",
+            "autoAddThreshold": "Calidad mínima (0-100)",
+            "autoAddMaxCount": "Número máximo de caras añadidas automáticamente",
+            "saveSettingsAutoAdd": "Guardar ajustes de adición automática",
+            "addedAt": "Añadido"
         },
         "tab5": {
             "title": "Gestionar la nube",

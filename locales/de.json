@@ -7,9 +7,9 @@
             "registerTitle": "API-Schlüssel registrieren",
             "registerInstructions": "Jede Homey muss einen eigenen Schlüssel verwenden. Einen kostenlosen API-Schlüssel erhalten Sie unter <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Bekannte Gesichter verwalten",
-            "manageInstructions": "Nachdem Sie die API-Schlüssel im Einstellungen-Tab hinzugefügt haben, können Sie Fotos von bekannten Personen hinzufügen. Diese werden für die Gesichtserkennung verwendet.",
+            "manageInstructions": "Nachdem Sie die API-Schlüssel im Einstellungen-Tab hinzugefügt haben, können Sie Fotos von bekannten Personen hinzufügen. Diese werden für die Gesichtserkennung verwendet. Du kannst Gesichter hinzufügen, indem du ein hochwertiges Bild hochlädst (bevorzugt), oder indem du sie automatisch aus Kamera-Schnappschüssen hinzufügen lässt.",
             "useTitle": "Verwendung in einem Flow",
-            "useInstructions": "Verwenden Sie einen Flow, um ein Kamerabild an die App zu senden. Die App versucht, Gesichter in diesem Bild zu finden, und löst für jedes gefundene Gesicht eine Flowcard aus. Beachten Sie, dass Gesichter nur erkannt werden, wenn sie (fast) frontal und detailliert genug sind (>75 Pixel breit). Um die Trefferquote zu verbessern, kannst du 4 Schnappschüsse nacheinander senden, jeweils mit 1 s zusätzlicher Verzögerung."
+            "useInstructions": "Verwenden Sie einen Flow, um ein Kamerabild an die App zu senden. Die App versucht, Gesichter in diesem Bild zu finden, und löst für jedes gefundene Gesicht eine Flowcard aus. Beachten Sie, dass Gesichter nur erkannt werden, wenn sie (fast) frontal und detailliert genug sind (>75 Pixel breit). Um die Trefferquote zu verbessern, versuche 4 Schnappschüsse nacheinander zu senden, jeweils mit 1 s zusätzlicher Verzögerung."
         },
         "tab2": {
             "title": "Protokoll",
@@ -65,7 +65,14 @@
             "faceUpdated": "Gesichtsbezeichnung wurde aktualisiert!",
             "deleteFaceWarning": "Dieses Gesicht löschen? Dies kann nicht rückgängig gemacht werden.",
             "unnamedFaceLabel": "Unbenannt",
-            "unnamedFaceGlassesLabel": "Brille"
+            "unnamedFaceGlassesLabel": "Brille",
+            "instructionsLegendAutoAdd": "Gesichter automatisch hinzufügen",
+            "instructionsAutoAdd": "Registriert automatisch ein neues Gesicht, wenn keine Übereinstimmung gefunden wird und die Qualität über dem Schwellenwert liegt. Standardmäßig aus.",
+            "autoAddEnabled": "Nicht zugeordnete Gesichter automatisch hinzufügen",
+            "autoAddThreshold": "Mindestqualität (0-100)",
+            "autoAddMaxCount": "Maximale Anzahl automatisch hinzugefügter Gesichter",
+            "saveSettingsAutoAdd": "Automatisch-hinzufügen-Einstellungen speichern",
+            "addedAt": "Hinzugefügt"
         },
         "tab5": {
             "title": "Cloud verwalten",

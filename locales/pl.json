@@ -7,9 +7,9 @@
             "registerTitle": "Zarejestruj klucz API",
             "registerInstructions": "Każdy Homey musi używać innego klucza. Aby uzyskać bezpłatny klucz API, przejdź do <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Zarządzaj znanymi twarzami",
-            "manageInstructions": "Po dodaniu kluczy API w zakładce Ustawienia możesz zacząć dodawać zdjęcia znanych osób. Będą one używane do rozpoznawania twarzy.",
+            "manageInstructions": "Po dodaniu kluczy API w zakładce Ustawienia możesz zacząć dodawać zdjęcia znanych osób. Będą one używane do rozpoznawania twarzy. Możesz dodawać twarze, przesyłając zdjęcie w wysokiej jakości (preferowane), lub dodając je automatycznie ze zdjęć z kamery.",
             "useTitle": "Jak używać w przepływie",
-            "useInstructions": "Użyj przepływu, aby wysłać obraz z kamery do aplikacji. Aplikacja spróbuje znaleźć twarze na tym obrazie i uruchomi kartę przepływu dla każdej znalezionej twarzy. Pamiętaj, że twarze zostaną wykryte tylko wtedy, gdy są (niemal) frontalne i wystarczająco szczegółowe (>75 pikseli szerokości). Aby zwiększyć skuteczność, możesz wysłać 4 zdjęcia jedno po drugim, każde z dodatkowym opóźnieniem 1 s."
+            "useInstructions": "Użyj przepływu, aby wysłać obraz z kamery do aplikacji. Aplikacja spróbuje znaleźć twarze na tym obrazie i uruchomi kartę przepływu dla każdej znalezionej twarzy. Pamiętaj, że twarze zostaną wykryte tylko wtedy, gdy są (niemal) frontalne i wystarczająco szczegółowe (>75 pikseli szerokości). Aby zwiększyć skuteczność, spróbuj wysłać 4 zdjęcia jedno po drugim, każde z dodatkowym opóźnieniem 1 s."
         },
         "tab2": {
             "title": "Dziennik",
@@ -65,7 +65,14 @@
             "faceUpdated": "Etykieta twarzy została zaktualizowana!",
             "deleteFaceWarning": "Usunąć tę twarz? Tej czynności nie można cofnąć.",
             "unnamedFaceLabel": "Bez nazwy",
-            "unnamedFaceGlassesLabel": "okulary"
+            "unnamedFaceGlassesLabel": "okulary",
+            "instructionsLegendAutoAdd": "Automatyczne dodawanie twarzy",
+            "instructionsAutoAdd": "Automatycznie rejestruje nową twarz, gdy nie znaleziono dopasowania, a jakość przekracza próg. Domyślnie wyłączone.",
+            "autoAddEnabled": "Automatycznie dodawaj nierozpoznane twarze",
+            "autoAddThreshold": "Minimalna jakość (0-100)",
+            "autoAddMaxCount": "Maksymalna liczba automatycznie dodanych twarzy",
+            "saveSettingsAutoAdd": "Zapisz ustawienia automatycznego dodawania",
+            "addedAt": "Dodano"
         },
         "tab5": {
             "title": "Zarządzaj chmurą",

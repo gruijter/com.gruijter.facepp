@@ -121,9 +121,32 @@
 					<label class="homey-form-label" for="glass" data-i18n="settings.tab4.glass">GLASS</label>
 					<input class="homey-form-input" id="glass" type="text" readonly>
 				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="addedAt" data-i18n="settings.tab4.addedAt">ADDED</label>
+					<input class="homey-form-input" id="addedAt" type="text" value="" readonly>
+				</div>
 
 				<button id="saveFace" class="homey-button-primary" onclick="saveFace()" data-i18n="settings.tab4.saveFace">SAVE</button>
 				<button id="deleteFace" class="homey-button-danger" onclick="deleteFace()" data-i18n="settings.tab4.deleteFace">DELETE</button>
+			</fieldset>
+
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab4.instructionsLegendAutoAdd">AUTO-ADD FACES</legend>
+				<p data-i18n="settings.tab4.instructionsAutoAdd">Instructions</p>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="autoAddEnabled" data-i18n="settings.tab4.autoAddEnabled">Automatically add unmatched faces</label>
+					<input type="checkbox" id="autoAddEnabled">
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="autoAddThreshold" data-i18n="settings.tab4.autoAddThreshold">Minimum quality (0-100)</label>
+					<input class="homey-form-input" id="autoAddThreshold" type="number" min="1" max="100" value="80">
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="autoAddMaxCount" data-i18n="settings.tab4.autoAddMaxCount">Maximum auto-added faces</label>
+					<input class="homey-form-input" id="autoAddMaxCount" type="number" min="1" value="20">
+				</div>
+				<button id="saveSettingsAutoAdd" class="homey-button-primary-full" onclick="saveSettingsAutoAdd()" data-i18n="settings.tab4.saveSettingsAutoAdd">SAVE AUTO-ADD SETTINGS</button>
 			</fieldset>
 		</div>
 

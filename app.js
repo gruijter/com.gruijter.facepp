@@ -239,6 +239,44 @@ class FaceApp extends Homey.App {
     return this.noCropImage;
   }
 
+  // registers an unmatched, high-quality detected face as a new known face (settings.tab4
+  // "Auto-add Faces", off by default). Reuses the already-decoded raster when available
+  // (crop enabled) but decodes on demand otherwise - auto-add only fires for genuinely
+  // new, unmatched faces, so this is rare enough that the extra decode is a non-issue even
+  // with cropping turned off. Mirrors addFace()'s Face++ + local face_set bookkeeping, and
+  // labels the face the same way fetchForeignFaces() labels an import with no real name.
+  async autoAddFace(face, decodedImage, imgBuffer) {
+    const homeySet = this.homey.settings.get('face_set') || {};
+    const autoAddedCount = Object.values(homeySet).filter((entry) => entry.autoAdded).length;
+    const settings = this.homey.settings.get('settingsAutoAdd') || {};
+    const maxCount = Number(settings.maxCount) || 20;
+    if (autoAddedCount >= maxCount) {
+      this.log(`auto-add: skipped, max auto-added faces (${maxCount}) already reached`);
+      return null;
+    }
+
+    const raster = decodedImage || decodeJpeg(imgBuffer);
+    const scaledBounds = scaleRegionToDecoded(raster, face.face_rectangle);
+    const croppedFace = cropDecoded(raster, scaledBounds);
+    fs.writeFileSync(`/userdata/${face.face_token}.img`, croppedFace);
+
+    await this.FAPI.fsAddFace({ outer_id: this.outerID, face_tokens: face.face_token });
+
+    const glassesWord = this.homey.__('settings.tab4.unnamedFaceGlassesLabel');
+    const label = `${this.homey.__('settings.tab4.unnamedFaceLabel')} ${face.attributes.gender.value} ${face.attributes.age.value} ${glassesWord}: ${face.attributes.glass.value}`;
+    await this.FAPI.setFaceUserId({ face_token: face.face_token, user_id: sanitizeUserId(label) })
+      .catch((error) => this.error('failed to tag auto-added face with its label:', error));
+
+    const faceInfo = {
+      ...face, label, autoAdded: true, addedAt: Date.now(),
+    };
+    const faceSet = this.homey.settings.get('face_set') || {};
+    faceSet[face.face_token] = faceInfo;
+    this.homey.settings.set('face_set', faceSet);
+    this.log('auto-added face', label);
+    return faceInfo;
+  }
+
   // returns a formatted array of recognised faces, and triggers flowCards.
   // Serialized across calls via _searchFaces so two trigger images arriving in quick
   // succession never process at the same time - extra safety margin on top of
@@ -300,6 +338,22 @@ class FaceApp extends Homey.App {
                 tokens.label = homeySet[bestMatch.face_token].label;
                 tokens.confidence = bestMatch.confidence;
                 tokens.token = homeySet[bestMatch.face_token].face_token;
+              }
+            }
+          }
+
+          if (tokens.label === 'NOMATCH') {
+            const autoAddSettings = this.homey.settings.get('settingsAutoAdd') || {};
+            const qualityThreshold = Number(autoAddSettings.threshold) || 80;
+            if (autoAddSettings.enabled && face.attributes.facequality.value > qualityThreshold) {
+              const added = await this.autoAddFace(face, decodedImage, imgBuffer)
+                .catch((error) => {
+                  this.error('auto-add face failed:', error); return null;
+                });
+              if (added) {
+                tokens.label = added.label;
+                tokens.confidence = 100;
+                tokens.token = face.face_token;
               }
             }
           }
@@ -695,7 +749,7 @@ class FaceApp extends Homey.App {
 
     // store face persistent in Homey
     const faceSet = this.homey.settings.get('face_set') || {};
-    faceSet[body.faceInfo.face_token] = body.faceInfo;
+    faceSet[body.faceInfo.face_token] = { ...body.faceInfo, addedAt: Date.now() };
     this.homey.settings.set('face_set', faceSet);
     this.log('added face', options);
     return true;

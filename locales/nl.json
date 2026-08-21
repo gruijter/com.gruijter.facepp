@@ -7,9 +7,9 @@
             "registerTitle": "API-sleutel registreren",
             "registerInstructions": "Elke Homey moet een andere sleutel gebruiken. Voor een gratis API-sleutel, ga naar <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
             "manageTitle": "Bekende gezichten beheren",
-            "manageInstructions": "Nadat u de API-sleutels heeft toegevoegd op het tabblad Instellingen, kunt u foto's van bekende personen toevoegen. Deze worden gebruikt voor gezichtsherkenning.",
+            "manageInstructions": "Nadat u de API-sleutels heeft toegevoegd op het tabblad Instellingen, kunt u foto's van bekende personen toevoegen. Deze worden gebruikt voor gezichtsherkenning. Je kunt gezichten toevoegen door een foto van hoge kwaliteit te uploaden (voorkeur), of door automatisch toe te voegen vanuit camera-snapshots.",
             "useTitle": "Gebruik in een flow",
-            "useInstructions": "Gebruik een flow om een camerabeeld naar de app te sturen. De app probeert gezichten in dit beeld te vinden en activeert een flowcard voor elk gevonden gezicht. Let op: gezichten worden alleen herkend als ze (bijna) recht van voren zichtbaar zijn en voldoende detail bevatten (>75 pixels breed). Om de trefkans te verbeteren kun je 4 momentopnames na elkaar sturen, elk met 1s extra vertraging."
+            "useInstructions": "Gebruik een flow om een camerabeeld naar de app te sturen. De app probeert gezichten in dit beeld te vinden en activeert een flowcard voor elk gevonden gezicht. Let op: gezichten worden alleen herkend als ze (bijna) recht van voren zichtbaar zijn en voldoende detail bevatten (>75 pixels breed). Om de trefkans te verbeteren, probeer 4 momentopnames na elkaar te sturen, elk met 1s extra vertraging."
         },
         "tab2": {
             "title": "Logboek",
@@ -65,7 +65,14 @@
             "faceUpdated": "Gezichtslabel is bijgewerkt!",
             "deleteFaceWarning": "Dit gezicht verwijderen? Dit kan niet ongedaan worden gemaakt.",
             "unnamedFaceLabel": "Naamloos",
-            "unnamedFaceGlassesLabel": "bril"
+            "unnamedFaceGlassesLabel": "bril",
+            "instructionsLegendAutoAdd": "Gezichten automatisch toevoegen",
+            "instructionsAutoAdd": "Registreert automatisch een nieuw gezicht als er geen match is en de kwaliteit boven de drempel ligt. Standaard uit.",
+            "autoAddEnabled": "Onbekende gezichten automatisch toevoegen",
+            "autoAddThreshold": "Minimale kwaliteit (0-100)",
+            "autoAddMaxCount": "Maximum aantal automatisch toegevoegde gezichten",
+            "saveSettingsAutoAdd": "Bewaar auto-toevoeg-instellingen",
+            "addedAt": "Toegevoegd"
         },
         "tab5": {
             "title": "Cloud beheren",
