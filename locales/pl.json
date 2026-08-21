@@ -9,7 +9,7 @@
             "manageTitle": "Zarządzaj znanymi twarzami",
             "manageInstructions": "Po dodaniu kluczy API w zakładce Ustawienia możesz zacząć dodawać zdjęcia znanych osób. Będą one używane do rozpoznawania twarzy.",
             "useTitle": "Jak używać w przepływie",
-            "useInstructions": "Użyj przepływu, aby wysłać obraz z kamery do aplikacji. Aplikacja spróbuje znaleźć twarze na tym obrazie i uruchomi kartę przepływu dla każdej znalezionej twarzy. Pamiętaj, że twarze zostaną wykryte tylko wtedy, gdy są (niemal) frontalne i wystarczająco szczegółowe (>75 pikseli szerokości)."
+            "useInstructions": "Użyj przepływu, aby wysłać obraz z kamery do aplikacji. Aplikacja spróbuje znaleźć twarze na tym obrazie i uruchomi kartę przepływu dla każdej znalezionej twarzy. Pamiętaj, że twarze zostaną wykryte tylko wtedy, gdy są (niemal) frontalne i wystarczająco szczegółowe (>75 pikseli szerokości). Aby zwiększyć skuteczność, możesz wysłać 4 zdjęcia jedno po drugim, każde z dodatkowym opóźnieniem 1 s."
         },
         "tab2": {
             "title": "Dziennik",

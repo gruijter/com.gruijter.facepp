@@ -9,7 +9,7 @@
             "manageTitle": "Gestionar rostros conocidos",
             "manageInstructions": "Después de agregar las claves API en la pestaña de configuración, puede comenzar a agregar fotos de personas conocidas. Se utilizarán para el reconocimiento facial.",
             "useTitle": "Uso en un flow",
-            "useInstructions": "Use un flow para enviar una imagen de cámara a la aplicación. La aplicación intentará encontrar caras en esta imagen y activará una flowcard por cada cara que encuentre. Tenga en cuenta que las caras solo se detectarán cuando estén (casi) de frente y con suficiente detalle (>75 píxeles de ancho)."
+            "useInstructions": "Use un flow para enviar una imagen de cámara a la aplicación. La aplicación intentará encontrar caras en esta imagen y activará una flowcard por cada cara que encuentre. Tenga en cuenta que las caras solo se detectarán cuando estén (casi) de frente y con suficiente detalle (>75 píxeles de ancho). Para mejorar la tasa de acierto, puedes enviar 4 instantáneas seguidas, cada una con 1 s de retraso adicional."
         },
         "tab2": {
             "title": "Registro",

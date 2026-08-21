@@ -9,7 +9,7 @@
             "manageTitle": "Administrer kendte ansigter",
             "manageInstructions": "Når du har tilføjet API-nøglerne under fanen Indstillinger, kan du begynde at tilføje billeder af kendte personer. Disse bruges til ansigtsgenkendelse.",
             "useTitle": "Sådan bruges det i et flow",
-            "useInstructions": "Brug et flow til at sende et kamerabillede til appen. Appen vil forsøge at finde ansigter i billedet og udløse et flowkort for hvert ansigt, den finder. Bemærk, at ansigter kun genkendes, når de er (næsten) forfra og detaljerede nok (>75 pixels brede)."
+            "useInstructions": "Brug et flow til at sende et kamerabillede til appen. Appen vil forsøge at finde ansigter i billedet og udløse et flowkort for hvert ansigt, den finder. Bemærk, at ansigter kun genkendes, når de er (næsten) forfra og detaljerede nok (>75 pixels brede). For at forbedre træfsikkerheden kan du sende 4 øjebliksbilleder efter hinanden, hver med 1 sekunds ekstra forsinkelse."
         },
         "tab2": {
             "title": "Log",

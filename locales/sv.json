@@ -9,7 +9,7 @@
             "manageTitle": "Hantera kända ansikten",
             "manageInstructions": "När du har lagt till API-nycklarna på fliken Inställningar kan du börja lägga till foton på kända personer. Dessa används för ansiktsigenkänning.",
             "useTitle": "Så använder du det i ett flöde",
-            "useInstructions": "Använd ett flöde för att skicka en kamerabild till appen. Appen försöker hitta ansikten i bilden och utlöser ett flödeskort för varje ansikte den hittar. Observera att ansikten endast upptäcks när de är (nästan) rakt framifrån och tillräckligt detaljerade (>75 pixlar breda)."
+            "useInstructions": "Använd ett flöde för att skicka en kamerabild till appen. Appen försöker hitta ansikten i bilden och utlöser ett flödeskort för varje ansikte den hittar. Observera att ansikten endast upptäcks när de är (nästan) rakt framifrån och tillräckligt detaljerade (>75 pixlar breda). För att förbättra träffsäkerheten kan du skicka 4 ögonblicksbilder efter varandra, var och en med 1 s extra fördröjning."
         },
         "tab2": {
             "title": "Logg",

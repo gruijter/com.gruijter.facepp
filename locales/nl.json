@@ -9,7 +9,7 @@
             "manageTitle": "Bekende gezichten beheren",
             "manageInstructions": "Nadat u de API-sleutels heeft toegevoegd op het tabblad Instellingen, kunt u foto's van bekende personen toevoegen. Deze worden gebruikt voor gezichtsherkenning.",
             "useTitle": "Gebruik in een flow",
-            "useInstructions": "Gebruik een flow om een camerabeeld naar de app te sturen. De app probeert gezichten in dit beeld te vinden en activeert een flowcard voor elk gevonden gezicht. Let op: gezichten worden alleen herkend als ze (bijna) recht van voren zichtbaar zijn en voldoende detail bevatten (>75 pixels breed)."
+            "useInstructions": "Gebruik een flow om een camerabeeld naar de app te sturen. De app probeert gezichten in dit beeld te vinden en activeert een flowcard voor elk gevonden gezicht. Let op: gezichten worden alleen herkend als ze (bijna) recht van voren zichtbaar zijn en voldoende detail bevatten (>75 pixels breed). Om de trefkans te verbeteren kun je 4 momentopnames na elkaar sturen, elk met 1s extra vertraging."
         },
         "tab2": {
             "title": "Logboek",

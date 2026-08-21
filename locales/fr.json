@@ -9,7 +9,7 @@
             "manageTitle": "Gérer les visages connus",
             "manageInstructions": "Après avoir ajouté les clés API dans l'onglet Paramètres, vous pouvez commencer à ajouter des photos de personnes connues. Elles seront utilisées pour la reconnaissance faciale.",
             "useTitle": "Utilisation dans un flow",
-            "useInstructions": "Utilisez un flow pour envoyer une image de caméra à l'application. L'application essaiera de trouver des visages dans cette image et déclenchera une flowcard pour chaque visage trouvé. Notez que les visages ne seront détectés que s'ils sont (presque) de face et suffisamment détaillés (>75 pixels de large)."
+            "useInstructions": "Utilisez un flow pour envoyer une image de caméra à l'application. L'application essaiera de trouver des visages dans cette image et déclenchera une flowcard pour chaque visage trouvé. Notez que les visages ne seront détectés que s'ils sont (presque) de face et suffisamment détaillés (>75 pixels de large). Pour améliorer le taux de réussite, vous pouvez envoyer 4 instantanés à la suite, chacun avec 1 s de délai supplémentaire."
         },
         "tab2": {
             "title": "Journal",

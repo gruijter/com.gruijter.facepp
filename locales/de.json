@@ -9,7 +9,7 @@
             "manageTitle": "Bekannte Gesichter verwalten",
             "manageInstructions": "Nachdem Sie die API-Schlüssel im Einstellungen-Tab hinzugefügt haben, können Sie Fotos von bekannten Personen hinzufügen. Diese werden für die Gesichtserkennung verwendet.",
             "useTitle": "Verwendung in einem Flow",
-            "useInstructions": "Verwenden Sie einen Flow, um ein Kamerabild an die App zu senden. Die App versucht, Gesichter in diesem Bild zu finden, und löst für jedes gefundene Gesicht eine Flowcard aus. Beachten Sie, dass Gesichter nur erkannt werden, wenn sie (fast) frontal und detailliert genug sind (>75 Pixel breit)."
+            "useInstructions": "Verwenden Sie einen Flow, um ein Kamerabild an die App zu senden. Die App versucht, Gesichter in diesem Bild zu finden, und löst für jedes gefundene Gesicht eine Flowcard aus. Beachten Sie, dass Gesichter nur erkannt werden, wenn sie (fast) frontal und detailliert genug sind (>75 Pixel breit). Um die Trefferquote zu verbessern, kannst du 4 Schnappschüsse nacheinander senden, jeweils mit 1 s zusätzlicher Verzögerung."
         },
         "tab2": {
             "title": "Protokoll",

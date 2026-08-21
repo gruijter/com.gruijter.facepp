@@ -9,7 +9,7 @@
             "manageTitle": "Gestisci volti conosciuti",
             "manageInstructions": "Dopo aver aggiunto le chiavi API nella scheda impostazioni, puoi iniziare ad aggiungere foto di persone conosciute. Verranno utilizzate per il riconoscimento facciale.",
             "useTitle": "Utilizzo in un flow",
-            "useInstructions": "Usa un flow per inviare un'immagine della telecamera all'app. L'app cercherà di trovare volti in questa immagine e attiverà una flowcard per ogni volto trovato. Nota che i volti verranno rilevati solo se (quasi) frontali e sufficientemente dettagliati (>75 pixel di larghezza)."
+            "useInstructions": "Usa un flow per inviare un'immagine della telecamera all'app. L'app cercherà di trovare volti in questa immagine e attiverà una flowcard per ogni volto trovato. Nota che i volti verranno rilevati solo se (quasi) frontali e sufficientemente dettagliati (>75 pixel di larghezza). Per migliorare il tasso di successo, puoi inviare 4 istantanee una dopo l'altra, ciascuna con 1 s di ritardo aggiuntivo."
         },
         "tab2": {
             "title": "Registro",
