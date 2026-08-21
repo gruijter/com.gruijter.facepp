@@ -1,15 +1,39 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.gruijter.facepp",
-  "version": "2.0.2",
-  "compatibility": ">=5.0.0",
+  "version": "3.0.0",
+  "compatibility": ">=12.9.0",
   "sdk": 3,
   "brandColor": "#df2d20",
   "name": {
-    "en": "Face++"
+    "en": "Face++",
+    "nl": "Face++",
+    "de": "Face++",
+    "fr": "Face++",
+    "es": "Face++",
+    "it": "Face++",
+    "da": "Face++",
+    "sv": "Face++",
+    "no": "Face++",
+    "pl": "Face++",
+    "ru": "Face++",
+    "ar": "Face++",
+    "ko": "Face++"
   },
   "description": {
-    "en": "Face recognition for Homey"
+    "en": "Face recognition for Homey",
+    "nl": "Gezichtsherkenning voor Homey",
+    "de": "Gesichtserkennung für Homey",
+    "fr": "Reconnaissance faciale pour Homey",
+    "es": "Reconocimiento facial para Homey",
+    "it": "Riconoscimento facciale per Homey",
+    "da": "Ansigtsgenkendelse til Homey",
+    "sv": "Ansiktsigenkänning för Homey",
+    "no": "Ansiktsgjenkjenning for Homey",
+    "pl": "Rozpoznawanie twarzy dla Homey",
+    "ru": "Распознавание лиц для Homey",
+    "ar": "التعرف على الوجه لـ Homey",
+    "ko": "Homey를 위한 얼굴 인식"
   },
   "category": [
     "localization",
@@ -22,6 +46,78 @@
       "video",
       "analytics",
       "biometrics"
+    ],
+    "nl": [
+      "gezichtsherkenning",
+      "video",
+      "analyse",
+      "biometrie"
+    ],
+    "de": [
+      "Gesichtserkennung",
+      "Video",
+      "Analyse",
+      "Biometrie"
+    ],
+    "fr": [
+      "reconnaissance faciale",
+      "vidéo",
+      "analyse",
+      "biométrie"
+    ],
+    "es": [
+      "reconocimiento facial",
+      "vídeo",
+      "análisis",
+      "biometría"
+    ],
+    "it": [
+      "riconoscimento facciale",
+      "video",
+      "analisi",
+      "biometria"
+    ],
+    "da": [
+      "ansigtsgenkendelse",
+      "video",
+      "analyse",
+      "biometri"
+    ],
+    "sv": [
+      "ansiktsigenkänning",
+      "video",
+      "analys",
+      "biometri"
+    ],
+    "no": [
+      "ansiktsgjenkjenning",
+      "video",
+      "analyse",
+      "biometri"
+    ],
+    "pl": [
+      "rozpoznawanie twarzy",
+      "wideo",
+      "analityka",
+      "biometria"
+    ],
+    "ru": [
+      "распознавание лиц",
+      "видео",
+      "аналитика",
+      "биометрия"
+    ],
+    "ar": [
+      "التعرف على الوجه",
+      "فيديو",
+      "تحليلات",
+      "القياسات الحيوية"
+    ],
+    "ko": [
+      "얼굴 인식",
+      "비디오",
+      "분석",
+      "생체 인식"
     ]
   },
   "permissions": [],
@@ -34,9 +130,9 @@
       "method": "get",
       "path": "/deletelogs"
     },
-    "getFaceSet": {
+    "testApiKey": {
       "method": "post",
-      "path": "/getfaces/"
+      "path": "/testapikey/"
     },
     "detectFaces": {
       "method": "post",
@@ -49,6 +145,26 @@
     "deleteFace": {
       "method": "post",
       "path": "/deleteface/"
+    },
+    "fetchFaces": {
+      "method": "post",
+      "path": "/facesets/import/"
+    },
+    "listFacesets": {
+      "method": "get",
+      "path": "/facesets/"
+    },
+    "getFacesetFaceCount": {
+      "method": "post",
+      "path": "/facesets/count/"
+    },
+    "deleteForeignFaceset": {
+      "method": "post",
+      "path": "/facesets/delete/"
+    },
+    "resyncOwnFaceset": {
+      "method": "post",
+      "path": "/facesets/resync/"
     }
   },
   "images": {
@@ -73,7 +189,7 @@
     ]
   },
   "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
-  "license": " GPL-3.0-or-later",
+  "license": "GPL-3.0-or-later",
   "contributing": {
     "donate": {
       "paypal": {
@@ -93,14 +209,38 @@
       {
         "id": "face_detected",
         "title": {
-          "en": "Face detected"
+          "en": "Face detected",
+          "nl": "Gezicht gedetecteerd",
+          "de": "Gesicht erkannt",
+          "fr": "Visage détecté",
+          "es": "Rostro detectado",
+          "it": "Volto rilevato",
+          "da": "Ansigt registreret",
+          "sv": "Ansikte upptäckt",
+          "no": "Ansikt oppdaget",
+          "pl": "Wykryto twarz",
+          "ru": "Обнаружено лицо",
+          "ar": "تم اكتشاف وجه",
+          "ko": "얼굴 감지됨"
         },
         "tokens": [
           {
             "name": "origin",
             "type": "string",
             "title": {
-              "en": "origin"
+              "en": "origin",
+              "nl": "herkomst",
+              "de": "Herkunft",
+              "fr": "origine",
+              "es": "origen",
+              "it": "origine",
+              "da": "oprindelse",
+              "sv": "ursprung",
+              "no": "opprinnelse",
+              "pl": "źródło",
+              "ru": "источник",
+              "ar": "المصدر",
+              "ko": "출처"
             },
             "example": "Ring camera"
           },
@@ -108,7 +248,19 @@
             "name": "label",
             "type": "string",
             "title": {
-              "en": "label"
+              "en": "label",
+              "nl": "label",
+              "de": "Bezeichnung",
+              "fr": "étiquette",
+              "es": "etiqueta",
+              "it": "etichetta",
+              "da": "etiket",
+              "sv": "etikett",
+              "no": "etikett",
+              "pl": "etykieta",
+              "ru": "метка",
+              "ar": "التسمية",
+              "ko": "라벨"
             },
             "example": "John Doe"
           },
@@ -116,7 +268,19 @@
             "name": "confidence",
             "type": "number",
             "title": {
-              "en": "confidence"
+              "en": "confidence",
+              "nl": "betrouwbaarheid",
+              "de": "Zuverlässigkeit",
+              "fr": "confiance",
+              "es": "confianza",
+              "it": "affidabilità",
+              "da": "sikkerhed",
+              "sv": "säkerhet",
+              "no": "sikkerhet",
+              "pl": "pewność",
+              "ru": "достоверность",
+              "ar": "مستوى الثقة",
+              "ko": "신뢰도"
             },
             "example": 96.35
           },
@@ -124,17 +288,53 @@
             "name": "token",
             "type": "string",
             "title": {
-              "en": "token"
+              "en": "token",
+              "nl": "token",
+              "de": "Token",
+              "fr": "jeton",
+              "es": "token",
+              "it": "token",
+              "da": "token",
+              "sv": "token",
+              "no": "token",
+              "pl": "token",
+              "ru": "токен",
+              "ar": "الرمز المميز",
+              "ko": "토큰"
             },
             "example": {
-              "en": "0d32892fad08a6b2b4f0fb92c814ad8c"
+              "en": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "nl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "de": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "fr": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "es": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "it": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "da": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "sv": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "no": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "pl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ru": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ar": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ko": "0d32892fad08a6b2b4f0fb92c814ad8c"
             }
           },
           {
             "name": "quality",
             "type": "number",
             "title": {
-              "en": "quality"
+              "en": "quality",
+              "nl": "kwaliteit",
+              "de": "Qualität",
+              "fr": "qualité",
+              "es": "calidad",
+              "it": "qualità",
+              "da": "kvalitet",
+              "sv": "kvalitet",
+              "no": "kvalitet",
+              "pl": "jakość",
+              "ru": "качество",
+              "ar": "الجودة",
+              "ko": "품질"
             },
             "example": 92.12
           },
@@ -142,17 +342,53 @@
             "name": "gender",
             "type": "string",
             "title": {
-              "en": "gender"
+              "en": "gender",
+              "nl": "geslacht",
+              "de": "Geschlecht",
+              "fr": "sexe",
+              "es": "género",
+              "it": "genere",
+              "da": "køn",
+              "sv": "kön",
+              "no": "kjønn",
+              "pl": "płeć",
+              "ru": "пол",
+              "ar": "الجنس",
+              "ko": "성별"
             },
             "example": {
-              "en": "Male"
+              "en": "Male",
+              "nl": "Man",
+              "de": "Männlich",
+              "fr": "Homme",
+              "es": "Hombre",
+              "it": "Uomo",
+              "da": "Mand",
+              "sv": "Man",
+              "no": "Mann",
+              "pl": "Mężczyzna",
+              "ru": "Мужской",
+              "ar": "ذكر",
+              "ko": "남성"
             }
           },
           {
             "name": "age",
             "type": "number",
             "title": {
-              "en": "age"
+              "en": "age",
+              "nl": "leeftijd",
+              "de": "Alter",
+              "fr": "âge",
+              "es": "edad",
+              "it": "età",
+              "da": "alder",
+              "sv": "ålder",
+              "no": "alder",
+              "pl": "wiek",
+              "ru": "возраст",
+              "ar": "العمر",
+              "ko": "나이"
             },
             "example": 34
           },
@@ -160,17 +396,53 @@
             "name": "emotion",
             "type": "string",
             "title": {
-              "en": "emotion"
+              "en": "emotion",
+              "nl": "emotie",
+              "de": "Emotion",
+              "fr": "émotion",
+              "es": "emoción",
+              "it": "emozione",
+              "da": "følelse",
+              "sv": "känsla",
+              "no": "følelse",
+              "pl": "emocja",
+              "ru": "эмоция",
+              "ar": "المشاعر",
+              "ko": "감정"
             },
             "example": {
-              "en": "neutral"
+              "en": "neutral",
+              "nl": "neutraal",
+              "de": "neutral",
+              "fr": "neutre",
+              "es": "neutral",
+              "it": "neutro",
+              "da": "neutral",
+              "sv": "neutral",
+              "no": "nøytral",
+              "pl": "neutralny",
+              "ru": "нейтральный",
+              "ar": "محايد",
+              "ko": "중립"
             }
           },
           {
             "name": "normalglass",
             "type": "boolean",
             "title": {
-              "en": "normal glasses"
+              "en": "normal glasses",
+              "nl": "normale bril",
+              "de": "normale Brille",
+              "fr": "lunettes normales",
+              "es": "gafas normales",
+              "it": "occhiali normali",
+              "da": "normale briller",
+              "sv": "vanliga glasögon",
+              "no": "vanlige briller",
+              "pl": "zwykłe okulary",
+              "ru": "обычные очки",
+              "ar": "نظارات عادية",
+              "ko": "일반 안경"
             },
             "example": true
           },
@@ -178,7 +450,19 @@
             "name": "sunglass",
             "type": "boolean",
             "title": {
-              "en": "sun glasses"
+              "en": "sun glasses",
+              "nl": "zonnebril",
+              "de": "Sonnenbrille",
+              "fr": "lunettes de soleil",
+              "es": "gafas de sol",
+              "it": "occhiali da sole",
+              "da": "solbriller",
+              "sv": "solglasögon",
+              "no": "solbriller",
+              "pl": "okulary przeciwsłoneczne",
+              "ru": "солнцезащитные очки",
+              "ar": "نظارات شمسية",
+              "ko": "선글라스"
             },
             "example": false
           },
@@ -186,7 +470,19 @@
             "name": "mask",
             "type": "boolean",
             "title": {
-              "en": "mask"
+              "en": "mask",
+              "nl": "masker",
+              "de": "Maske",
+              "fr": "masque",
+              "es": "mascarilla",
+              "it": "mascherina",
+              "da": "maske",
+              "sv": "mask",
+              "no": "maske",
+              "pl": "maska",
+              "ru": "маска",
+              "ar": "قناع",
+              "ko": "마스크"
             },
             "example": false
           },
@@ -194,7 +490,19 @@
             "name": "face_image_token",
             "type": "image",
             "title": {
-              "en": "face snapshot"
+              "en": "face snapshot",
+              "nl": "gezichtsfoto",
+              "de": "Gesichtsfoto",
+              "fr": "photo du visage",
+              "es": "foto del rostro",
+              "it": "foto del volto",
+              "da": "ansigtsfoto",
+              "sv": "ansiktsfoto",
+              "no": "ansiktsfoto",
+              "pl": "zdjęcie twarzy",
+              "ru": "снимок лица",
+              "ar": "صورة الوجه",
+              "ko": "얼굴 스냅샷"
             }
           }
         ]
@@ -204,7 +512,34 @@
       {
         "id": "search_faces",
         "title": {
-          "en": "Search faces"
+          "en": "Search faces",
+          "nl": "Zoek gezichten",
+          "de": "Gesichter suchen",
+          "fr": "Rechercher des visages",
+          "es": "Buscar caras",
+          "it": "Cerca volti",
+          "da": "Søg ansigter",
+          "sv": "Sök ansikten",
+          "no": "Søk ansikter",
+          "pl": "Szukaj twarzy",
+          "ru": "Поиск лиц",
+          "ar": "البحث عن الوجوه",
+          "ko": "얼굴 검색"
+        },
+        "titleFormatted": {
+          "en": "Search faces in [[droptoken]] from [[origin]]",
+          "nl": "Zoek gezichten in [[droptoken]] van [[origin]]",
+          "de": "Gesichter in [[droptoken]] suchen von [[origin]]",
+          "fr": "Rechercher des visages dans [[droptoken]] depuis [[origin]]",
+          "es": "Buscar caras en [[droptoken]] desde [[origin]]",
+          "it": "Cerca volti in [[droptoken]] da [[origin]]",
+          "da": "Søg ansigter i [[droptoken]] fra [[origin]]",
+          "sv": "Sök ansikten i [[droptoken]] från [[origin]]",
+          "no": "Søk ansikter i [[droptoken]] fra [[origin]]",
+          "pl": "Szukaj twarzy w [[droptoken]] z [[origin]]",
+          "ru": "Поиск лиц на [[droptoken]] с [[origin]]",
+          "ar": "البحث عن الوجوه في [[droptoken]] من [[origin]]",
+          "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
         },
         "droptoken": "image",
         "args": [
@@ -212,7 +547,19 @@
             "type": "text",
             "name": "origin",
             "placeholder": {
-              "en": "Origin Label (e.g. Cam1)"
+              "en": "Origin Label (e.g. Cam1)",
+              "nl": "Herkomstlabel (bijv. Cam1)",
+              "de": "Herkunftsbezeichnung (z. B. Cam1)",
+              "fr": "Étiquette d'origine (p. ex. Cam1)",
+              "es": "Etiqueta de origen (p. ej. Cam1)",
+              "it": "Etichetta di origine (es. Cam1)",
+              "da": "Oprindelsesetiket (f.eks. Cam1)",
+              "sv": "Ursprungsetikett (t.ex. Cam1)",
+              "no": "Opprinnelsesetikett (f.eks. Cam1)",
+              "pl": "Etykieta źródła (np. Cam1)",
+              "ru": "Метка источника (напр. Cam1)",
+              "ar": "تسمية المصدر (مثل Cam1)",
+              "ko": "출처 라벨 (예: Cam1)"
             }
           }
         ]

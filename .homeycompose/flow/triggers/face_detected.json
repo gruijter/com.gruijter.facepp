@@ -1,14 +1,38 @@
 {
   "id": "face_detected",
   "title": {
-    "en": "Face detected"
+    "en": "Face detected",
+    "nl": "Gezicht gedetecteerd",
+    "de": "Gesicht erkannt",
+    "fr": "Visage détecté",
+    "es": "Rostro detectado",
+    "it": "Volto rilevato",
+    "da": "Ansigt registreret",
+    "sv": "Ansikte upptäckt",
+    "no": "Ansikt oppdaget",
+    "pl": "Wykryto twarz",
+    "ru": "Обнаружено лицо",
+    "ar": "تم اكتشاف وجه",
+    "ko": "얼굴 감지됨"
   },
   "tokens": [
     {
       "name": "origin",
       "type": "string",
       "title": {
-        "en": "origin"
+        "en": "origin",
+        "nl": "herkomst",
+        "de": "Herkunft",
+        "fr": "origine",
+        "es": "origen",
+        "it": "origine",
+        "da": "oprindelse",
+        "sv": "ursprung",
+        "no": "opprinnelse",
+        "pl": "źródło",
+        "ru": "источник",
+        "ar": "المصدر",
+        "ko": "출처"
       },
       "example": "Ring camera"
     },
@@ -16,7 +40,19 @@
       "name": "label",
       "type": "string",
       "title": {
-        "en": "label"
+        "en": "label",
+        "nl": "label",
+        "de": "Bezeichnung",
+        "fr": "étiquette",
+        "es": "etiqueta",
+        "it": "etichetta",
+        "da": "etiket",
+        "sv": "etikett",
+        "no": "etikett",
+        "pl": "etykieta",
+        "ru": "метка",
+        "ar": "التسمية",
+        "ko": "라벨"
       },
       "example": "John Doe"
     },
@@ -24,7 +60,19 @@
       "name": "confidence",
       "type": "number",
       "title": {
-        "en": "confidence"
+        "en": "confidence",
+        "nl": "betrouwbaarheid",
+        "de": "Zuverlässigkeit",
+        "fr": "confiance",
+        "es": "confianza",
+        "it": "affidabilità",
+        "da": "sikkerhed",
+        "sv": "säkerhet",
+        "no": "sikkerhet",
+        "pl": "pewność",
+        "ru": "достоверность",
+        "ar": "مستوى الثقة",
+        "ko": "신뢰도"
       },
       "example": 96.35
     },
@@ -32,17 +80,53 @@
       "name": "token",
       "type": "string",
       "title": {
-        "en": "token"
+        "en": "token",
+        "nl": "token",
+        "de": "Token",
+        "fr": "jeton",
+        "es": "token",
+        "it": "token",
+        "da": "token",
+        "sv": "token",
+        "no": "token",
+        "pl": "token",
+        "ru": "токен",
+        "ar": "الرمز المميز",
+        "ko": "토큰"
       },
       "example": {
-        "en": "0d32892fad08a6b2b4f0fb92c814ad8c"
+        "en": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "nl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "de": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "fr": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "es": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "it": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "da": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "sv": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "no": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "pl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "ru": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "ar": "0d32892fad08a6b2b4f0fb92c814ad8c",
+        "ko": "0d32892fad08a6b2b4f0fb92c814ad8c"
       }
     },
     {
       "name": "quality",
       "type": "number",
       "title": {
-        "en": "quality"
+        "en": "quality",
+        "nl": "kwaliteit",
+        "de": "Qualität",
+        "fr": "qualité",
+        "es": "calidad",
+        "it": "qualità",
+        "da": "kvalitet",
+        "sv": "kvalitet",
+        "no": "kvalitet",
+        "pl": "jakość",
+        "ru": "качество",
+        "ar": "الجودة",
+        "ko": "품질"
       },
       "example": 92.12
     },
@@ -50,17 +134,53 @@
       "name": "gender",
       "type": "string",
       "title": {
-        "en": "gender"
+        "en": "gender",
+        "nl": "geslacht",
+        "de": "Geschlecht",
+        "fr": "sexe",
+        "es": "género",
+        "it": "genere",
+        "da": "køn",
+        "sv": "kön",
+        "no": "kjønn",
+        "pl": "płeć",
+        "ru": "пол",
+        "ar": "الجنس",
+        "ko": "성별"
       },
       "example": {
-        "en": "Male"
+        "en": "Male",
+        "nl": "Man",
+        "de": "Männlich",
+        "fr": "Homme",
+        "es": "Hombre",
+        "it": "Uomo",
+        "da": "Mand",
+        "sv": "Man",
+        "no": "Mann",
+        "pl": "Mężczyzna",
+        "ru": "Мужской",
+        "ar": "ذكر",
+        "ko": "남성"
       }
     },
     {
       "name": "age",
       "type": "number",
       "title": {
-        "en": "age"
+        "en": "age",
+        "nl": "leeftijd",
+        "de": "Alter",
+        "fr": "âge",
+        "es": "edad",
+        "it": "età",
+        "da": "alder",
+        "sv": "ålder",
+        "no": "alder",
+        "pl": "wiek",
+        "ru": "возраст",
+        "ar": "العمر",
+        "ko": "나이"
       },
       "example": 34
     },
@@ -68,17 +188,53 @@
       "name": "emotion",
       "type": "string",
       "title": {
-        "en": "emotion"
+        "en": "emotion",
+        "nl": "emotie",
+        "de": "Emotion",
+        "fr": "émotion",
+        "es": "emoción",
+        "it": "emozione",
+        "da": "følelse",
+        "sv": "känsla",
+        "no": "følelse",
+        "pl": "emocja",
+        "ru": "эмоция",
+        "ar": "المشاعر",
+        "ko": "감정"
       },
       "example": {
-        "en": "neutral"
+        "en": "neutral",
+        "nl": "neutraal",
+        "de": "neutral",
+        "fr": "neutre",
+        "es": "neutral",
+        "it": "neutro",
+        "da": "neutral",
+        "sv": "neutral",
+        "no": "nøytral",
+        "pl": "neutralny",
+        "ru": "нейтральный",
+        "ar": "محايد",
+        "ko": "중립"
       }
     },
     {
       "name": "normalglass",
       "type": "boolean",
       "title": {
-        "en": "normal glasses"
+        "en": "normal glasses",
+        "nl": "normale bril",
+        "de": "normale Brille",
+        "fr": "lunettes normales",
+        "es": "gafas normales",
+        "it": "occhiali normali",
+        "da": "normale briller",
+        "sv": "vanliga glasögon",
+        "no": "vanlige briller",
+        "pl": "zwykłe okulary",
+        "ru": "обычные очки",
+        "ar": "نظارات عادية",
+        "ko": "일반 안경"
       },
       "example": true
     },
@@ -86,7 +242,19 @@
       "name": "sunglass",
       "type": "boolean",
       "title": {
-        "en": "sun glasses"
+        "en": "sun glasses",
+        "nl": "zonnebril",
+        "de": "Sonnenbrille",
+        "fr": "lunettes de soleil",
+        "es": "gafas de sol",
+        "it": "occhiali da sole",
+        "da": "solbriller",
+        "sv": "solglasögon",
+        "no": "solbriller",
+        "pl": "okulary przeciwsłoneczne",
+        "ru": "солнцезащитные очки",
+        "ar": "نظارات شمسية",
+        "ko": "선글라스"
       },
       "example": false
     },
@@ -94,7 +262,19 @@
       "name": "mask",
       "type": "boolean",
       "title": {
-        "en": "mask"
+        "en": "mask",
+        "nl": "masker",
+        "de": "Maske",
+        "fr": "masque",
+        "es": "mascarilla",
+        "it": "mascherina",
+        "da": "maske",
+        "sv": "mask",
+        "no": "maske",
+        "pl": "maska",
+        "ru": "маска",
+        "ar": "قناع",
+        "ko": "마스크"
       },
       "example": false
     },
@@ -102,7 +282,19 @@
       "name": "face_image_token",
       "type": "image",
       "title": {
-        "en": "face snapshot"
+        "en": "face snapshot",
+        "nl": "gezichtsfoto",
+        "de": "Gesichtsfoto",
+        "fr": "photo du visage",
+        "es": "foto del rostro",
+        "it": "foto del volto",
+        "da": "ansigtsfoto",
+        "sv": "ansiktsfoto",
+        "no": "ansiktsfoto",
+        "pl": "zdjęcie twarzy",
+        "ru": "снимок лица",
+        "ar": "صورة الوجه",
+        "ko": "얼굴 스냅샷"
       }
     }
   ]

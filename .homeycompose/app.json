@@ -1,14 +1,38 @@
 {
   "id": "com.gruijter.facepp",
-  "version": "2.0.2",
-  "compatibility": ">=5.0.0",
+  "version": "3.0.0",
+  "compatibility": ">=12.9.0",
   "sdk": 3,
   "brandColor": "#df2d20",
   "name": {
-    "en": "Face++"
+    "en": "Face++",
+    "nl": "Face++",
+    "de": "Face++",
+    "fr": "Face++",
+    "es": "Face++",
+    "it": "Face++",
+    "da": "Face++",
+    "sv": "Face++",
+    "no": "Face++",
+    "pl": "Face++",
+    "ru": "Face++",
+    "ar": "Face++",
+    "ko": "Face++"
   },
   "description": {
-    "en": "Face recognition for Homey"
+    "en": "Face recognition for Homey",
+    "nl": "Gezichtsherkenning voor Homey",
+    "de": "Gesichtserkennung für Homey",
+    "fr": "Reconnaissance faciale pour Homey",
+    "es": "Reconocimiento facial para Homey",
+    "it": "Riconoscimento facciale per Homey",
+    "da": "Ansigtsgenkendelse til Homey",
+    "sv": "Ansiktsigenkänning för Homey",
+    "no": "Ansiktsgjenkjenning for Homey",
+    "pl": "Rozpoznawanie twarzy dla Homey",
+    "ru": "Распознавание лиц для Homey",
+    "ar": "التعرف على الوجه لـ Homey",
+    "ko": "Homey를 위한 얼굴 인식"
   },
   "category": [
     "localization",
@@ -16,12 +40,19 @@
     "video"
   ],
   "tags": {
-    "en": [
-      "face recognition",
-      "video",
-      "analytics",
-      "biometrics"
-    ]
+    "en": ["face recognition", "video", "analytics", "biometrics"],
+    "nl": ["gezichtsherkenning", "video", "analyse", "biometrie"],
+    "de": ["Gesichtserkennung", "Video", "Analyse", "Biometrie"],
+    "fr": ["reconnaissance faciale", "vidéo", "analyse", "biométrie"],
+    "es": ["reconocimiento facial", "vídeo", "análisis", "biometría"],
+    "it": ["riconoscimento facciale", "video", "analisi", "biometria"],
+    "da": ["ansigtsgenkendelse", "video", "analyse", "biometri"],
+    "sv": ["ansiktsigenkänning", "video", "analys", "biometri"],
+    "no": ["ansiktsgjenkjenning", "video", "analyse", "biometri"],
+    "pl": ["rozpoznawanie twarzy", "wideo", "analityka", "biometria"],
+    "ru": ["распознавание лиц", "видео", "аналитика", "биометрия"],
+    "ar": ["التعرف على الوجه", "فيديو", "تحليلات", "القياسات الحيوية"],
+    "ko": ["얼굴 인식", "비디오", "분석", "생체 인식"]
   },
   "permissions": [],
   "api": {
@@ -33,9 +64,9 @@
       "method": "get",
       "path": "/deletelogs"
     },
-    "getFaceSet": {
+    "testApiKey": {
       "method": "post",
-      "path": "/getfaces/"
+      "path": "/testapikey/"
     },
     "detectFaces": {
       "method": "post",
@@ -48,6 +79,26 @@
     "deleteFace": {
       "method": "post",
       "path": "/deleteface/"
+    },
+    "fetchFaces": {
+      "method": "post",
+      "path": "/facesets/import/"
+    },
+    "listFacesets": {
+      "method": "get",
+      "path": "/facesets/"
+    },
+    "getFacesetFaceCount": {
+      "method": "post",
+      "path": "/facesets/count/"
+    },
+    "deleteForeignFaceset": {
+      "method": "post",
+      "path": "/facesets/delete/"
+    },
+    "resyncOwnFaceset": {
+      "method": "post",
+      "path": "/facesets/resync/"
     }
   },
   "images": {
@@ -72,7 +123,7 @@
     ]
   },
   "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
-  "license": " GPL-3.0-or-later",
+  "license": "GPL-3.0-or-later",
   "contributing": {
     "donate": {
       "paypal": {

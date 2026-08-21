@@ -1,7 +1,34 @@
 {
   "id": "search_faces",
   "title": {
-    "en": "Search faces"
+    "en": "Search faces",
+    "nl": "Zoek gezichten",
+    "de": "Gesichter suchen",
+    "fr": "Rechercher des visages",
+    "es": "Buscar caras",
+    "it": "Cerca volti",
+    "da": "Søg ansigter",
+    "sv": "Sök ansikten",
+    "no": "Søk ansikter",
+    "pl": "Szukaj twarzy",
+    "ru": "Поиск лиц",
+    "ar": "البحث عن الوجوه",
+    "ko": "얼굴 검색"
+  },
+  "titleFormatted": {
+    "en": "Search faces in [[droptoken]] from [[origin]]",
+    "nl": "Zoek gezichten in [[droptoken]] van [[origin]]",
+    "de": "Gesichter in [[droptoken]] suchen von [[origin]]",
+    "fr": "Rechercher des visages dans [[droptoken]] depuis [[origin]]",
+    "es": "Buscar caras en [[droptoken]] desde [[origin]]",
+    "it": "Cerca volti in [[droptoken]] da [[origin]]",
+    "da": "Søg ansigter i [[droptoken]] fra [[origin]]",
+    "sv": "Sök ansikten i [[droptoken]] från [[origin]]",
+    "no": "Søk ansikter i [[droptoken]] fra [[origin]]",
+    "pl": "Szukaj twarzy w [[droptoken]] z [[origin]]",
+    "ru": "Поиск лиц на [[droptoken]] с [[origin]]",
+    "ar": "البحث عن الوجوه في [[droptoken]] من [[origin]]",
+    "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
   },
   "droptoken": "image",
   "args": [
@@ -9,7 +36,19 @@
       "type": "text",
       "name": "origin",
       "placeholder": {
-        "en": "Origin Label (e.g. Cam1)"
+        "en": "Origin Label (e.g. Cam1)",
+        "nl": "Herkomstlabel (bijv. Cam1)",
+        "de": "Herkunftsbezeichnung (z. B. Cam1)",
+        "fr": "Étiquette d'origine (p. ex. Cam1)",
+        "es": "Etiqueta de origen (p. ej. Cam1)",
+        "it": "Etichetta di origine (es. Cam1)",
+        "da": "Oprindelsesetiket (f.eks. Cam1)",
+        "sv": "Ursprungsetikett (t.ex. Cam1)",
+        "no": "Opprinnelsesetikett (f.eks. Cam1)",
+        "pl": "Etykieta źródła (np. Cam1)",
+        "ru": "Метка источника (напр. Cam1)",
+        "ar": "تسمية المصدر (مثل Cam1)",
+        "ko": "출처 라벨 (예: Cam1)"
       }
     }
   ]

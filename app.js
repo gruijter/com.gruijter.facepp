@@ -1,5 +1,5 @@
 /*
-Copyright 2020 - 2023, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2020 - 2026, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.facepp.
 
@@ -22,563 +22,693 @@ along with com.gruijter.facepp.  If not, see <http://www.gnu.org/licenses/>.
 const Homey = require('homey');
 const fs = require('fs');
 const { networkInterfaces } = require('os');
-// const { Duplex } = require('stream');
-const { Readable } = require('stream');
-const Jimp = require('jimp');
-// const util = require('util');
-const Logger = require('./captureLogs');
-const FacePP = require('./facepp');
-
-// const setTimeoutPromise = util.promisify(setTimeout);
-
-// convert buffer to/from base64 encoded string
-const base64Encode = (img) => Buffer.from(img).toString('base64');
-const base64Decode = (base64) => Buffer.from(base64, 'base64');
-
-const bufferToStream = (buffer) => {
-	const stream = Readable.from(buffer);
-	return stream;
-};
-
-const streamToBuffer = (stream) => new Promise((resolve, reject) => {
-	const buffers = [];
-	stream.on('error', reject);
-	stream.on('data', (data) => buffers.push(data));
-	stream.on('end', () => resolve(Buffer.concat(buffers)));
-});
-
-// image crop
-const crop = async (imgBuffer, region) => {	// returns image buffer
-	try {
-		const image = await Jimp.read(imgBuffer);
-		image.crop(region.left, region.top, region.width, region.height);
-		return image.getBufferAsync(image.getMIME());
-	} catch (error) {
-		return error;
-	}
-};
+const Logger = require('./lib/captureLogs');
+const FacePP = require('./lib/FacePP');
+const {
+  base64Decode, stripDataUrlPrefix, bufferToStream, streamToBuffer, decodeJpeg, cropDecoded,
+} = require('./lib/ImageHelpers');
 
 const getEmotion = (emotions) => {
-	const emotionsArray = Object.keys(emotions).map((emotion) => ({ emotion, value: emotions[emotion] }));
-	if (!emotionsArray || !emotionsArray[0]) return 'undefined';
-	return emotionsArray.sort((a, b) => b.value - a.value)[0].emotion;
+  const emotionsArray = Object.keys(emotions).map((emotion) => ({ emotion, value: emotions[emotion] }));
+  if (!emotionsArray || !emotionsArray[0]) return 'undefined';
+  return emotionsArray.sort((a, b) => b.value - a.value)[0].emotion;
 };
+
+// Face++'s user_id constraint: max 255 chars, must not contain ^@,&=*'" - strip only
+// those specific characters (not a broader whitelist) so accented/non-Latin names
+// used as labels survive intact
+const sanitizeUserId = (label) => String(label).replace(/[\^@,&=*'"]/g, '').slice(0, 255);
 
 class FaceApp extends Homey.App {
 
-	async onInit() {
-		try {
-			if (!this.logger) this.logger = new Logger({ name: 'log', length: 200, homey: this.homey });
+  async onInit() {
+    try {
+      if (!this.logger) this.logger = new Logger({ name: 'log', length: 200, homey: this.homey });
 
-			process.on('unhandledRejection', (error) => {
-				this.error('unhandledRejection! ', error);
-			});
-			process.on('uncaughtException', (error) => {
-				this.error('uncaughtException! ', error);
-			});
-			this.homey
-				.on('unload', () => {
-					this.log('app unload called');
-					// save logs to persistant storage
-					this.logger.saveLogs();
-				})
-				.on('cpuwarn', () => {
-					this.log('cpuwarn!');
-				})
-				.on('memwarn', () => {
-					this.log('memwarn!');
-				});
+      process.on('unhandledRejection', (error) => {
+        this.error('unhandledRejection! ', error);
+      });
+      process.on('uncaughtException', (error) => {
+        this.error('uncaughtException! ', error);
+      });
+      this.homey
+        .on('unload', () => {
+          this.log('app unload called');
+          // save logs to persistant storage
+          this.logger.saveLogs();
+        })
+        .on('cpuwarn', () => {
+          this.log('cpuwarn!');
+        })
+        .on('memwarn', () => {
+          this.log('memwarn!');
+        });
 
-			// first remove settings events listener
-			if (this.listeners && this.listeners.set) {
-				this.homey.settings.removeListener('set', this.listeners.set);
-			}
+      // first remove any settings-changed listener from a previous onInit() run
+      if (this._onSettingsSet) {
+        this.homey.settings.removeListener('set', this._onSettingsSet);
+      }
 
-			// listen to change settings events
-			this.listeners.set = (key) => {
-				if (key === 'settingsMatch') {
-					this.log('Face Match settings changed:', JSON.stringify(this.homey.settings.get('settingsMatch')));
-				}
-				if (key === 'settingsKey') {
-					this.log('API Key settings changed, reloading app now');
-				}
-				this.logger.saveLogs();
-				this.log('Re-initing app now');
-				this.onInit();
-			};
-			this.homey.settings
-				.on('set', this.listeners.set);
+      // only reload the app when the API key/secret or match threshold change; a
+      // face_set change (adding/deleting a face from the settings UI) must NOT
+      // trigger a full reload + Face++ re-sync
+      this._onSettingsSet = (key) => {
+        if (key !== 'settingsKey' && key !== 'settingsMatch') return;
+        if (key === 'settingsMatch') this.log('Face Match settings changed:', JSON.stringify(this.homey.settings.get('settingsMatch')));
+        if (key === 'settingsKey') this.log('API Key settings changed, reloading app now');
+        this.logger.saveLogs();
+        this.log('Re-initing app now');
+        this.onInit();
+      };
+      this.homey.settings
+        .on('set', this._onSettingsSet);
 
-			this.matchSettings = this.homey.settings.get('settingsMatch') || { threshold: 75 }; // threshold
-			const { apiKey, apiSecret } = this.homey.settings.get('settingsKey') || {}; // apiKey, apiSecret
-			if (!apiKey || !apiSecret) {
-				this.log('No API key entered in app settings');
-				return;
-			}
+      this.matchSettings = this.homey.settings.get('settingsMatch') || { threshold: 75 }; // threshold
+      const { apiKey, apiSecret } = this.homey.settings.get('settingsKey') || {}; // apiKey, apiSecret
+      if (!apiKey || !apiSecret) {
+        this.log('No API key entered in app settings');
+        return;
+      }
 
-			const interfaces = networkInterfaces();
-			let mac = null;
+      const interfaces = networkInterfaces();
+      let mac = null;
 
-			if (interfaces.eth1 && interfaces.eth1[0].address) {
-				mac = interfaces.eth1[0].mac;
-			} else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
-				mac = interfaces.wlan0[0].mac;
-			} else if (interfaces.eth0 && interfaces.eth0[0].address) {
-				mac = interfaces.eth0[0].mac;
-			}
-			if (!mac) throw Error('No active network connection found.');
+      if (interfaces.eth1 && interfaces.eth1[0].address) {
+        mac = interfaces.eth1[0].mac;
+      } else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
+        mac = interfaces.wlan0[0].mac;
+      } else if (interfaces.eth0 && interfaces.eth0[0].address) {
+        mac = interfaces.eth0[0].mac;
+      }
+      if (!mac) throw Error('No active network connection found.');
 
-			this.outerID = `homey_${mac}`;
-			const options = {
-				key: apiKey,
-				secret: apiSecret,
-			};
-			this.FAPI = new FacePP(options);
+      this.outerID = `homey_${mac}`;
+      this.log('Face++ outer_id for this Homey:', this.outerID);
+      const options = {
+        key: apiKey,
+        secret: apiSecret,
+      };
+      this.FAPI = new FacePP(options);
 
-			// register flows and tokens
-			await this.registerFlowCards();
-			await this.registerFlowTokens();
+      // register flows and tokens
+      await this.registerFlowCards();
+      await this.registerFlowTokens();
 
-			// sync Face++ set and local .img files
-			await this.syncFaceset();
+      // sync Face++ set and local .img files; not awaited so a slow/unreachable
+      // Face++ API can never cause onInit() to overrun Homey's ready window
+      this.syncFaceset().catch((error) => this.error(error));
 
-			this.log('Face++ is running...');
+      this.log('Face++ is running...');
 
-			// do garbage collection every 10 minutes
-			// this.intervalIdGc = setInterval(() => {	global.gc(); }, 1000 * 60 * 10);
+      // do garbage collection every 10 minutes
+      // this.intervalIdGc = setInterval(() => { global.gc(); }, 1000 * 60 * 10);
 
-		} catch (error) {
-			this.error(error);
-		}
+    } catch (error) {
+      this.error(error);
+    }
 
-	}
+  }
 
-	//  stuff for frontend API
-	deleteLogs() {
-		return this.logger.deleteLogs();
-	}
+  //  stuff for frontend API
+  deleteLogs() {
+    return this.logger.deleteLogs();
+  }
 
-	getLogs() {
-		return this.logger.logArray;
-	}
+  // verify an API key/secret pair actually works against Face++, without
+  // touching this.FAPI (the app's own live client, built from the already-saved key)
+  async testApiKey(body) {
+    const { apiKey, apiSecret } = body || {};
+    if (!apiKey || !apiSecret) throw Error('Missing API key or secret');
+    const testApi = new FacePP({ key: apiKey, secret: apiSecret });
+    await testApi.getFaceSets();
+    return true;
+  }
 
-	// returns an array of detected scenes and objects
-	async detectObjects(imgBase64) {
-		try {
-			const options = {
-				image_base64: imgBase64,
-			};
-			const result = await this.FAPI.detectObjects(options);
-			return Promise.resolve(result);
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+  getLogs() {
+    return this.logger.logArray;
+  }
 
-	// returns a formatted array of recognised objects, and triggers flowCards
-	async searchObjects(imgBase64, origin) {
-		try {
-			const { scenes, objects } = await this.detectObjects(imgBase64);
+  // returns an array of detected scenes and objects
+  async detectObjects(imgBase64) {
+    const options = {
+      image_base64: imgBase64,
+    };
+    return this.FAPI.detectObjects(options);
+  }
 
-			const scene = {
-				value: 'undefined',
-				confidence: 0,
-			};
-			if (scenes.length > 0) {
-				const bestScene = scenes.sort((a, b) => b.confidence - a.confidence)[0];
-				scene.value = bestScene.value;
-				scene.confidence = bestScene.confidence;
-			}
-			const objectResult = objects.map(async (obj) => {
-				const tokens = {
-					origin: origin || 'undefined',
-					scene: scene.value,
-					scene_confidence: scene.confidence,
-					object: obj.value,
-					object_confidence: obj.confidence,
-				};
-				this.log(tokens);
-				// this.flows.objectDetectedTrigger.trigger(tokens);
-				return tokens;
-			});
-			await Promise.all(objectResult);
-			if (objectResult.length === 0) this.log(`no objects found in image ${origin}`);
-			return objectResult;
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+  // returns a formatted array of recognised objects, and triggers flowCards
+  async searchObjects(imgBase64, origin) {
+    try {
+      const { scenes, objects } = await this.detectObjects(imgBase64);
 
-	// returns an array of detected faces plus attributes
-	async detectFaces(imgBase64) {
-		try {
-			const options = {
-				image_base64: imgBase64,
-			};
-			const result = await this.FAPI.detectFaces(options);
-			return Promise.resolve(result);
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+      const scene = {
+        value: 'undefined',
+        confidence: 0,
+      };
+      if (scenes.length > 0) {
+        const bestScene = scenes.sort((a, b) => b.confidence - a.confidence)[0];
+        scene.value = bestScene.value;
+        scene.confidence = bestScene.confidence;
+      }
+      const objectResult = await Promise.all(objects.map(async (obj) => {
+        const tokens = {
+          origin: origin || 'undefined',
+          scene: scene.value,
+          scene_confidence: scene.confidence,
+          object: obj.value,
+          object_confidence: obj.confidence,
+        };
+        this.log(tokens);
+        return tokens;
+      }));
+      if (objectResult.length === 0) this.log(`no objects found in image ${origin}`);
+      return objectResult;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 
-	// get faceImageToken Stream
-	async getFaceToken(imgBuffer, bounds) {
-		try {
-			const croppedFace = await crop(imgBuffer, bounds);
-			const imgFunct = async (stream) => {
-				const imgStream = bufferToStream(croppedFace);
-				imgStream.pipe(stream);
-			};
-			const faceImage = await this.homey.images.createImage();
-			faceImage.setStream(imgFunct);
-			setTimeout(() => { faceImage.unregister(); }, 1000 * 60 * 3); // image stream is available for 3 minutes
-			return Promise.resolve(faceImage);
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+  // returns an array of detected faces plus attributes. Accepts either a raw Buffer
+  // (the flow-card camera-image path) or a base64/data-URL string (the settings-page
+  // upload path, which can only reach us as base64 JSON over Homey.api) - either way
+  // it's sent on to Face++ as a multipart "image_file" attachment, never re-encoded
+  // back to base64.
+  async detectFaces(img) {
+    const imgBuffer = Buffer.isBuffer(img) ? img : base64Decode(stripDataUrlPrefix(img));
+    const options = {
+      image_file: imgBuffer,
+    };
+    return this.FAPI.detectFaces(options);
+  }
 
-	// returns a formatted array of recognised faces, and triggers flowCards
-	async searchFaces(imgStream, origin) {
-		try {
-			const imgBuffer = await streamToBuffer(imgStream);
-			const imgBase64 = base64Encode(imgBuffer);
-			const { faces } = await this.detectFaces(imgBase64);
-			const homeySet = this.homey.settings.get('face_set') || {};
-			const searchResult = faces.map(async (face) => {
-				const snapshot = await this.getFaceToken(imgBuffer, face.face_rectangle);
-				const tokens = {
-					origin: origin || 'undefined',
-					label: 'NOMATCH',
-					confidence: 0,
-					token: face.face_token,
-					quality: face.attributes.facequality.value,
-					gender: face.attributes.gender.value,
-					age: face.attributes.age.value,
-					emotion: getEmotion(face.attributes.emotion),
-					normalglass: face.attributes.glass.value === 'Normal',
-					sunglass: face.attributes.glass.value === 'Dark',
-					mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
-					face_image_token: snapshot,
-				};
-				if (Object.keys(homeySet).length > 0) {
-					const options = {
-						outer_id: this.outerID,
-						face_token: face.face_token,
-					};
-					const result = await this.FAPI.searchFaces(options);
-					const { threshold } = this.matchSettings;
-					if (result.results) {
-						const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
-						if (bestMatch.confidence > threshold) {
-							tokens.label = homeySet[bestMatch.face_token].label;
-							tokens.confidence = bestMatch.confidence;
-							tokens.token = homeySet[bestMatch.face_token].face_token;
-						}
-					}
-				}
+  // get faceImageToken Stream
+  async getFaceToken(decodedImage, bounds) {
+    const croppedFace = cropDecoded(decodedImage, bounds);
+    const imgFunct = async (stream) => {
+      const imgStream = bufferToStream(croppedFace);
+      imgStream.pipe(stream);
+    };
+    const faceImage = await this.homey.images.createImage();
+    faceImage.setStream(imgFunct);
+    setTimeout(() => {
+      faceImage.unregister();
+    }, 1000 * 60 * 3); // image stream is available for 3 minutes
+    return faceImage;
+  }
 
-				const logTokens = { ...tokens };
-				logTokens.face_image_token = tokens.face_image_token.cloudUrl;
-				this.log(logTokens);
+  // returns a formatted array of recognised faces, and triggers flowCards
+  async searchFaces(imgStream, origin) {
+    try {
+      const imgBuffer = await streamToBuffer(imgStream);
+      const { faces } = await this.detectFaces(imgBuffer);
+      // decode the JPEG once and reuse it for every face's crop, instead of each
+      // getFaceToken() call redoing a full-image decode of its own
+      const decodedImage = faces.length > 0 ? decodeJpeg(imgBuffer) : null;
+      const homeySet = this.homey.settings.get('face_set') || {};
+      const searchResult = await Promise.all(faces.map(async (face) => {
+        try {
+          const snapshot = await this.getFaceToken(decodedImage, face.face_rectangle);
+          const tokens = {
+            origin: origin || 'undefined',
+            label: 'NOMATCH',
+            confidence: 0,
+            token: face.face_token,
+            quality: face.attributes.facequality.value,
+            gender: face.attributes.gender.value,
+            age: face.attributes.age.value,
+            emotion: getEmotion(face.attributes.emotion),
+            normalglass: face.attributes.glass.value === 'Normal',
+            sunglass: face.attributes.glass.value === 'Dark',
+            mask: face.attributes.mouthstatus.surgical_mask_or_respirator.value > 50,
+            face_image_token: snapshot,
+          };
+          if (Object.keys(homeySet).length > 0) {
+            const options = {
+              outer_id: this.outerID,
+              face_token: face.face_token,
+            };
+            const result = await this.FAPI.searchFaces(options);
+            const { threshold } = this.matchSettings;
+            if (result.results) {
+              const bestMatch = result.results.sort((a, b) => b.confidence - a.confidence)[0];
+              if (bestMatch.confidence > threshold) {
+                tokens.label = homeySet[bestMatch.face_token].label;
+                tokens.confidence = bestMatch.confidence;
+                tokens.token = homeySet[bestMatch.face_token].face_token;
+              }
+            }
+          }
 
-				const faceDetectedTrigger = this.homey.flow.getTriggerCard('face_detected');
-				faceDetectedTrigger.trigger(tokens);
-				return tokens;
-			});
-			await Promise.all(searchResult);
-			if (searchResult.length === 0) this.log(`no faces found in image ${origin}`);
-		} catch (error) {
-			this.error(error);
-		}
-	}
+          const logTokens = { ...tokens };
+          logTokens.face_image_token = tokens.face_image_token.cloudUrl;
+          this.log(logTokens);
 
-	async analyzeImage(args) {
-		try {
-			// get the contents of the image
-			const image = args.droptoken;
-			if (!image || !image.getStream) throw Error('no valid image stream');
-			// if (typeof image === 'undefined' || image == null) return false;
-			const imageStream = await image.getStream();
-			this.log('analyzing image from face', args.origin);
-			await this.searchFaces(imageStream, args.origin);
-		} catch (error) {
-			this.error(error);
-		}
-	}
+          const faceDetectedTrigger = this.homey.flow.getTriggerCard('face_detected');
+          await faceDetectedTrigger.trigger(tokens);
+          return tokens;
+        } catch (error) {
+          this.error(`skipping a face in image ${origin}:`, error);
+          return null;
+        }
+      }));
+      const found = searchResult.filter(Boolean);
+      if (found.length === 0) this.log(`no faces found in image ${origin}`);
+      return found;
+    } catch (error) {
+      this.error(error);
+      return [];
+    }
+  }
 
-	// sync the Homey set with Face++ set and userdata/*.img
-	async syncFaceset() {
-		try {
-			// migrating from old sceme
-			if (this.migrating) {
-				this.log('migrating Face++ face set to new scheme');
-				const options = {
-					outer_id: 'homey',
-					face_tokens: 'RemoveAllFaceTokens',
-				};
-				await this.FAPI.fsRemoveFace(options)
-					.catch((error) => {
-						if (error.message.includes('INVALID_OUTER_ID')) return;
-						this.error(error);
-					});
-				this.migrating = false;
-			}
+  async analyzeImage(args) {
+    try {
+      // get the contents of the image
+      const image = args.droptoken;
+      if (!image || !image.getStream) throw Error('no valid image stream');
+      const imageStream = await image.getStream();
+      this.log('analyzing image from face', args.origin);
+      await this.searchFaces(imageStream, args.origin);
+    } catch (error) {
+      this.error(error);
+    }
+  }
 
-			const homeySet = this.homey.settings.get('face_set') || {};
-			// remove all face tokens in Face++ set
-			const options = {
-				outer_id: this.outerID,
-				face_tokens: 'RemoveAllFaceTokens',
-			};
-			await this.FAPI.fsRemoveFace(options)
-				.catch((error) => {
-					if (error.message.includes('INVALID_OUTER_ID')) return;
-					this.error(error);
-				});
+  // sync the Homey set with Face++ set and userdata/*.img. Guarded against running twice
+  // at once - it's called unawaited from onInit(), and can also now be triggered manually
+  // via the Manage Cloud tab's "Rebuild" button (resyncOwnFaceset());
+  // both hitting Face++ for the same outerID concurrently would race.
+  async syncFaceset() {
+    if (this._syncingFaceset) {
+      this.log('syncFaceset already running, skipping this call');
+      return;
+    }
+    this._syncingFaceset = true;
+    try {
+      const homeySet = this.homey.settings.get('face_set') || {};
+      if (Object.keys(homeySet).length === 0) {
+        // Nothing registered locally - do NOT wipe Face++'s faceset for this outerID.
+        // A local face_set can be empty either genuinely (no faces added yet) or
+        // because Homey reset the app's settings (e.g. a dev-session uninstall while
+        // testing) while the Face++-side faceset for this outerID survived untouched.
+        // Treating "empty locally" as "should be empty on Face++ too" would silently
+        // delete real cloud data in the second case, so leave Face++ alone until a
+        // real local face_set exists again.
+        this.log('no local faces registered yet, skipping Face++ faceset sync');
+        return;
+      }
+      // remove all face tokens in Face++ set
+      const options = {
+        outer_id: this.outerID,
+        face_tokens: 'RemoveAllFaceTokens',
+      };
+      await this.FAPI.fsRemoveFace(options)
+        .catch((error) => {
+          if (error.message.includes('INVALID_OUTER_ID')) return;
+          this.error(error);
+        });
 
-			// add all face tokens from Homey set to Face++ set
-			const ready = Object.keys(homeySet).map((face) => {
-				const opts = {
-					outer_id: this.outerID,
-					face_tokens: face,
-				};
-				return this.FAPI.fsAddFace(opts);
-			});
-			await Promise.all(ready);
+      // add all face tokens from Homey set to Face++ set, tagging each with its label
+      // so any Homey sharing this Face++ account can later recover it (fetchForeignFaces)
+      const ready = Object.keys(homeySet).map(async (face) => {
+        const opts = {
+          outer_id: this.outerID,
+          face_tokens: face,
+        };
+        await this.FAPI.fsAddFace(opts);
+        const { label } = homeySet[face] || {};
+        if (!label) return;
+        await this.FAPI.setFaceUserId({ face_token: face, user_id: sanitizeUserId(label) })
+          .catch((error) => this.error(`failed to tag face ${face} with its label:`, error));
+      });
+      await Promise.all(ready);
 
-			// purge all img files that are not in homeySet
-			const files = fs.readdirSync('/userdata');
-			files.forEach((file) => {
-				if (file.includes('.img')) {
-					const token = file.split('.')[0];
-					if (!Object.keys(homeySet).includes(token)) {
-						fs.unlinkSync(`/userdata/${file}`);
-					}
-				}
-			});
-			this.log('ready syncing face set with cloud');
-		} catch (error) {
-			this.error('CRITICAL: FACE SET CLOUD SYNC FAILED!');
-			this.error(error);
-		}
-	}
+      // purge all img files that are not in homeySet
+      const files = fs.readdirSync('/userdata');
+      files.forEach((file) => {
+        if (file.includes('.img')) {
+          const token = file.split('.')[0];
+          if (!Object.keys(homeySet).includes(token)) {
+            fs.unlinkSync(`/userdata/${file}`);
+          }
+        }
+      });
+      this.log('ready syncing face set with cloud');
+    } catch (error) {
+      this.error('CRITICAL: FACE SET CLOUD SYNC FAILED!');
+      this.error(error);
+    } finally {
+      this._syncingFaceset = false;
+    }
+  }
 
-	// add face to faceset
-	async addFace(body) {
-		try {
-			if (!body.faceInfo || !body.faceInfo.face_token) throw Error('No Face Token; cannot add face');
+  // Gatekeeper for the Manage Cloud tab's "Rebuild" button:
+  // rebuilds this Homey's Face++ faceset FROM the local face_set (local -> cloud). Same
+  // logic syncFaceset() already runs automatically on init - this just exposes it as an
+  // explicit, user-facing action with its own confirmation, distinct from "Delete" (reserved
+  // for other Homeys, since deleting your own actively-matched-against faceset with no
+  // rebuild would break face recognition on this Homey until the next app restart).
+  //
+  // This is NOT the right tool after a reinstall (local face_set wiped, cloud still has
+  // data) - syncFaceset() deliberately no-ops when local is empty, precisely so a wipe
+  // doesn't happen accidentally. For that direction, see "Import faces from cloud"
+  // (fetchForeignFaces() below, called with this Homey's own outerID), which pulls
+  // cloud -> local instead.
+  async resyncOwnFaceset() {
+    if (this._syncingFaceset) throw Error(this.homey.__('settings.tab5.rebuildAlreadyRunning'));
+    // not awaited - same timeout risk as fetchForeignFaces() for a large face_set
+    this.syncFaceset().catch((error) => this.error('resyncOwnFaceset (background) failed:', error));
+    return true;
+  }
 
-			// save base64 file as jpeg/img
-			const filename = `/userdata/${body.faceInfo.face_token}.img`;
-			const file64 = body.img.replace(/^data:image\/(\w+);base64,/, '');
-			const file = base64Decode(file64);
-			fs.writeFileSync(filename, file);
+  // One-time, explicit import: pull known faces (label + token only, no photo) into this
+  // Homey's own face set. Two sources use this same logic:
+  // - another Homey's set ("Import faces" button, other-Homeys rows) - makes this Homey
+  //   recognize people already known elsewhere on the account.
+  // - THIS Homey's own cloud set ("Import faces from cloud" button, own row) - the
+  //   recovery path after a reinstall wipes local settings while the cloud-side faceset
+  //   survives untouched. Existing local faces and their locally stored photos are never
+  //   touched either way, since only tokens NOT already known locally are ever processed.
+  // Never runs automatically - only ever triggered by a settings-page button click. A
+  // face with no user_id set (e.g. added by a version of this app that predates the
+  // labeling feature) still gets imported, under a placeholder label the user can
+  // rename from Manage Faces, rather than being silently dropped forever.
+  //
+  // For an OTHER Homey's set, two layers of de-duplication apply:
+  // 1. face_token identity - a token already known locally (added here, or imported in
+  //    an earlier run) is never reprocessed.
+  // 2. facial similarity - Face++ assigns a NEW face_token every time a face is
+  //    detected from a different photo, even of the same real person, so token identity
+  //    alone can't catch "this is a person I already know, just registered elsewhere
+  //    from a different photo". Each new candidate is searched against this Homey's own
+  //    faceset (the same confidence threshold already configured for regular flow
+  //    matching); a hit means it's the same person as an existing local entry - that
+  //    local entry (its label, its own registration) is left completely untouched, and
+  //    the duplicate candidate is fully ignored rather than merged in any way.
+  // For THIS Homey's OWN set, the similarity search is skipped entirely - every
+  // candidate is already a member of the very faceset being searched, so it would
+  // trivially match itself and get skipped as a "duplicate" every time. Token identity
+  // is the only dedup that's meaningful there, and no Face++ write calls are needed
+  // either, since these tokens are already registered under this.outerID.
+  //
+  // Gatekeeper: refuses to start a second import while one is already running, and also
+  // refuses to start a self-import while "Rebuild" is rewriting
+  // the very faceset it would read. Returns as soon as the run has genuinely started -
+  // the run itself (_runFetchForeignFaces) is not awaited here, since it can take well
+  // over a minute and would otherwise trip Homey.api()'s own client-side timeout (see
+  // api.js's fetchFaces handler).
+  async fetchForeignFaces(body) {
+    const { sourceOuterId } = body || {};
+    if (!sourceOuterId) throw Error('Invalid source Homey');
+    const isSelf = sourceOuterId === this.outerID;
+    if (this._fetchingForeignFaces) throw Error(this.homey.__('settings.tab5.importAlreadyRunning'));
+    if (isSelf && this._syncingFaceset) throw Error(this.homey.__('settings.tab5.rebuildAlreadyRunning'));
+    this._fetchingForeignFaces = true;
+    this._runFetchForeignFaces(sourceOuterId, isSelf)
+      .catch((error) => this.error('fetchForeignFaces (background) failed:', error))
+      .finally(() => {
+        this._fetchingForeignFaces = false;
+      });
+    return true;
+  }
 
-			// add face to set in Face++
-			const options = {
-				outer_id: this.outerID,
-				face_tokens: body.faceInfo.face_token,
-			};
-			await this.FAPI.fsAddFace(options);
+  async _runFetchForeignFaces(sourceOuterId, isSelf) {
+    let homeySet;
+    let knownTokens;
+    let candidateTokens;
+    let attributesByToken;
+    try {
+      homeySet = this.homey.settings.get('face_set') || {};
+      knownTokens = new Set(Object.keys(homeySet));
 
-			// store face persistent in Homey
-			const faceSet = this.homey.settings.get('face_set') || {};
-			faceSet[body.faceInfo.face_token] = body.faceInfo;
-			this.homey.settings.set('face_set', faceSet);
-			this.log('added face', options);
-			return Promise.resolve(true);
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+      const detail = await this.FAPI.getFacesetDetail({ outer_id: sourceOuterId });
+      candidateTokens = (detail.face_tokens || []).filter((token) => !knownTokens.has(token));
+      this.log(`fetchForeignFaces: importing from ${sourceOuterId}${isSelf ? ' (own cloud set)' : ''}, ${candidateTokens.length} candidate faces`);
 
-	// delete face from faceset
-	async deleteFace(body) {
-		try {
-			// remove img file
-			const filename = `/userdata/${body.faceInfo.face_token}.img`;
-			if (fs.existsSync(filename)) fs.unlinkSync(filename);
+      // face/getdetail (used per-candidate below, for user_id) never includes
+      // gender/age/quality/glass/etc - only face/analyze does, and it batches up to 5
+      // tokens per call, so this stays cheap even for a large import (e.g. 14 tokens is
+      // just 3 calls) rather than one extra call per candidate
+      attributesByToken = {};
+      const batchSize = 5;
+      for (let i = 0; i < candidateTokens.length; i += batchSize) {
+        const batch = candidateTokens.slice(i, i + batchSize);
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const analyzeResult = await this.FAPI.analyzeFaces({ face_tokens: batch.join(',') });
+          (analyzeResult.faces || []).forEach((face) => {
+            attributesByToken[face.face_token] = face.attributes;
+          });
+        } catch (error) {
+          this.error('failed to analyze a batch of candidate faces:', error);
+        }
+      }
+    } catch (error) {
+      this.error('fetchForeignFaces failed while listing candidates:', error);
+      throw error;
+    }
 
-			// remove face from in Homey
-			const faceSet = this.homey.settings.get('face_set') || {};
-			delete faceSet[body.faceInfo.face_token];
-			this.homey.settings.set('face_set', faceSet);
+    const { threshold } = this.matchSettings;
+    let imported = 0;
+    let unnamed = 0;
+    let merged = 0;
+    let skipped = 0;
 
-			// delete face from set in Face++
-			const options = {
-				outer_id: this.outerID,
-				face_tokens: body.faceInfo.face_token,
-			};
-			await this.FAPI.fsRemoveFace(options);
-			this.log('deleted face', options);
-			return Promise.resolve(true);
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
+    // sequential on purpose: each import must become searchable before the NEXT
+    // candidate is checked, so the same person registered under two different
+    // foreign tokens only ever ends up with one local entry, not two
+    for (let i = 0; i < candidateTokens.length; i += 1) {
+      const token = candidateTokens[i];
+      try {
+        const faceDetail = await this.FAPI.getFaceDetail({ face_token: token }); // eslint-disable-line no-await-in-loop
+        const hasRealLabel = !!faceDetail.user_id;
+        const attrs = attributesByToken[token];
+        let label;
+        if (hasRealLabel) {
+          label = faceDetail.user_id;
+        } else if (attrs && attrs.gender && attrs.age && attrs.glass) {
+          // e.g. "Unnamed Male 52 glasses: Normal" - far more useful for telling several
+          // placeholder entries apart at a glance than a meaningless token substring
+          const glassesWord = this.homey.__('settings.tab4.unnamedFaceGlassesLabel');
+          label = `${this.homey.__('settings.tab4.unnamedFaceLabel')} ${attrs.gender.value} ${attrs.age.value} ${glassesWord}: ${attrs.glass.value}`;
+        } else {
+          // face/analyze failed for this candidate's batch - fall back to a token
+          // fragment rather than blocking the import on missing attribute data
+          label = `${this.homey.__('settings.tab4.unnamedFaceLabel')} ${token.slice(0, 8)}`;
+        }
 
-	// register flow cards
-	async registerFlowCards() {
-		try {
-			if (this.hasFlows) return;
-			// action cards
-			const analyzeImageAction = this.homey.flow.getActionCard('search_faces');
-			analyzeImageAction.registerRunListener((args) => this.analyzeImage(args));
-			this.hasFlows = true;
-		} catch (error) {
-			this.error(error);
-		}
-	}
+        let existingMatch = null;
+        if (!isSelf) {
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            const searchResult = await this.FAPI.searchFaces({ outer_id: this.outerID, face_token: token });
+            const bestMatch = (searchResult.results || []).sort((a, b) => b.confidence - a.confidence)[0];
+            if (bestMatch && bestMatch.confidence > threshold) existingMatch = bestMatch;
+          } catch (error) {
+            const noLocalFacesYet = error.message.includes('INVALID_OUTER_ID') || error.message.includes('EMPTY_FACESET');
+            if (!noLocalFacesYet) throw error;
+          }
+        }
 
-	// register global flow tokens
-	async registerFlowTokens() {
-		try {
-			// unregister tokens first
-			if (!this.tokens) this.tokens = {};
-			const ready = Object.keys(this.tokens).map((token) => Promise.resolve(this.homey.ManagerFlow.unregisterToken(this.tokens[token])));
-			await Promise.all(ready);
+        if (existingMatch) {
+          // same person as an existing LOCAL profile - that local profile (its label,
+          // its own token registration) is left completely untouched; this duplicate
+          // candidate is fully ignored, nothing about it is registered anywhere
+          merged += 1;
+        } else {
+          if (!isSelf) {
+            await this.FAPI.fsAddFace({ outer_id: this.outerID, face_tokens: token }); // eslint-disable-line no-await-in-loop
+            // only push a label back to Face++ if it already had a real one - never write
+            // this Homey's local placeholder text there as if it were a real name
+            if (hasRealLabel) {
+              await this.FAPI.setFaceUserId({ face_token: token, user_id: label }) // eslint-disable-line no-await-in-loop
+                .catch((error) => this.error(`failed to re-tag imported face ${token}:`, error));
+            } else {
+              unnamed += 1;
+            }
+          } else if (!hasRealLabel) {
+            // already registered under this.outerID - no Face++ write needed, just count it
+            unnamed += 1;
+          }
+          homeySet[token] = {
+            face_token: token, label, imported: true, attributes: attributesByToken[token],
+          };
+          knownTokens.add(token);
+          imported += 1;
+        }
+      } catch (error) {
+        this.error(`failed to import face ${token}:`, error);
+        skipped += 1;
+      }
+    }
 
-			// register the test image
-			const fileName = this.homey.platformVersion === 2 ? '/app/assets/images/test.jpg' : '/assets/images/test.jpg';
-			const testImage = await this.homey.images.createImage();
-			testImage.setPath(fileName);
+    this.homey.settings.set('face_set', homeySet);
+    this.log(`fetchForeignFaces: imported ${imported} (${unnamed} unnamed), merged ${merged}, skipped ${skipped}`);
+    return {
+      imported, unnamed, merged, skipped,
+    };
+  }
 
-			// create a droptoken for test image
-			this.tokens.testImageToken = await this.homey.flow.createToken('test_image_token', {
-				type: 'image',
-				title: 'Face++ Test Image',
-			});
-			await this.tokens.testImageToken.setValue(testImage);
+  // list every homey_* faceset on this account, including this Homey's own (flagged via
+  // isOwn, sorted first) - read-only, used by the Manage Cloud tab. Deliberately just the
+  // one getFaceSets() call and nothing more: an earlier version also fetched each entry's
+  // face count via a getFacesetDetail() call per outer_id, and that fan-out (rate-limited,
+  // one at a time) was slow enough - especially under real Face++-side throttling - to
+  // blow past Homey's client-side API timeout, which silently looked like "no results" on
+  // the frontend rather than a visible error. Face count is now lazy-loaded per row by the
+  // frontend, one on-demand call each, after this list has already rendered (see
+  // getFacesetFaceCount()).
+  async listFacesets() {
+    try {
+      const allSets = await this.FAPI.getFaceSets();
+      const outerIds = (allSets.facesets || [])
+        .map((set) => set.outer_id)
+        .filter((outerId) => outerId && outerId.startsWith('homey_'));
+      const list = outerIds
+        .sort((a, b) => {
+          if (a === this.outerID) return -1;
+          if (b === this.outerID) return 1;
+          return 0;
+        })
+        .map((outerId) => ({ outerId, isOwn: outerId === this.outerID }));
+      this.log(`listFacesets: found ${list.length} Homeys`);
+      return list;
+    } catch (error) {
+      this.error('listFacesets failed:', error);
+      throw error;
+    }
+  }
 
-			return Promise.resolve(this.tokens);
-		} catch (error) {
-			return Promise.resolve(error);
-		}
-	}
+  // face count for exactly one outer_id (including this Homey's own), fetched on-demand
+  // by the frontend after the list has already rendered - not part of the bulk list, so
+  // one slow/failed lookup can't hold up the others
+  async getFacesetFaceCount(body) {
+    const { outerId } = body || {};
+    if (!outerId) throw Error('Invalid outer_id');
+    try {
+      const detail = await this.FAPI.getFacesetDetail({ outer_id: outerId });
+      return { faceCount: detail.face_count };
+    } catch (error) {
+      // a Homey that has never had a face added yet (including possibly this one) has no
+      // faceset on Face++ at all - that's a normal state, not an error, report 0 faces
+      if (error.message.includes('INVALID_OUTER_ID')) return { faceCount: 0 };
+      throw error;
+    }
+  }
+
+  // permanently delete another Homey's faceset from Face++. Never touches this
+  // Homey's own outer_id or local settings - only ever reachable from a settings-page
+  // button behind an explicit, outer_id-naming confirmation, never from a flow.
+  //
+  // Verified live (2026-08-21): Face++'s faceset/delete only succeeds on an EMPTY
+  // faceset - a non-empty one fails with FACESET_NOT_EMPTY. So this empties the
+  // faceset first (RemoveAllFaceTokens, same call syncFaceset() already uses), then
+  // deletes the now-empty container - one button click, two Face++ calls.
+  async deleteForeignFaceset(body) {
+    const { outerId } = body || {};
+    if (!outerId || outerId === this.outerID) throw Error('Refusing to delete this Homey\'s own faceset');
+    await this.FAPI.fsRemoveFace({ outer_id: outerId, face_tokens: 'RemoveAllFaceTokens' })
+      .catch((error) => {
+        if (error.message.includes('INVALID_OUTER_ID') || error.message.includes('EMPTY_FACESET')) return;
+        throw error;
+      });
+    await this.FAPI.deleteFaceset({ outer_id: outerId });
+    this.log('deleted foreign faceset', outerId);
+    return true;
+  }
+
+  // add face to faceset
+  async addFace(body) {
+    if (!body.faceInfo || !body.faceInfo.face_token) throw Error('No Face Token; cannot add face');
+
+    // save base64 file as jpeg/img
+    const filename = `/userdata/${body.faceInfo.face_token}.img`;
+    const file64 = stripDataUrlPrefix(body.img);
+    const file = base64Decode(file64);
+    fs.writeFileSync(filename, file);
+
+    // add face to set in Face++, and tag it with its label so any Homey sharing this
+    // Face++ account can later recover it via fetchForeignFaces()
+    const options = {
+      outer_id: this.outerID,
+      face_tokens: body.faceInfo.face_token,
+    };
+    await this.FAPI.fsAddFace(options);
+    if (body.faceInfo.label) {
+      await this.FAPI.setFaceUserId({
+        face_token: body.faceInfo.face_token,
+        user_id: sanitizeUserId(body.faceInfo.label),
+      }).catch((error) => this.error('failed to tag new face with its label:', error));
+    }
+
+    // store face persistent in Homey
+    const faceSet = this.homey.settings.get('face_set') || {};
+    faceSet[body.faceInfo.face_token] = body.faceInfo;
+    this.homey.settings.set('face_set', faceSet);
+    this.log('added face', options);
+    return true;
+  }
+
+  // delete face from faceset
+  async deleteFace(body) {
+    // remove img file
+    const filename = `/userdata/${body.faceInfo.face_token}.img`;
+    if (fs.existsSync(filename)) fs.unlinkSync(filename);
+
+    // remove face from in Homey
+    const faceSet = this.homey.settings.get('face_set') || {};
+    delete faceSet[body.faceInfo.face_token];
+    this.homey.settings.set('face_set', faceSet);
+
+    // delete face from set in Face++
+    const options = {
+      outer_id: this.outerID,
+      face_tokens: body.faceInfo.face_token,
+    };
+    await this.FAPI.fsRemoveFace(options);
+    this.log('deleted face', options);
+    return true;
+  }
+
+  // register flow cards
+  async registerFlowCards() {
+    try {
+      if (this.hasFlows) return;
+      // action cards
+      const analyzeImageAction = this.homey.flow.getActionCard('search_faces');
+      analyzeImageAction.registerRunListener((args) => this.analyzeImage(args));
+      this.hasFlows = true;
+    } catch (error) {
+      this.error(error);
+    }
+  }
+
+  // register global flow tokens
+  async registerFlowTokens() {
+    try {
+      // unregister tokens first
+      if (!this.tokens) this.tokens = {};
+      const ready = Object.keys(this.tokens).map((token) => this.homey.flow.unregisterToken(this.tokens[token]));
+      await Promise.all(ready);
+
+      // register the test image
+      const fileName = this.homey.platformVersion === 2 ? '/app/assets/images/test.jpg' : '/assets/images/test.jpg';
+      const testImage = await this.homey.images.createImage();
+      testImage.setPath(fileName);
+
+      // create a droptoken for test image
+      this.tokens.testImageToken = await this.homey.flow.createToken('test_image_token', {
+        type: 'image',
+        title: 'Face++ Test Image',
+      });
+      await this.tokens.testImageToken.setValue(testImage);
+
+      return this.tokens;
+    } catch (error) {
+      this.error(error);
+      return this.tokens;
+    }
+  }
 
 }
 
 module.exports = FaceApp;
-
-/*
-  {
-    face_token: '2485daa964b877b1a6c6b109f409b561',
-    face_rectangle: { top: 173, left: 218, width: 87, height: 87 },
-    attributes: {
-      gender: [Object],
-      age: [Object],
-      smile: [Object],
-      eyestatus: [Object],
-      emotion: [Object],
-      facequality: [Object],
-      beauty: [Object],
-      mouthstatus: [Object],
-      eyegaze: [Object],
-      skinstatus: [Object],
-      glass: [Object]
-    }
-  },
-
-  face_image_token: Image {
-    id: '75aa0755-e6de-4868-a4dd-9d16feb259a4',
-    __client: { emit: [Function: bound __onImageEmit] },
-    _type: 'buffer',
-    _source: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 00 00 01 00 01 00 00 ff db 00 84 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 ... 7556 more bytes>,
-    cloudUrl: 'https://5c4968afb1b00f14323059f6.connect.athom.com/image/75aa0755-e6de-4868-a4dd-9d16feb259a4/image',
-    localUrl: 'http://10.0.0.61/image/75aa0755-e6de-4868-a4dd-9d16feb259a4/image'
-  }
-
-  PassThrough {
-  _readableState: ReadableState {
-    objectMode: false,
-    highWaterMark: 16384,
-    buffer: BufferList { head: null, tail: null, length: 0 },
-    length: 0,
-    pipes: null,
-    pipesCount: 0,
-    flowing: null,
-    ended: false,
-    endEmitted: false,
-    reading: false,
-    sync: false,
-    needReadable: false,
-    emittedReadable: false,
-    readableListening: false,
-    resumeScheduled: false,
-    emitClose: true,
-    autoDestroy: false,
-    destroyed: false,
-    defaultEncoding: 'utf8',
-    awaitDrain: 0,
-    readingMore: false,
-    decoder: null,
-    encoding: null,
-    [Symbol(kPaused)]: null
-  },
-  readable: true,
-  _events: [Object: null prototype] {
-    end: [Function: bound onceWrapper] { listener: [Function: onend] },
-    prefinish: [Function: prefinish],
-    finish: [ [Function], [Function] ],
-    unpipe: [Function: onunpipe],
-    error: [Function: onerror],
-    close: [Function: bound onceWrapper] { listener: [Function: onclose] }
-  },
-  _eventsCount: 6,
-  _maxListeners: undefined,
-  _writableState: WritableState {
-    objectMode: false,
-    highWaterMark: 16384,
-    finalCalled: false,
-    needDrain: false,
-    ending: false,
-    ended: false,
-    finished: false,
-    destroyed: false,
-    decodeStrings: true,
-    defaultEncoding: 'utf8',
-    length: 0,
-    writing: false,
-    corked: 0,
-    sync: true,
-    bufferProcessing: false,
-    onwrite: [Function: bound onwrite],
-    writecb: null,
-    writelen: 0,
-    afterWriteTickInfo: null,
-    bufferedRequest: null,
-    lastBufferedRequest: null,
-    pendingcb: 0,
-    prefinished: false,
-    errorEmitted: false,
-    emitClose: true,
-    autoDestroy: false,
-    bufferedRequestCount: 0,
-    corkedRequestsFree: {
-      next: null,
-      entry: null,
-      finish: [Function: bound onCorkedFinish]
-    }
-  },
-  writable: true,
-  allowHalfOpen: false,
-  _transformState: {
-    afterTransform: [Function: bound afterTransform],
-    needTransform: false,
-    transforming: false,
-    writecb: null,
-    writechunk: null,
-    writeencoding: null
-  },
-  contentType: 'image/jpeg',
-  filename: '14a8d90d-6149-408a-b6d3-1c32dec81d82.jpg',
-  meta: {
-    contentType: 'image/jpeg',
-    filename: '14a8d90d-6149-408a-b6d3-1c32dec81d82.jpg'
-  },
-  [Symbol(kCapture)]: false
-}
-
-  */

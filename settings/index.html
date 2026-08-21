@@ -1,166 +1,158 @@
 <!doctype html>
 <html>
 	<head>
-		<!-- The '/homey.js' script must be included in your settings view to work -->
 		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
-		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
 		<script type="text/javascript" src="settings.js" data-origin="settings"></script>
-		<link rel="stylesheet" type="text/css" href="./styles.css" />
 	</head>
 	<body>
-		<div id="app">
-			<div class="rTable tabs">
-				<div class="rTableRow">
-					<div id="tabb1" class="tab tab-inactive" onclick="showTab(1)" data-i18n="settings.tab1.title">Instructions</div>
-					<div id="tabb3" class="tab tab-inactive" onclick="showTab(3)" data-i18n="settings.tab3.title">Settings</div>
-					<div id="tabb4" class="tab tab-inactive" onclick="showTab(4)" data-i18n="settings.tab4.title">Manage Faces</div>
-					<div id="tabb2" class="tab tab-inactive" onclick="showTab(2)" data-i18n="settings.tab2.title">Log</div>
-				</div>
-			</div>
+		<header class="homey-header">
+			<h1 class="homey-title" data-i18n="settings.tab1.title">Instructions</h1>
+		</header>
 
-			<div class="tab-content">
-				<div style="height:8px" class="panel"></div>
-				<!-- Instructions panel -->
-				<div id="tab1" class="panel">
-					<fieldset class="listContainer">
-						<legend data-i18n="settings.tab1.warningTitle">WARNING</legend>
-						<p data-i18n="settings.tab1.warningInstructions" class="instructions">Instructions</p>
-					</fieldset>
-					<fieldset class="listContainer">
-						<legend data-i18n="settings.tab1.registerTitle">Register</legend>
-						<p data-i18n="settings.tab1.registerInstructions" class="instructions">Instructions</p>
-					</fieldset>
-					<fieldset class="listContainer">
-						<legend data-i18n="settings.tab1.manageTitle">Manage</legend>
-						<p data-i18n="settings.tab1.manageInstructions" class="instructions">Instructions</p>
-          </fieldset>
-          <fieldset class="listContainer">
-						<legend data-i18n="settings.tab1.useTitle">Use</legend>
-						<p data-i18n="settings.tab1.useInstructions" class="instructions">Instructions</p>
-					</fieldset>
-				</div>
-				<!-- Logging panel -->
-				<div id="tab2" class="panel">
-					<div class="setting">
-						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab2.deletelogs">Delete</button>
-						<br>
-						<label class="form-switch">
-							log
-							<input type="checkbox" name="logs" id="show_logs" onchange="updateLogs()" checked/>
-							<i></i>
-						</label>
-						<label class="form-switch">
-							error
-							<input type="checkbox" name="errors" id="show_errors" onchange="updateLogs()" checked/>
-							<i></i>
-						</label>
-						<label class="form-switch">
-							No_detect
-							<input type="checkbox" name="no_detect" id="show_no_detections" onchange="updateLogs()" checked/>
-							<i></i>
-						</label>
+		<div>
+			<button id="tabb1" class="homey-button-primary" onclick="showTab(1)" data-i18n="settings.tab1.title">Instructions</button>
+			<button id="tabb3" class="homey-button-secondary" onclick="showTab(3)" data-i18n="settings.tab3.title">Settings</button>
+			<button id="tabb4" class="homey-button-secondary" onclick="showTab(4)" data-i18n="settings.tab4.title">Manage Faces</button>
+			<button id="tabb5" class="homey-button-secondary" onclick="showTab(5)" data-i18n="settings.tab5.title">Manage cloud</button>
+			<button id="tabb2" class="homey-button-secondary" onclick="showTab(2)" data-i18n="settings.tab2.title">Log</button>
+		</div>
 
-						<div id="loglines" class="instructions"></div>
+		<!-- Instructions panel -->
+		<div id="tab1">
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab1.warningTitle">WARNING</legend>
+				<p data-i18n="settings.tab1.warningInstructions">Instructions</p>
+			</fieldset>
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab1.registerTitle">Register</legend>
+				<p data-i18n="settings.tab1.registerInstructions">Instructions</p>
+			</fieldset>
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab1.manageTitle">Manage</legend>
+				<p data-i18n="settings.tab1.manageInstructions">Instructions</p>
+			</fieldset>
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab1.useTitle">Use</legend>
+				<p data-i18n="settings.tab1.useInstructions">Instructions</p>
+			</fieldset>
+		</div>
+
+		<!-- Settings panel -->
+		<div id="tab3" style="display: none;">
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab3.instructionsLegendKey">API Key</legend>
+				<p data-i18n="settings.tab3.instructionsKey">Instructions</p>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="apiKey" data-i18n="settings.tab3.api_key">API Key</label>
+					<input class="homey-form-input" id="apiKey" type="text" value="">
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="apiSecret" data-i18n="settings.tab3.api_secret">API Secret</label>
+					<div style="display: flex; gap: 8px;">
+						<input class="homey-form-input" id="apiSecret" type="password" value="">
+						<button type="button" class="homey-button-secondary" onclick="togglePasswordView()">&#128065;</button>
 					</div>
 				</div>
-				<!-- Settings panel -->
-				<div id="tab3" class="panel">
-					<div class="setting">
-						<fieldset class="listContainer">
-							<legend data-i18n="settings.tab3.instructionsLegendKey">API Key</legend>
-							<p data-i18n="settings.tab3.instructionsKey" class="instructions">Instructions</p>
-						</fieldset>
+				<button id="saveSettingsKey" class="homey-button-primary-full" onclick="saveSettingsKey()" data-i18n="settings.tab3.saveSettingsKey">Save API Key</button>
+			</fieldset>
 
-						<label class="settings-item-description" data-i18n="settings.tab3.api_key">API KEY</label>
-						<div class="settings-itemgroup">
-							<input id="apiKey" type="text" value="">
-						</div>
-						<label class="settings-item-description" onclick="togglePasswordView()" data-i18n="settings.tab3.api_secret">API SECRET</label>
-						<div class="settings-itemgroup">
-							<input id="apiSecret" type="password" value="">
-						</div>
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab3.instructionsLegendMatch">FACE MATCH</legend>
+				<p data-i18n="settings.tab3.instructionsMatch">Instructions</p>
 
-						<br>
-						<!-- <label class="settings-item-description" data-i18n="settings.tab3.saveKey">SAVE KEY</label> -->
-						<button id="saveSettingsKey" class="btn" onclick="saveSettingsKey()" data-i18n="settings.tab3.saveSettingsKey">SAVE KEY</button>
-						<br>
-
-						<br>
-						<fieldset class="listContainer">
-							<legend data-i18n="settings.tab3.instructionsLegendMatch">FACE MATCH</legend>
-							<p data-i18n="settings.tab3.instructionsMatch" class="instructions">Instructions</p>
-						</fieldset>
-
-						<label class="settings-item-description" data-i18n="settings.tab3.threshold">MATCH THRESHOLD</label>
-						<div class="settings-itemgroup">
-							<input id="threshold" type="number" min="1" max="100" value=70>
-						</div>
-<!-- 
-						<div class="slidecontainer">
-							<input type="range" min="1" max="100" value="65" class="slider" id="myRange">
-						</div> -->
-
-						<br>
-						<!-- <label class="settings-item-description" data-i18n="settings.tab3.saveSettings">SAVE</label> -->
-						<button id="saveSettingsMatch" class="btn" onclick="saveSettingsMatch()" data-i18n="settings.tab3.saveSettingsMatch">SAVE MATCH SETTINGS</button>
-					</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="threshold" data-i18n="settings.tab3.threshold">MATCH THRESHOLD</label>
+					<input class="homey-form-input" id="threshold" type="number" min="1" max="100" value="70">
 				</div>
-				<!-- Manage Faces panel -->
-				<div id="tab4" class="panel">
-					<div class="setting">
-						<fieldset class="listContainer">
-							<legend data-i18n="settings.tab4.instructionsLegend">Instructions</legend>
-							<p data-i18n="settings.tab4.instructions" class="instructions">Instructions</p>
-						</fieldset>
+				<button id="saveSettingsMatch" class="homey-button-primary-full" onclick="saveSettingsMatch()" data-i18n="settings.tab3.saveSettingsMatch">SAVE MATCH SETTINGS</button>
+			</fieldset>
+		</div>
 
-						<label class="settings-item-description" data-i18n="settings.tab4.select">SELECT</label>
-						<div class="settings-itemgroup">
-							<select id="faceList" style="width: 250px" onchange="faceSelected()" ></select>
-						</div>
+		<!-- Manage Faces panel -->
+		<div id="tab4" style="display: none;">
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab4.instructionsLegend">Instructions</legend>
+				<p data-i18n="settings.tab4.instructions">Instructions</p>
 
-						<label class="settings-item-description" data-i18n="settings.tab4.label">LABEL</label>
-						<div class="settings-itemgroup">
-							<input id="label" type="text" value="" placeholder="enter name">
-						</div>
-
-						<!-- <label class="settings-item-description" data-i18n="settings.tab4.load">LOAD</label> -->
-						<br/>
-						<input id="file" type="file" accept="image/*" name="image" onchange="loadFile(event)">
-						<br/>
-						<p><img id="preview" height="200" /></p>
-
-
-						<label class="settings-item-description" data-i18n="settings.tab4.faceToken">FACE TOKEN</label>
-						<div class="settings-itemgroup">
-							<input id="faceToken" type="text" value="" readonly>
-						</div>
-						<label class="settings-item-description" data-i18n="settings.tab4.facequality">FACE QUALITY</label>
-						<div class="settings-itemgroup">
-							<input id="facequality" type="number" readonly>
-						</div>
-						<label class="settings-item-description" data-i18n="settings.tab4.gender">GENDER</label>
-						<div class="settings-itemgroup">
-							<input id="gender" type="text" value="" readonly>
-						</div>
-						<label class="settings-item-description" data-i18n="settings.tab4.age">AGE</label>
-						<div class="settings-itemgroup">
-							<input id="age" type="number" readonly>
-						</div>
-						<label class="settings-item-description" data-i18n="settings.tab4.glass">GLASS</label>
-						<div class="settings-itemgroup">
-							<input id="glass" type="text" readonly>
-						</div>
-
-
-						<label class="settings-item-description" data-i18n="settings.tab4.addFace">SAVE</label>
-						<button id="saveFace" class="btn" onclick="saveFace()" data-i18n="settings.tab4.saveFace">SAVE</button>
-
-						<label class="settings-item-description" data-i18n="settings.tab4.deleteFace">DELETE</label>
-						<button id="deleteFace" class="btn" onclick="deleteFace()" data-i18n="settings.tab4.deleteFace">DELETE</button>
-
-					</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="faceList" data-i18n="settings.tab4.select">SELECT</label>
+					<select class="homey-form-select" id="faceList" onchange="faceSelected()"></select>
 				</div>
-			</div>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="label" data-i18n="settings.tab4.label">LABEL</label>
+					<input class="homey-form-input" id="label" type="text" value="" placeholder="enter name">
+				</div>
+
+				<div class="homey-form-group">
+					<input id="file" type="file" accept="image/*" name="image" onchange="loadFile(event)">
+				</div>
+				<p><img id="preview" height="200" /></p>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="faceToken" data-i18n="settings.tab4.faceToken">FACE TOKEN</label>
+					<input class="homey-form-input" id="faceToken" type="text" value="" readonly>
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="facequality" data-i18n="settings.tab4.facequality">FACE QUALITY</label>
+					<input class="homey-form-input" id="facequality" type="number" readonly>
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="gender" data-i18n="settings.tab4.gender">GENDER</label>
+					<input class="homey-form-input" id="gender" type="text" value="" readonly>
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="age" data-i18n="settings.tab4.age">AGE</label>
+					<input class="homey-form-input" id="age" type="number" readonly>
+				</div>
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="glass" data-i18n="settings.tab4.glass">GLASS</label>
+					<input class="homey-form-input" id="glass" type="text" readonly>
+				</div>
+
+				<button id="saveFace" class="homey-button-primary" onclick="saveFace()" data-i18n="settings.tab4.saveFace">SAVE</button>
+				<button id="deleteFace" class="homey-button-danger" onclick="deleteFace()" data-i18n="settings.tab4.deleteFace">DELETE</button>
+			</fieldset>
+		</div>
+
+		<!-- Manage cloud panel -->
+		<div id="tab5" style="display: none;">
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab5.legendThisHomey">This Homey</legend>
+				<p data-i18n="settings.tab5.instructionsThisHomey">Instructions</p>
+				<div id="thisHomeyRow"></div>
+			</fieldset>
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab5.legendOtherHomeys">Other Homeys</legend>
+				<p data-i18n="settings.tab5.instructionsOtherHomeys">Instructions</p>
+				<div id="foreignFacesetsList"></div>
+			</fieldset>
+		</div>
+
+		<!-- Logging panel -->
+		<div id="tab2" style="display: none;">
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab2.title">Log</legend>
+
+				<div class="homey-form-group">
+					<label class="homey-form-checkbox">
+						<input type="checkbox" id="show_logs" checked onchange="updateLogs()">
+						<span data-i18n="settings.tab2.showLogs">Show logs</span>
+					</label>
+					<label class="homey-form-checkbox">
+						<input type="checkbox" id="show_errors" checked onchange="updateLogs()">
+						<span data-i18n="settings.tab2.showErrors">Show errors</span>
+					</label>
+					<label class="homey-form-checkbox">
+						<input type="checkbox" id="show_no_detections" checked onchange="updateLogs()">
+						<span data-i18n="settings.tab2.showNoDetections">Show 'no faces found'</span>
+					</label>
+				</div>
+
+				<button id="deleteButton" class="homey-button-danger" onclick="deleteLogs()" data-i18n="settings.tab2.deletelogs">Delete logs</button>
+				<pre id="loglines"></pre>
+			</fieldset>
 		</div>
 	</body>
 </html>

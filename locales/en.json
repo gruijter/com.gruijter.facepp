@@ -1,50 +1,89 @@
 {
     "settings": {
-		"tab1": {
+        "tab1": {
             "title": "Instructions",
             "warningTitle": "WARNING",
             "warningInstructions": "Using the Face++ service has severe privacy implications. Use at own risk. Read and understand your local privacy legislation, and the terms of use from Face++",
-			"registerTitle": "Register API Key",
-			"registerInstructions": "Each Homey must use a different key. For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
-			"manageTitle": "Manage known faces",
-			"manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
-			"useTitle": "How to use in a flow",
-			"useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and detailed enough (>75 pixels wide)."
-		},
-		"tab2": {
-			"title": "Logs",
-			"logs": "Logs",
-			"deletelogs": "Delete logs",
-			"deleteWarning": "Delete all logs?",
-			"deleted": "Logs deleted!"
-		},
-		"tab3": {
-			"title": "Settings",
-			"instructionsLegendKey": "API Key and Secret",
-			"instructionsKey": "Enter the API Key and API Secret that you obtained from the Face++ website. Each Homey must use a different key!",
-			"api_key": "API Key",
-			"api_secret": "API Secret &#128065;",
-			"saveSettingsKey": "Save API Key",
-			"instructionsLegendMatch": "Face Match",
-			"instructionsMatch": "A higher confidence threshold will reduce incorrect face matches.",
-			"threshold": "Confidence Threshold",
-			"saveSettingsMatch": "Save Face Match Settings"
-		},
-		"tab4": {
-			"title": "Faces",
-			"instructionsLegend": "Manage known faces",
-			"instructions": "Each reference image must contain only one face. Minimum 250x250px, max 500KB file. The label you add will be used in flows on detection.",
-			"select": "Select Face",
-			"newFace": "***Add a new face***",
-			"load": "Load image",
-			"label": "Label this person",
-			"faceToken": "Face Token",
-			"facequality": "Detection quality",
-			"gender": "Estimated gender",
-			"age": "Estimated age",
-			"glass": "Glasses",
-			"saveFace": "Save",
-			"deleteFace": "Delete"
-		}
-	}
+            "registerTitle": "Register API Key",
+            "registerInstructions": "Each Homey must use a different key. For a free API key, go to <a href='https://console.faceplusplus.com/register'><u>console.faceplusplus.com/register</u></a>",
+            "manageTitle": "Manage known faces",
+            "manageInstructions": "After adding the API keys in the settings tab, you can start adding photo's of known persons. These will be used for face recognition.",
+            "useTitle": "How to use in a flow",
+            "useInstructions": "Use a flow to send a camera image to the app. The app will try to find faces in this image, and will trigger a flowcard for each face it finds. Note that faces will only be discovered when they are (almost) frontal, and detailed enough (>75 pixels wide)."
+        },
+        "tab2": {
+            "title": "Log",
+            "showLogs": "Show logs",
+            "showErrors": "Show errors",
+            "showNoDetections": "Show 'no faces found'",
+            "deletelogs": "Delete logs",
+            "deleteWarning": "Delete all logs?",
+            "deleted": "Logs deleted!"
+        },
+        "tab3": {
+            "title": "Settings",
+            "instructionsLegendKey": "API Key and Secret",
+            "instructionsKey": "Enter the API Key and API Secret that you obtained from the Face++ website. Each Homey must use a different key!",
+            "api_key": "API Key",
+            "api_secret": "API Secret",
+            "saveSettingsKey": "Save API Key",
+            "keyNotSaved": "API Key and Secret are not saved!",
+            "keyInvalid": "API Key and Secret are not correctly saved!",
+            "keySaved": "API Keys are saved!",
+            "instructionsLegendMatch": "Face Match",
+            "instructionsMatch": "A higher confidence threshold will reduce incorrect face matches.",
+            "threshold": "Confidence Threshold",
+            "saveSettingsMatch": "Save Face Match Settings",
+            "thresholdInvalid": "Threshold must be between 0 and 100",
+            "matchSaved": "Settings are saved!"
+        },
+        "tab4": {
+            "title": "Manage Faces",
+            "instructionsLegend": "Manage known faces",
+            "instructions": "Each reference image must contain only one face. Minimum 250x250px, max 2MB file. The label you add will be used in flows on detection.",
+            "select": "Select Face",
+            "newFace": "***Add a new face***",
+            "label": "Label this person",
+            "faceToken": "Face Token",
+            "facequality": "Detection quality",
+            "gender": "Estimated gender",
+            "age": "Estimated age",
+            "glass": "Glasses",
+            "saveFace": "Save",
+            "deleteFace": "Delete",
+            "analyzing": "Analyzing, hang on...",
+            "imageTooLarge": "Image size is too large",
+            "noFaceDetected": "No face detected",
+            "multipleFacesDetected": "Multiple faces detected, but only one is allowed",
+            "faceSaved": "Face is saved!",
+            "invalidToken": "Invalid face token. Upload a valid face image.",
+            "faceDeleted": "Face is deleted!",
+            "faceUpdated": "Face label is updated!",
+            "deleteFaceWarning": "Delete this face? This cannot be undone.",
+            "unnamedFaceLabel": "Unnamed",
+            "unnamedFaceGlassesLabel": "glasses"
+        },
+        "tab5": {
+            "title": "Manage Cloud",
+            "importAlreadyRunning": "Import already running, please wait for it to finish.",
+            "fetchFacesStarted": "Import started in the background. This can take a while for many faces — check the Log tab, or reopen this tab shortly, to see the result.",
+            "deleteFacesetButton": "Delete",
+            "deleteFacesetWarningPrefix": "Permanently delete faceset",
+            "deleteFacesetWarningSuffix": "This cannot be undone, and will affect any Homey still using this identifier.",
+            "facesetDeleted": "Faceset deleted.",
+            "faceCountUnit": "faces",
+            "legendThisHomey": "This Homey",
+            "instructionsThisHomey": "Import faces pulls any faces already registered in this Homey's own cloud set into your local list, e.g. after reinstalling the app. Rebuild deletes the cloud stored face templates and replaces them with the current templates in Homey.",
+            "legendOtherHomeys": "Other Homeys",
+            "instructionsOtherHomeys": "If you use this app on multiple Homeys with the same Face++ API key, each Homey keeps its own private set of known faces by default. Import faces (name only, no photo) from another Homey's set below, or permanently delete a Homey's set — deleting is permanent, and will break stored faces functionality on that Homey.",
+            "facesetsEmpty": "No other Homeys found.",
+            "importFacesButton": "Import faces",
+            "importFacesWarning": "This will import known faces (name only, no photo) from this Homey's set into the current one. Continue?",
+            "rebuildButton": "Rebuild",
+            "rebuildWarning": "This will rebuild this Homey's Face++ cloud faceset from your local Manage Faces list: anything registered in the cloud that isn't in your local list will be removed, then everything in your local list will be re-added. Continue?",
+            "rebuildStarted": "Rebuild started in the background. This can take a while for many faces — check the Log tab, or reopen this tab shortly, to see the result.",
+            "rebuildAlreadyRunning": "This Homey's cloud faceset is currently being updated, please wait for it to finish.",
+            "importFromCloudWarning": "This will import any faces already registered in this Homey's own Face++ cloud set (name only) into your local Manage Faces list. Existing local faces, and any locally stored photos, are left untouched. Continue?"
+        }
+    }
 }
