@@ -31,19 +31,19 @@
     "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
   },
   "hint": {
-    "en": "Detects faces and matches them against your saved face set. 'Origin' is your own label, not sent to Face++. Tokens are returned directly too - use face_count for multiple faces, not matched.",
-    "nl": "Detecteert gezichten en vergelijkt ze met je gezichtenset. 'Herkomst' is je eigen label, wordt niet naar Face++ gestuurd. Geeft ook direct tokens terug - gebruik face_count bij meerdere gezichten, niet matched.",
-    "de": "Erkennt Gesichter und vergleicht sie mit deiner Gesichtsdatenbank. 'Herkunft' ist dein eigenes Label, wird nicht an Face++ gesendet. Gibt auch direkt Tokens zurück - bei mehreren Gesichtern face_count statt matched verwenden.",
-    "fr": "Détecte les visages et les compare à votre ensemble enregistré. « Origine » est votre propre étiquette, non envoyée à Face++. Renvoie aussi des jetons directement - utilisez face_count (pas matched) pour plusieurs visages.",
-    "es": "Detecta caras y las compara con tu conjunto guardado. «Origen» es tu propia etiqueta, no se envía a Face++. También devuelve tokens directamente: usa face_count (no matched) si hay varias caras.",
-    "it": "Rileva i volti e li confronta con il tuo set salvato. 'Origine' è una tua etichetta, non inviata a Face++. Restituisce anche token direttamente: usa face_count (non matched) per più volti.",
-    "da": "Registrerer ansigter og sammenligner dem med dit gemte sæt. 'Oprindelse' er din egen etiket, sendes ikke til Face++. Returnerer også tokens direkte - brug face_count ved flere ansigter, ikke matched.",
-    "sv": "Identifierar ansikten och matchar dem mot din sparade uppsättning. 'Ursprung' är din egen etikett, skickas inte till Face++. Returnerar även tokens direkt - använd face_count vid flera ansikten, inte matched.",
-    "no": "Registrerer ansikter og sammenligner dem med det lagrede settet. 'Opprinnelse' er din egen etikett, sendes ikke til Face++. Returnerer også tokens direkte - bruk face_count ved flere ansikter, ikke matched.",
-    "pl": "Wykrywa twarze i porównuje je z zapisanym zestawem. „Źródło” to twoja własna etykieta, nie jest wysyłana do Face++. Zwraca też tokeny bezpośrednio - przy wielu twarzach użyj face_count, nie matched.",
-    "ru": "Обнаруживает лица и сравнивает их с вашим набором. «Источник» - ваша метка, не отправляется в Face++. Также возвращает токены напрямую - при нескольких лицах используйте face_count, а не matched.",
-    "ar": "يكتشف الوجوه ويقارنها بمجموعتك المحفوظة. 'المصدر' هو تسمية خاصة بك، لا تُرسل إلى Face++. يعيد أيضًا الرموز مباشرة - استخدم face_count بدلاً من matched عند وجود عدة وجوه.",
-    "ko": "얼굴을 감지하고 저장된 얼굴 세트와 비교합니다. '출처'는 Face++로 전송되지 않는 사용자 지정 라벨입니다. 토큰도 바로 반환됩니다 - 얼굴이 여러 개면 matched 대신 face_count를 사용하세요."
+    "en": "Detects faces and compares them. 'Origin' optionally sets a camera name for use as a token in flows. If a face is found, the card also outputs tokens with details (for advanced flows).",
+    "nl": "Detecteert gezichten en vergelijkt ze. Bij 'Herkomst' kun je optioneel de cameranaam opgeven voor gebruik als token binnen flows. Als er een gezicht wordt gevonden geeft de uitgang van de kaart tokens met gegevens (alleen voor advanced flows).",
+    "de": "Erkennt Gesichter und vergleicht sie. Bei 'Herkunft' kannst du optional den Kameranamen angeben, nutzbar als Token in Flows. Wird ein Gesicht gefunden, liefert die Karte zusätzlich Tokens mit Details (nur für fortgeschrittene Flows).",
+    "fr": "Détecte les visages et les compare. Sous « Origine », vous pouvez indiquer le nom de la caméra, utilisable comme jeton dans les flows. Si un visage est trouvé, la carte fournit aussi des jetons avec des détails (pour les flows avancés).",
+    "es": "Detecta caras y las compara. En «Origen» puedes indicar opcionalmente el nombre de la cámara, utilizable como token en los flows. Si se encuentra una cara, la tarjeta también ofrece tokens con datos (para flows avanzados).",
+    "it": "Rileva i volti e li confronta. In 'Origine' puoi indicare facoltativamente il nome della videocamera, utilizzabile come token nei flow. Se viene trovato un volto, la card fornisce anche token con i dati (per flow avanzati).",
+    "da": "Registrerer ansigter og sammenligner dem. Under 'Oprindelse' kan du valgfrit angive kameranavnet, som kan bruges som token i flows. Hvis der findes et ansigt, giver kortet også tokens med data (til avancerede flows).",
+    "sv": "Identifierar ansikten och jämför dem. Under 'Ursprung' kan du valfritt ange kameranamnet, användbart som token i flöden. Om ett ansikte hittas ger kortet även tokens med data (för avancerade flöden).",
+    "no": "Registrerer ansikter og sammenligner dem. Under 'Opprinnelse' kan du valgfritt angi kameranavnet, som kan brukes som token i flows. Hvis et ansikt blir funnet, gir kortet også tokens med data (for avanserte flows).",
+    "pl": "Wykrywa twarze i porównuje je. W polu „Źródło” możesz opcjonalnie podać nazwę kamery, dostępną jako token w flow. Jeśli twarz zostanie znaleziona, karta zwraca też tokeny z danymi (dla zaawansowanych flow).",
+    "ru": "Обнаруживает лица и сравнивает их. В поле «Источник» можно указать название камеры, доступное как токен во flow. Если лицо найдено, карточка также возвращает токены с данными (для продвинутых flow).",
+    "ar": "يكتشف الوجوه ويقارنها. في 'المصدر' يمكنك اختياريًا تحديد اسم الكاميرا لاستخدامه كرمز داخل الفلوز. إذا تم العثور على وجه، توفر البطاقة أيضًا رموزًا تحتوي على بيانات (للفلوز المتقدمة).",
+    "ko": "얼굴을 감지하고 비교합니다. '출처'에는 선택적으로 카메라 이름을 입력해 플로우 내 토큰으로 사용할 수 있습니다. 얼굴이 감지되면 카드가 데이터가 담긴 토큰도 함께 반환합니다(고급 플로우용)."
   },
   "droptoken": "image",
   "args": [
