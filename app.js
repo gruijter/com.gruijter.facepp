@@ -125,9 +125,9 @@ class FaceApp extends Homey.App {
       await this.registerFlowCards();
       await this.registerFlowTokens();
 
-      // sync Face++ set and local .img files; not awaited so a slow/unreachable
+      // reconcile Face++ set and local .img files; not awaited so a slow/unreachable
       // Face++ API can never cause onInit() to overrun Homey's ready window
-      this.syncFaceset().catch((error) => this.error(error));
+      this.reconcileFaceset().catch((error) => this.error(error));
 
       this.log('Face++ is running...');
 
@@ -491,10 +491,14 @@ class FaceApp extends Homey.App {
     };
   }
 
-  // sync the Homey set with Face++ set and userdata/*.img. Guarded against running twice
-  // at once - it's called unawaited from onInit(), and can also now be triggered manually
-  // via the Manage Cloud tab's "Rebuild" button (resyncOwnFaceset());
-  // both hitting Face++ for the same outerID concurrently would race.
+  // full rebuild of the Face++ set (and userdata/*.img) from the Homey set: wipes
+  // whatever's in the cloud faceset and recreates every face + label from scratch. This
+  // is the "Rebuild" button's (resyncOwnFaceset()) explicit job - it's the only place
+  // local label edits (made via Manage Faces, which never call the Face++ API directly)
+  // actually get pushed to Face++'s user_id, so this must stay a full, unconditional
+  // re-tag rather than a diff. NOT used on every app boot any more - see
+  // reconcileFaceset() for that; both share the _syncingFaceset guard so they can never
+  // race each other for the same outerID.
   async syncFaceset() {
     if (this._syncingFaceset) {
       this.log('syncFaceset already running, skipping this call');
@@ -559,10 +563,85 @@ class FaceApp extends Homey.App {
     }
   }
 
+  // lightweight self-healing counterpart to syncFaceset(), run automatically on every
+  // app boot. addFace()/deleteFace()/autoAddFace() already keep Face++ in sync
+  // incrementally as changes happen, so in the common case (nothing drifted since the
+  // last boot) there is nothing to repair here - this only touches actual drift (a local
+  // face missing from the cloud faceset, or a cloud token orphaned by e.g. a crash
+  // mid-operation), instead of unconditionally wiping and recreating everything like
+  // syncFaceset() does. Deliberately does NOT push label changes to Face++ for tokens
+  // that are already present on both sides - that stays "Rebuild"'s job (syncFaceset()),
+  // per its own tab5 description ("Rebuild ... replaces them with the current templates
+  // in Homey").
+  async reconcileFaceset() {
+    if (this._syncingFaceset) {
+      this.log('faceset sync already running, skipping reconcile');
+      return;
+    }
+    this._syncingFaceset = true;
+    try {
+      const homeySet = this.homey.settings.get('face_set') || {};
+      const localTokens = new Set(Object.keys(homeySet));
+      if (localTokens.size === 0) {
+        // see syncFaceset() for why an empty local set must never translate into
+        // wiping a possibly-real cloud faceset
+        this.log('no local faces registered yet, skipping Face++ faceset reconcile');
+        return;
+      }
+
+      let cloudTokens;
+      try {
+        const detail = await this.FAPI.getFacesetDetail({ outer_id: this.outerID });
+        cloudTokens = new Set(detail.face_tokens || []);
+      } catch (error) {
+        if (!error.message.includes('INVALID_OUTER_ID')) throw error;
+        cloudTokens = new Set(); // no faceset created for this outer_id yet
+      }
+
+      const missing = [...localTokens].filter((token) => !cloudTokens.has(token));
+      const orphaned = [...cloudTokens].filter((token) => !localTokens.has(token));
+
+      if (orphaned.length > 0) {
+        await this.FAPI.fsRemoveFace({ outer_id: this.outerID, face_tokens: orphaned.join(',') });
+      }
+      if (missing.length > 0) {
+        const ready = missing.map(async (token) => {
+          await this.FAPI.fsAddFace({ outer_id: this.outerID, face_tokens: token });
+          const { label } = homeySet[token] || {};
+          if (!label) return;
+          await this.FAPI.setFaceUserId({ face_token: token, user_id: sanitizeUserId(label) })
+            .catch((error) => this.error(`failed to tag reconciled face ${token} with its label:`, error));
+        });
+        await Promise.all(ready);
+      }
+
+      // purge all img files that are not in homeySet - same cleanup syncFaceset() does
+      const files = fs.readdirSync('/userdata');
+      files.forEach((file) => {
+        if (file.includes('.img')) {
+          const token = file.split('.')[0];
+          if (!localTokens.has(token)) fs.unlinkSync(`/userdata/${file}`);
+        }
+      });
+
+      if (missing.length === 0 && orphaned.length === 0) {
+        this.log('faceset already in sync with cloud, nothing to reconcile');
+      } else {
+        this.log(`faceset reconciled with cloud: added ${missing.length}, removed ${orphaned.length}`);
+      }
+    } catch (error) {
+      this.error('CRITICAL: FACE SET CLOUD RECONCILE FAILED!');
+      this.error(error);
+    } finally {
+      this._syncingFaceset = false;
+    }
+  }
+
   // Gatekeeper for the Manage Cloud tab's "Rebuild" button:
-  // rebuilds this Homey's Face++ faceset FROM the local face_set (local -> cloud). Same
-  // logic syncFaceset() already runs automatically on init - this just exposes it as an
-  // explicit, user-facing action with its own confirmation, distinct from "Delete" (reserved
+  // rebuilds this Homey's Face++ faceset FROM the local face_set (local -> cloud). Unlike
+  // reconcileFaceset() (which now runs automatically on boot, and only repairs actual
+  // drift), this always does a full wipe-and-recreate - it's the explicit, user-facing
+  // way to force every label back in sync with Face++, distinct from "Delete" (reserved
   // for other Homeys, since deleting your own actively-matched-against faceset with no
   // rebuild would break face recognition on this Homey until the next app restart).
   //
