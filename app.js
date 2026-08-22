@@ -385,7 +385,7 @@ class FaceApp extends Homey.App {
 
           if (tokens.label === 'NOMATCH') {
             const autoAddSettings = this.homey.settings.get('settingsAutoAdd') || {};
-            const qualityThreshold = Number(autoAddSettings.threshold) || 80;
+            const qualityThreshold = Number(autoAddSettings.threshold) || 60;
             if (autoAddSettings.enabled && face.attributes.facequality.value > qualityThreshold) {
               const added = await this.autoAddFace(face, decodedImage, imgBuffer)
                 .catch((error) => {

@@ -788,6 +788,7 @@
           {
             "type": "text",
             "name": "origin",
+            "required": false,
             "placeholder": {
               "en": "Origin Label (e.g. Cam1)",
               "nl": "Herkomstlabel (bijv. Cam1)",
