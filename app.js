@@ -91,19 +91,28 @@ class FaceApp extends Homey.App {
         return;
       }
 
-      const interfaces = networkInterfaces();
-      let mac = null;
-
-      if (interfaces.eth1 && interfaces.eth1[0].address) {
-        mac = interfaces.eth1[0].mac;
-      } else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
-        mac = interfaces.wlan0[0].mac;
-      } else if (interfaces.eth0 && interfaces.eth0[0].address) {
-        mac = interfaces.eth0[0].mac;
+      // the outer_id must stay IDENTICAL across restarts, or every previously added face
+      // becomes orphaned under a stale outer_id on Face++. Deriving it fresh from
+      // networkInterfaces() on every boot is NOT stable: which interface (eth vs wifi)
+      // already has an address depends on DHCP/link timing at that exact moment, and can
+      // differ between restarts on the very same physical Homey. So it's only ever
+      // computed once - the first time this runs - and then always reused from settings.
+      let outerID = this.homey.settings.get('outerID');
+      if (!outerID) {
+        const interfaces = networkInterfaces();
+        let mac = null;
+        if (interfaces.eth1 && interfaces.eth1[0].address) {
+          mac = interfaces.eth1[0].mac;
+        } else if (interfaces.wlan0 && interfaces.wlan0[0].address) {
+          mac = interfaces.wlan0[0].mac;
+        } else if (interfaces.eth0 && interfaces.eth0[0].address) {
+          mac = interfaces.eth0[0].mac;
+        }
+        if (!mac) throw Error('No active network connection found.');
+        outerID = `homey_${mac}`;
+        this.homey.settings.set('outerID', outerID);
       }
-      if (!mac) throw Error('No active network connection found.');
-
-      this.outerID = `homey_${mac}`;
+      this.outerID = outerID;
       this.log('Face++ outer_id for this Homey:', this.outerID);
       const options = {
         key: apiKey,
