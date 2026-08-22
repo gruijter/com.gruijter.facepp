@@ -702,6 +702,11 @@ class FaceApp extends Homey.App {
       const outerIds = (allSets.facesets || [])
         .map((set) => set.outer_id)
         .filter((outerId) => outerId && outerId.startsWith('homey_'));
+      // this Homey's own row must always show, even before it has ever had a faceset
+      // created on Face++ (e.g. right after install, before any face is added) -
+      // getFacesetFaceCount() already treats a missing faceset as 0 faces, so this
+      // just makes sure the row itself is never silently dropped from the list
+      if (!outerIds.includes(this.outerID)) outerIds.push(this.outerID);
       const list = outerIds
         .sort((a, b) => {
           if (a === this.outerID) return -1;
