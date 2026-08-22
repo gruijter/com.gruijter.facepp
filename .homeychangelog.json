@@ -57,6 +57,6 @@
     "en": "jimp@0.22.7. Partial fix Homey2023 compatibility"
   },
   "3.0.0": {
-    "en": "Full modernization: replaced jimp/smart-request-balancer/https with jpeg-js, a custom rate-limiting queue, and native fetch (much smaller footprint). Fixed a ready_timeout crash, a broken flow trigger image, and a dead SDK2 flow token call. Moved helpers into /lib. Rewrote the settings page on Homey's standard UI components. Added translations for all 13 supported languages."
+    "en": "Full app rewrite. Reduced dependencies. Significantly reduced memory footprint. Significantly improved stability. Improved app settings page. Added advanced search faces flow card. Added auto-adding of discovered faces. Added managing and syncing from Face++ cloud. Added all translations."
   }
 }
