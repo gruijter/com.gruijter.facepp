@@ -435,10 +435,38 @@ class FaceApp extends Homey.App {
       if (!image || !image.getStream) throw Error('no valid image stream');
       const imageStream = await image.getStream();
       this.log('analyzing image from face', args.origin);
-      await this.searchFaces(imageStream, args.origin);
+      const found = await this.searchFaces(imageStream, args.origin);
+      return await this.formatSearchTokens(found);
     } catch (error) {
       this.error(error);
+      return this.formatSearchTokens([]);
     }
+  }
+
+  // collapses _searchFaces()'s per-face result array down to the single "best" face
+  // (a known match first, else just the first detected face) as output tokens on the
+  // search_faces action card itself - so a flow can read e.g. `matched` right after
+  // this card runs and only chain into another (costly) search_faces attempt while
+  // it's still false, instead of always firing every attempt in the chain regardless
+  // of whether an earlier one already found something (see face_detected for the full
+  // per-face detail this collapses, still fired separately for every face found).
+  async formatSearchTokens(found) {
+    const best = found.find((face) => face.label !== 'NOMATCH') || found[0] || null;
+    return {
+      matched: !!best && best.label !== 'NOMATCH',
+      face_count: found.length,
+      label: best ? best.label : 'NOMATCH',
+      confidence: best ? best.confidence : 0,
+      token: best ? best.token : '',
+      quality: best ? best.quality : 0,
+      gender: best ? best.gender : 'undefined',
+      age: best ? best.age : 0,
+      emotion: best ? best.emotion : 'undefined',
+      normalglass: best ? best.normalglass : false,
+      sunglass: best ? best.sunglass : false,
+      mask: best ? best.mask : false,
+      face_image_token: best ? best.face_image_token : await this.getPlaceholderFaceImage(),
+    };
   }
 
   // sync the Homey set with Face++ set and userdata/*.img. Guarded against running twice
