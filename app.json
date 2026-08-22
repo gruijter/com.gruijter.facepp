@@ -769,19 +769,19 @@
           "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
         },
         "hint": {
-          "en": "Detects faces in the image and matches them against your saved face set. The Origin label is not sent to Face++; it's just your own text (e.g. a camera name) that is passed along in the 'A face was detected' trigger tokens and the app log, so you can tell which flow or camera a detection came from.",
-          "nl": "Detecteert gezichten in de afbeelding en vergelijkt ze met je opgeslagen gezichtenset. Het Herkomstlabel wordt niet naar Face++ gestuurd; het is enkel je eigen tekst (bijv. een cameranaam) die wordt meegegeven in de tokens van de trigger 'Een gezicht is gedetecteerd' en in het app-logboek, zodat je kunt zien van welke flow of camera een detectie afkomstig is.",
-          "de": "Erkennt Gesichter im Bild und vergleicht sie mit deiner gespeicherten Gesichtsdatenbank. Das Herkunfts-Label wird nicht an Face++ gesendet; es ist nur dein eigener Text (z. B. ein Kameraname), der in den Tokens des Triggers 'Ein Gesicht wurde erkannt' und im App-Protokoll mitgegeben wird, damit du erkennen kannst, von welchem Flow oder welcher Kamera eine Erkennung stammt.",
-          "fr": "Détecte les visages dans l'image et les compare à votre ensemble de visages enregistrés. L'étiquette d'origine n'est pas envoyée à Face++ ; il s'agit simplement de votre propre texte (par exemple un nom de caméra) transmis dans les jetons du déclencheur « Un visage a été détecté » et dans le journal de l'application, afin que vous puissiez savoir de quel flux ou de quelle caméra provient une détection.",
-          "es": "Detecta caras en la imagen y las compara con tu conjunto de caras guardadas. La etiqueta de origen no se envía a Face++; es solo tu propio texto (por ejemplo, el nombre de una cámara) que se incluye en los tokens del disparador «Se ha detectado un rostro» y en el registro de la app, para que puedas saber de qué flujo o cámara proviene una detección.",
-          "it": "Rileva i volti nell'immagine e li confronta con il set di volti salvato. L'etichetta di origine non viene inviata a Face++; è semplicemente un testo tuo (ad esempio il nome di una videocamera) che viene incluso nei token del trigger 'È stato rilevato un volto' e nel log dell'app, così puoi capire da quale flow o videocamera proviene un rilevamento.",
-          "da": "Registrerer ansigter i billedet og sammenligner dem med dit gemte ansigtssæt. Oprindelsesetiketten sendes ikke til Face++; det er blot din egen tekst (f.eks. et kameranavn), som videregives i tokens for udløseren 'Et ansigt blev registreret' og i app-loggen, så du kan se, hvilken flow eller hvilket kamera en registrering kom fra.",
-          "sv": "Identifierar ansikten i bilden och matchar dem mot din sparade ansiktsuppsättning. Ursprungsetiketten skickas inte till Face++; det är bara din egen text (t.ex. ett kameranamn) som skickas med i tokens för utlösaren 'Ett ansikte upptäcktes' och i appens logg, så att du kan se vilket flöde eller kamera en identifiering kom från.",
-          "no": "Registrerer ansikter i bildet og sammenligner dem med det lagrede ansiktssettet ditt. Opprinnelsesetiketten sendes ikke til Face++; det er bare din egen tekst (f.eks. et kameranavn) som sendes med i tokenene til utløseren 'Et ansikt ble oppdaget' og i app-loggen, slik at du kan se hvilken flyt eller hvilket kamera en registrering kom fra.",
-          "pl": "Wykrywa twarze na obrazie i porównuje je z zapisanym zestawem twarzy. Etykieta źródła nie jest wysyłana do Face++; to tylko twój własny tekst (np. nazwa kamery), który jest przekazywany w tokenach wyzwalacza „Wykryto twarz” oraz w dzienniku aplikacji, dzięki czemu możesz sprawdzić, z którego flow lub kamery pochodzi wykrycie.",
-          "ru": "Обнаруживает лица на изображении и сравнивает их с вашим сохранённым набором лиц. Метка источника не отправляется в Face++; это просто ваш собственный текст (например, название камеры), который передаётся в токенах триггера «Обнаружено лицо» и в журнале приложения, чтобы вы могли определить, из какого flow или с какой камеры пришло обнаружение.",
-          "ar": "يكتشف الوجوه في الصورة ويقارنها بمجموعة الوجوه المحفوظة لديك. لا يتم إرسال تسمية المصدر إلى Face++؛ إنه مجرد نص خاص بك (مثل اسم الكاميرا) يتم تمريره ضمن رموز محفز 'تم اكتشاف وجه' وفي سجل التطبيق، حتى تتمكن من معرفة من أي فلو أو كاميرا جاء الاكتشاف.",
-          "ko": "이미지에서 얼굴을 감지하고 저장된 얼굴 세트와 비교합니다. 출처 라벨은 Face++로 전송되지 않습니다. 이는 '얼굴이 감지됨' 트리거 토큰과 앱 로그에 함께 전달되는 사용자 지정 텍스트(예: 카메라 이름)일 뿐이며, 이를 통해 어떤 플로우 또는 카메라에서 감지가 발생했는지 확인할 수 있습니다."
+          "en": "Detects faces and matches them against your saved face set. 'Origin' is your own label, not sent to Face++. Tokens are returned directly too - use face_count for multiple faces, not matched.",
+          "nl": "Detecteert gezichten en vergelijkt ze met je gezichtenset. 'Herkomst' is je eigen label, wordt niet naar Face++ gestuurd. Geeft ook direct tokens terug - gebruik face_count bij meerdere gezichten, niet matched.",
+          "de": "Erkennt Gesichter und vergleicht sie mit deiner Gesichtsdatenbank. 'Herkunft' ist dein eigenes Label, wird nicht an Face++ gesendet. Gibt auch direkt Tokens zurück - bei mehreren Gesichtern face_count statt matched verwenden.",
+          "fr": "Détecte les visages et les compare à votre ensemble enregistré. « Origine » est votre propre étiquette, non envoyée à Face++. Renvoie aussi des jetons directement - utilisez face_count (pas matched) pour plusieurs visages.",
+          "es": "Detecta caras y las compara con tu conjunto guardado. «Origen» es tu propia etiqueta, no se envía a Face++. También devuelve tokens directamente: usa face_count (no matched) si hay varias caras.",
+          "it": "Rileva i volti e li confronta con il tuo set salvato. 'Origine' è una tua etichetta, non inviata a Face++. Restituisce anche token direttamente: usa face_count (non matched) per più volti.",
+          "da": "Registrerer ansigter og sammenligner dem med dit gemte sæt. 'Oprindelse' er din egen etiket, sendes ikke til Face++. Returnerer også tokens direkte - brug face_count ved flere ansigter, ikke matched.",
+          "sv": "Identifierar ansikten och matchar dem mot din sparade uppsättning. 'Ursprung' är din egen etikett, skickas inte till Face++. Returnerar även tokens direkt - använd face_count vid flera ansikten, inte matched.",
+          "no": "Registrerer ansikter og sammenligner dem med det lagrede settet. 'Opprinnelse' er din egen etikett, sendes ikke til Face++. Returnerer også tokens direkte - bruk face_count ved flere ansikter, ikke matched.",
+          "pl": "Wykrywa twarze i porównuje je z zapisanym zestawem. „Źródło” to twoja własna etykieta, nie jest wysyłana do Face++. Zwraca też tokeny bezpośrednio - przy wielu twarzach użyj face_count, nie matched.",
+          "ru": "Обнаруживает лица и сравнивает их с вашим набором. «Источник» - ваша метка, не отправляется в Face++. Также возвращает токены напрямую - при нескольких лицах используйте face_count, а не matched.",
+          "ar": "يكتشف الوجوه ويقارنها بمجموعتك المحفوظة. 'المصدر' هو تسمية خاصة بك، لا تُرسل إلى Face++. يعيد أيضًا الرموز مباشرة - استخدم face_count بدلاً من matched عند وجود عدة وجوه.",
+          "ko": "얼굴을 감지하고 저장된 얼굴 세트와 비교합니다. '출처'는 Face++로 전송되지 않는 사용자 지정 라벨입니다. 토큰도 바로 반환됩니다 - 얼굴이 여러 개면 matched 대신 face_count를 사용하세요."
         },
         "droptoken": "image",
         "args": [
@@ -803,6 +803,309 @@
               "ru": "Метка источника (напр. Cam1)",
               "ar": "تسمية المصدر (مثل Cam1)",
               "ko": "출처 라벨 (예: Cam1)"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "matched",
+            "type": "boolean",
+            "title": {
+              "en": "matched",
+              "nl": "herkend",
+              "de": "erkannt",
+              "fr": "reconnu",
+              "es": "reconocido",
+              "it": "riconosciuto",
+              "da": "genkendt",
+              "sv": "igenkänd",
+              "no": "gjenkjent",
+              "pl": "rozpoznano",
+              "ru": "распознано",
+              "ar": "تم التعرف",
+              "ko": "인식됨"
+            },
+            "example": true
+          },
+          {
+            "name": "face_count",
+            "type": "number",
+            "title": {
+              "en": "number of faces",
+              "nl": "aantal gezichten",
+              "de": "Anzahl Gesichter",
+              "fr": "nombre de visages",
+              "es": "número de caras",
+              "it": "numero di volti",
+              "da": "antal ansigter",
+              "sv": "antal ansikten",
+              "no": "antall ansikter",
+              "pl": "liczba twarzy",
+              "ru": "количество лиц",
+              "ar": "عدد الوجوه",
+              "ko": "얼굴 수"
+            },
+            "example": 1
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "title": {
+              "en": "label",
+              "nl": "label",
+              "de": "Bezeichnung",
+              "fr": "étiquette",
+              "es": "etiqueta",
+              "it": "etichetta",
+              "da": "etiket",
+              "sv": "etikett",
+              "no": "etikett",
+              "pl": "etykieta",
+              "ru": "метка",
+              "ar": "التسمية",
+              "ko": "라벨"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "confidence",
+            "type": "number",
+            "title": {
+              "en": "confidence",
+              "nl": "betrouwbaarheid",
+              "de": "Zuverlässigkeit",
+              "fr": "confiance",
+              "es": "confianza",
+              "it": "affidabilità",
+              "da": "sikkerhed",
+              "sv": "säkerhet",
+              "no": "sikkerhet",
+              "pl": "pewność",
+              "ru": "достоверность",
+              "ar": "مستوى الثقة",
+              "ko": "신뢰도"
+            },
+            "example": 96.35
+          },
+          {
+            "name": "token",
+            "type": "string",
+            "title": {
+              "en": "token",
+              "nl": "token",
+              "de": "Token",
+              "fr": "jeton",
+              "es": "token",
+              "it": "token",
+              "da": "token",
+              "sv": "token",
+              "no": "token",
+              "pl": "token",
+              "ru": "токен",
+              "ar": "الرمز المميز",
+              "ko": "토큰"
+            },
+            "example": {
+              "en": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "nl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "de": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "fr": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "es": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "it": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "da": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "sv": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "no": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "pl": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ru": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ar": "0d32892fad08a6b2b4f0fb92c814ad8c",
+              "ko": "0d32892fad08a6b2b4f0fb92c814ad8c"
+            }
+          },
+          {
+            "name": "quality",
+            "type": "number",
+            "title": {
+              "en": "quality",
+              "nl": "kwaliteit",
+              "de": "Qualität",
+              "fr": "qualité",
+              "es": "calidad",
+              "it": "qualità",
+              "da": "kvalitet",
+              "sv": "kvalitet",
+              "no": "kvalitet",
+              "pl": "jakość",
+              "ru": "качество",
+              "ar": "الجودة",
+              "ko": "품질"
+            },
+            "example": 92.12
+          },
+          {
+            "name": "gender",
+            "type": "string",
+            "title": {
+              "en": "gender",
+              "nl": "geslacht",
+              "de": "Geschlecht",
+              "fr": "sexe",
+              "es": "género",
+              "it": "genere",
+              "da": "køn",
+              "sv": "kön",
+              "no": "kjønn",
+              "pl": "płeć",
+              "ru": "пол",
+              "ar": "الجنس",
+              "ko": "성별"
+            },
+            "example": {
+              "en": "Male",
+              "nl": "Man",
+              "de": "Männlich",
+              "fr": "Homme",
+              "es": "Hombre",
+              "it": "Uomo",
+              "da": "Mand",
+              "sv": "Man",
+              "no": "Mann",
+              "pl": "Mężczyzna",
+              "ru": "Мужской",
+              "ar": "ذكر",
+              "ko": "남성"
+            }
+          },
+          {
+            "name": "age",
+            "type": "number",
+            "title": {
+              "en": "age",
+              "nl": "leeftijd",
+              "de": "Alter",
+              "fr": "âge",
+              "es": "edad",
+              "it": "età",
+              "da": "alder",
+              "sv": "ålder",
+              "no": "alder",
+              "pl": "wiek",
+              "ru": "возраст",
+              "ar": "العمر",
+              "ko": "나이"
+            },
+            "example": 34
+          },
+          {
+            "name": "emotion",
+            "type": "string",
+            "title": {
+              "en": "emotion",
+              "nl": "emotie",
+              "de": "Emotion",
+              "fr": "émotion",
+              "es": "emoción",
+              "it": "emozione",
+              "da": "følelse",
+              "sv": "känsla",
+              "no": "følelse",
+              "pl": "emocja",
+              "ru": "эмоция",
+              "ar": "المشاعر",
+              "ko": "감정"
+            },
+            "example": {
+              "en": "neutral",
+              "nl": "neutraal",
+              "de": "neutral",
+              "fr": "neutre",
+              "es": "neutral",
+              "it": "neutro",
+              "da": "neutral",
+              "sv": "neutral",
+              "no": "nøytral",
+              "pl": "neutralny",
+              "ru": "нейтральный",
+              "ar": "محايد",
+              "ko": "중립"
+            }
+          },
+          {
+            "name": "normalglass",
+            "type": "boolean",
+            "title": {
+              "en": "normal glasses",
+              "nl": "normale bril",
+              "de": "normale Brille",
+              "fr": "lunettes normales",
+              "es": "gafas normales",
+              "it": "occhiali normali",
+              "da": "normale briller",
+              "sv": "vanliga glasögon",
+              "no": "vanlige briller",
+              "pl": "zwykłe okulary",
+              "ru": "обычные очки",
+              "ar": "نظارات عادية",
+              "ko": "일반 안경"
+            },
+            "example": true
+          },
+          {
+            "name": "sunglass",
+            "type": "boolean",
+            "title": {
+              "en": "sun glasses",
+              "nl": "zonnebril",
+              "de": "Sonnenbrille",
+              "fr": "lunettes de soleil",
+              "es": "gafas de sol",
+              "it": "occhiali da sole",
+              "da": "solbriller",
+              "sv": "solglasögon",
+              "no": "solbriller",
+              "pl": "okulary przeciwsłoneczne",
+              "ru": "солнцезащитные очки",
+              "ar": "نظارات شمسية",
+              "ko": "선글라스"
+            },
+            "example": false
+          },
+          {
+            "name": "mask",
+            "type": "boolean",
+            "title": {
+              "en": "mask",
+              "nl": "masker",
+              "de": "Maske",
+              "fr": "masque",
+              "es": "mascarilla",
+              "it": "mascherina",
+              "da": "maske",
+              "sv": "mask",
+              "no": "maske",
+              "pl": "maska",
+              "ru": "маска",
+              "ar": "قناع",
+              "ko": "마스크"
+            },
+            "example": false
+          },
+          {
+            "name": "face_image_token",
+            "type": "image",
+            "title": {
+              "en": "face snapshot",
+              "nl": "gezichtsfoto",
+              "de": "Gesichtsfoto",
+              "fr": "photo du visage",
+              "es": "foto del rostro",
+              "it": "foto del volto",
+              "da": "ansigtsfoto",
+              "sv": "ansiktsfoto",
+              "no": "ansiktsfoto",
+              "pl": "zdjęcie twarzy",
+              "ru": "снимок лица",
+              "ar": "صورة الوجه",
+              "ko": "얼굴 스냅샷"
             }
           }
         ]
