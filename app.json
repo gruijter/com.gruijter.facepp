@@ -769,6 +769,77 @@
           "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
         },
         "hint": {
+          "en": "Detects faces and compares them. Use the 'Face detected' trigger to get the result.",
+          "nl": "Detecteert gezichten en vergelijkt ze. Gebruik de 'Gezicht gedetecteerd'-trigger voor het resultaat.",
+          "de": "Erkennt Gesichter und vergleicht sie. Nutze den Trigger 'Gesicht erkannt' für das Ergebnis.",
+          "fr": "Détecte les visages et les compare. Utilisez le déclencheur « Visage détecté » pour le résultat.",
+          "es": "Detecta caras y las compara. Usa el disparador «Rostro detectado» para el resultado.",
+          "it": "Rileva i volti e li confronta. Usa il trigger 'Volto rilevato' per il risultato.",
+          "da": "Registrerer ansigter og sammenligner dem. Brug udløseren 'Ansigt registreret' til resultatet.",
+          "sv": "Identifierar ansikten och jämför dem. Använd utlösaren 'Ansikte upptäckt' för resultatet.",
+          "no": "Registrerer ansikter og sammenligner dem. Bruk utløseren 'Ansikt oppdaget' for resultatet.",
+          "pl": "Wykrywa twarze i porównuje je. Użyj wyzwalacza 'Wykryto twarz', aby uzyskać wynik.",
+          "ru": "Обнаруживает лица и сравнивает их. Используйте триггер «Обнаружено лицо» для результата.",
+          "ar": "يكتشف الوجوه ويقارنها. استخدم مشغّل 'تم اكتشاف وجه' للحصول على النتيجة.",
+          "ko": "얼굴을 감지하고 비교합니다. 결과는 '얼굴 감지됨' 트리거로 확인하세요."
+        },
+        "droptoken": "image",
+        "args": [
+          {
+            "type": "text",
+            "name": "origin",
+            "required": false,
+            "placeholder": {
+              "en": "Origin Label (e.g. Cam1)",
+              "nl": "Herkomstlabel (bijv. Cam1)",
+              "de": "Herkunftsbezeichnung (z. B. Cam1)",
+              "fr": "Étiquette d'origine (p. ex. Cam1)",
+              "es": "Etiqueta de origen (p. ej. Cam1)",
+              "it": "Etichetta di origine (es. Cam1)",
+              "da": "Oprindelsesetiket (f.eks. Cam1)",
+              "sv": "Ursprungsetikett (t.ex. Cam1)",
+              "no": "Opprinnelsesetikett (f.eks. Cam1)",
+              "pl": "Etykieta źródła (np. Cam1)",
+              "ru": "Метка источника (напр. Cam1)",
+              "ar": "تسمية المصدر (مثل Cam1)",
+              "ko": "출처 라벨 (예: Cam1)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "search_faces_advanced",
+        "title": {
+          "en": "Search faces (advanced)",
+          "nl": "Zoek gezichten (geavanceerd)",
+          "de": "Gesichter suchen (erweitert)",
+          "fr": "Rechercher des visages (avancé)",
+          "es": "Buscar caras (avanzado)",
+          "it": "Cerca volti (avanzato)",
+          "da": "Søg ansigter (avanceret)",
+          "sv": "Sök ansikten (avancerad)",
+          "no": "Søk ansikter (avansert)",
+          "pl": "Szukaj twarzy (zaawansowane)",
+          "ru": "Поиск лиц (расширенный)",
+          "ar": "البحث عن الوجوه (متقدم)",
+          "ko": "얼굴 검색 (고급)"
+        },
+        "titleFormatted": {
+          "en": "Search faces in [[droptoken]] from [[origin]]",
+          "nl": "Zoek gezichten in [[droptoken]] van [[origin]]",
+          "de": "Gesichter in [[droptoken]] suchen von [[origin]]",
+          "fr": "Rechercher des visages dans [[droptoken]] depuis [[origin]]",
+          "es": "Buscar caras en [[droptoken]] desde [[origin]]",
+          "it": "Cerca volti in [[droptoken]] da [[origin]]",
+          "da": "Søg ansigter i [[droptoken]] fra [[origin]]",
+          "sv": "Sök ansikten i [[droptoken]] från [[origin]]",
+          "no": "Søk ansikter i [[droptoken]] fra [[origin]]",
+          "pl": "Szukaj twarzy w [[droptoken]] z [[origin]]",
+          "ru": "Поиск лиц на [[droptoken]] с [[origin]]",
+          "ar": "البحث عن الوجوه في [[droptoken]] من [[origin]]",
+          "ko": "[[origin]]의 [[droptoken]]에서 얼굴 검색"
+        },
+        "hint": {
           "en": "Detects faces and compares them. 'Origin' optionally sets a camera name for use as a token in flows. If a face is found, the card also outputs tokens with details (for advanced flows).",
           "nl": "Detecteert gezichten en vergelijkt ze. Bij 'Herkomst' kun je optioneel de cameranaam opgeven voor gebruik als token binnen flows. Als er een gezicht wordt gevonden geeft de uitgang van de kaart tokens met gegevens (alleen voor advanced flows).",
           "de": "Erkennt Gesichter und vergleicht sie. Bei 'Herkunft' kannst du optional den Kameranamen angeben, nutzbar als Token in Flows. Wird ein Gesicht gefunden, liefert die Karte zusätzlich Tokens mit Details (nur für fortgeschrittene Flows).",

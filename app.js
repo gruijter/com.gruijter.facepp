@@ -879,8 +879,19 @@ class FaceApp extends Homey.App {
     try {
       if (this.hasFlows) return;
       // action cards
+      // "search_faces" keeps its original id and its original no-output-tokens shape, so
+      // Flows built with older versions of this app (before output tokens existed) keep
+      // working unchanged - Homey matches a Flow's saved card by id, and a Then-card with
+      // a "tokens" property is automatically Advanced Flow-only, so this id can never gain
+      // tokens without breaking those existing standard Flows. Per-face results are still
+      // available via the face_detected trigger, which isn't tokens-restricted either way.
       const analyzeImageAction = this.homey.flow.getActionCard('search_faces');
       analyzeImageAction.registerRunListener((args) => this.analyzeImage(args));
+      // "search_faces_advanced": same behavior, but its compose file declares the rich
+      // output tokens (matched, label, confidence, ...) for advanced-flow chaining -
+      // that's what makes Homey restrict it to Advanced Flow only.
+      const analyzeImageAdvancedAction = this.homey.flow.getActionCard('search_faces_advanced');
+      analyzeImageAdvancedAction.registerRunListener((args) => this.analyzeImage(args));
       this.hasFlows = true;
     } catch (error) {
       this.error(error);
