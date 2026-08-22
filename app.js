@@ -117,6 +117,7 @@ class FaceApp extends Homey.App {
       const options = {
         key: apiKey,
         secret: apiSecret,
+        logger: { log: (...args) => this.log(...args), error: (...args) => this.error(...args) },
       };
       this.FAPI = new FacePP(options);
 
@@ -146,7 +147,8 @@ class FaceApp extends Homey.App {
   async testApiKey(body) {
     const { apiKey, apiSecret } = body || {};
     if (!apiKey || !apiSecret) throw Error('Missing API key or secret');
-    const testApi = new FacePP({ key: apiKey, secret: apiSecret });
+    const logger = { log: (...args) => this.log(...args), error: (...args) => this.error(...args) };
+    const testApi = new FacePP({ key: apiKey, secret: apiSecret, logger });
     await testApi.getFaceSets();
     return true;
   }
