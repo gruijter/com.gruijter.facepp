@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Recorte de rostro",
             "instructionsCrop": "Añade una foto del rostro detectado al disparador. Desactívalo para reducir el uso de memoria y CPU en tu Homey.",
             "cropEnabled": "Incluir una foto del rostro en el disparador",
-            "saveSettingsCrop": "Guardar ajustes de recorte de rostro"
+            "saveSettingsCrop": "Guardar ajustes de recorte de rostro",
+            "instructionsLegendDebounce": "Intervalo mínimo",
+            "instructionsDebounce": "Ignora una nueva búsqueda de caras si se envía demasiado rápido después de la anterior desde un flow. Por defecto 1s.",
+            "debounceSeconds": "Tiempo de espera (s)",
+            "saveSettingsDebounce": "Guardar tiempo de espera",
+            "debounceInvalid": "El tiempo de espera debe estar entre 0 y 60"
         },
         "tab4": {
             "title": "Gestionar rostros",

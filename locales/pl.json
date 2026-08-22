@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Przycinanie twarzy",
             "instructionsCrop": "Dodaje zdjęcie wykrytej twarzy do wyzwalacza. Wyłącz, aby zmniejszyć zużycie pamięci i procesora na Twoim Homey.",
             "cropEnabled": "Dołącz zdjęcie twarzy do wyzwalacza",
-            "saveSettingsCrop": "Zapisz ustawienia przycinania twarzy"
+            "saveSettingsCrop": "Zapisz ustawienia przycinania twarzy",
+            "instructionsLegendDebounce": "Minimalny odstęp",
+            "instructionsDebounce": "Ignoruje nowe wyszukiwanie twarzy, jeśli zostanie wysłane zbyt szybko po poprzednim z flow. Domyślnie 1s.",
+            "debounceSeconds": "Czas oczekiwania (s)",
+            "saveSettingsDebounce": "Zapisz czas oczekiwania",
+            "debounceInvalid": "Czas oczekiwania musi wynosić od 0 do 60"
         },
         "tab4": {
             "title": "Zarządzaj twarzami",

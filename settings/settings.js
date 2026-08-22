@@ -96,6 +96,11 @@ function showInfo3() {
     // undefined (never saved before) means the default: enabled
     document.getElementById('cropEnabled').checked = value !== false;
   });
+  Homey.get('settingsDebounce', (err, set) => {
+    if (err) return;
+    // undefined (never saved before) means the default: 1s
+    document.getElementById('debounceSeconds').value = (set && set.seconds !== undefined) ? set.seconds : 1;
+  });
 }
 
 function togglePasswordView() {
@@ -136,6 +141,17 @@ async function saveSettingsCrop() {
   try {
     const cropEnabled = document.getElementById('cropEnabled').checked;
     await Homey.set('cropEnabled', cropEnabled);
+    Homey.alert(Homey.__('settings.tab3.matchSaved'), 'info');
+  } catch (error) {
+    Homey.alert(errMsg(error), 'error');
+  }
+}
+
+async function saveSettingsDebounce() {
+  try {
+    const seconds = document.getElementById('debounceSeconds').value;
+    if (seconds < 0 || seconds > 60) throw Error(Homey.__('settings.tab3.debounceInvalid'));
+    await Homey.set('settingsDebounce', { seconds });
     Homey.alert(Homey.__('settings.tab3.matchSaved'), 'info');
   } catch (error) {
     Homey.alert(errMsg(error), 'error');

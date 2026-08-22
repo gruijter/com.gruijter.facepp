@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "قص الوجه",
             "instructionsCrop": "يضيف صورة للوجه المكتشف إلى المحفز. أوقف التشغيل لتقليل استخدام الذاكرة والمعالج على جهاز Homey.",
             "cropEnabled": "تضمين صورة الوجه في المحفز",
-            "saveSettingsCrop": "حفظ إعدادات قص الوجه"
+            "saveSettingsCrop": "حفظ إعدادات قص الوجه",
+            "instructionsLegendDebounce": "الحد الأدنى للفاصل الزمني",
+            "instructionsDebounce": "يتجاهل بحثًا جديدًا عن الوجوه إذا أُرسل بسرعة كبيرة بعد السابق من أحد الفلوز. الافتراضي ثانية واحدة.",
+            "debounceSeconds": "وقت الانتظار (ث)",
+            "saveSettingsDebounce": "حفظ وقت الانتظار",
+            "debounceInvalid": "يجب أن يكون وقت الانتظار بين 0 و60"
         },
         "tab4": {
             "title": "إدارة الوجوه",

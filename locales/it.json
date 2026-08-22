@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Ritaglio del volto",
             "instructionsCrop": "Aggiunge una foto del volto rilevato al trigger. Disattiva per ridurre l'uso di memoria e CPU sulla tua Homey.",
             "cropEnabled": "Includi una foto del volto nel trigger",
-            "saveSettingsCrop": "Salva impostazioni ritaglio volto"
+            "saveSettingsCrop": "Salva impostazioni ritaglio volto",
+            "instructionsLegendDebounce": "Intervallo minimo",
+            "instructionsDebounce": "Ignora una nuova ricerca di volti se inviata troppo presto dopo la precedente da un flow. Predefinito 1s.",
+            "debounceSeconds": "Tempo di attesa (s)",
+            "saveSettingsDebounce": "Salva tempo di attesa",
+            "debounceInvalid": "Il tempo di attesa deve essere tra 0 e 60"
         },
         "tab4": {
             "title": "Gestisci volti",

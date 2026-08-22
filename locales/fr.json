@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Recadrage du visage",
             "instructionsCrop": "Ajoute une photo du visage détecté au déclencheur. Désactivez pour réduire l'utilisation de la mémoire et du processeur sur votre Homey.",
             "cropEnabled": "Inclure une photo du visage dans le déclencheur",
-            "saveSettingsCrop": "Enregistrer les paramètres de recadrage du visage"
+            "saveSettingsCrop": "Enregistrer les paramètres de recadrage du visage",
+            "instructionsLegendDebounce": "Intervalle minimum",
+            "instructionsDebounce": "Ignore une nouvelle recherche de visage envoyée trop vite après la précédente depuis un flow. Par défaut 1s.",
+            "debounceSeconds": "Délai (s)",
+            "saveSettingsDebounce": "Enregistrer le délai",
+            "debounceInvalid": "Le délai doit être compris entre 0 et 60"
         },
         "tab4": {
             "title": "Gérer les visages",

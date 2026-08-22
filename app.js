@@ -430,6 +430,10 @@ class FaceApp extends Homey.App {
 
   async analyzeImage(args) {
     try {
+      if (this.isDebounced(args.origin)) {
+        this.log('search_faces debounced for origin', args.origin);
+        return await this.formatSearchTokens([]);
+      }
       // get the contents of the image
       const image = args.droptoken;
       if (!image || !image.getStream) throw Error('no valid image stream');
@@ -441,6 +445,22 @@ class FaceApp extends Homey.App {
       this.error(error);
       return this.formatSearchTokens([]);
     }
+  }
+
+  // Homey has no built-in guard against a flow re-triggering search_faces while a
+  // previous run for the same origin is still busy (or just finished). settings.tab3
+  // "Minimum interval" (default 1s, 0 = off) sets how long a repeat trigger for the same
+  // origin is ignored; tracked in memory only, per origin, not persisted across app restarts.
+  isDebounced(origin) {
+    const { seconds } = this.homey.settings.get('settingsDebounce') || {};
+    const debounceMs = (seconds === undefined ? 1 : Number(seconds)) * 1000;
+    if (!debounceMs || debounceMs <= 0) return false;
+    if (!this.debounceLastRun) this.debounceLastRun = {};
+    const key = origin || 'undefined';
+    const now = Date.now();
+    if (now - (this.debounceLastRun[key] || 0) < debounceMs) return true;
+    this.debounceLastRun[key] = now;
+    return false;
   }
 
   // collapses _searchFaces()'s per-face result array down to the single "best" face

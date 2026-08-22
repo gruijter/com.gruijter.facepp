@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Face Crop",
             "instructionsCrop": "Adds a snapshot photo of the detected face to the trigger. Turn off to reduce memory and CPU load on Homey.",
             "cropEnabled": "Include a face snapshot in the trigger",
-            "saveSettingsCrop": "Save Face Crop Settings"
+            "saveSettingsCrop": "Save Face Crop Settings",
+            "instructionsLegendDebounce": "Minimum interval",
+            "instructionsDebounce": "Ignores a new face search sent too soon after the previous one from a flow. Default is 1s.",
+            "debounceSeconds": "Wait time (s)",
+            "saveSettingsDebounce": "Save Wait Time Settings",
+            "debounceInvalid": "Wait time must be between 0 and 60"
         },
         "tab4": {
             "title": "Manage Faces",

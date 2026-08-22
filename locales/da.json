@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Ansigtsbeskæring",
             "instructionsCrop": "Tilføjer et foto af det registrerede ansigt til udløseren. Slå fra for at reducere hukommelses- og CPU-forbruget på din Homey.",
             "cropEnabled": "Inkluder et ansigtsfoto i udløseren",
-            "saveSettingsCrop": "Gem indstillinger for ansigtsbeskæring"
+            "saveSettingsCrop": "Gem indstillinger for ansigtsbeskæring",
+            "instructionsLegendDebounce": "Minimumsinterval",
+            "instructionsDebounce": "Ignorerer en ny ansigtssøgning, hvis den sendes for hurtigt efter den forrige fra et flow. Standard er 1s.",
+            "debounceSeconds": "Ventetid (s)",
+            "saveSettingsDebounce": "Gem ventetid",
+            "debounceInvalid": "Ventetiden skal være mellem 0 og 60"
         },
         "tab4": {
             "title": "Administrer ansigter",

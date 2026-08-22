@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Gezichtscrop",
             "instructionsCrop": "Voegt een momentopname van het gedetecteerde gezicht toe aan de trigger. Zet uit om geheugen- en CPU-gebruik op je Homey te verminderen.",
             "cropEnabled": "Voeg een gezichtsfoto toe aan de trigger",
-            "saveSettingsCrop": "Bewaar gezichtscrop-instellingen"
+            "saveSettingsCrop": "Bewaar gezichtscrop-instellingen",
+            "instructionsLegendDebounce": "Minimale tussentijd",
+            "instructionsDebounce": "Negeer zoeken naar nieuwe gezichten als dat te snel achter elkaar wordt gestuurd vanuit een flow. Standaard is 1s.",
+            "debounceSeconds": "Wachttijd (s)",
+            "saveSettingsDebounce": "Bewaar wachttijd-instellingen",
+            "debounceInvalid": "Wachttijd moet tussen 0 en 60 liggen"
         },
         "tab4": {
             "title": "Gezichten beheren",

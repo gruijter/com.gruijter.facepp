@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "얼굴 크롭",
             "instructionsCrop": "감지된 얼굴의 스냅샷 사진을 트리거에 추가합니다. Homey의 메모리 및 CPU 사용량을 줄이려면 끄세요.",
             "cropEnabled": "트리거에 얼굴 스냅샷 포함",
-            "saveSettingsCrop": "얼굴 크롭 설정 저장"
+            "saveSettingsCrop": "얼굴 크롭 설정 저장",
+            "instructionsLegendDebounce": "최소 간격",
+            "instructionsDebounce": "플로우에서 이전 검색 직후 너무 빨리 보낸 새 얼굴 검색은 무시합니다. 기본값은 1초입니다.",
+            "debounceSeconds": "대기 시간(초)",
+            "saveSettingsDebounce": "대기 시간 저장",
+            "debounceInvalid": "대기 시간은 0~60 사이여야 합니다"
         },
         "tab4": {
             "title": "얼굴 관리",

@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Ansiktsbeskärning",
             "instructionsCrop": "Lägger till ett foto av det identifierade ansiktet i utlösaren. Stäng av för att minska minnes- och processoranvändningen på din Homey.",
             "cropEnabled": "Inkludera ett ansiktsfoto i utlösaren",
-            "saveSettingsCrop": "Spara inställningar för ansiktsbeskärning"
+            "saveSettingsCrop": "Spara inställningar för ansiktsbeskärning",
+            "instructionsLegendDebounce": "Minsta intervall",
+            "instructionsDebounce": "Ignorerar en ny ansiktssökning om den skickas för snabbt efter den föregående från ett flöde. Standard är 1s.",
+            "debounceSeconds": "Väntetid (s)",
+            "saveSettingsDebounce": "Spara väntetid",
+            "debounceInvalid": "Väntetiden måste vara mellan 0 och 60"
         },
         "tab4": {
             "title": "Hantera ansikten",

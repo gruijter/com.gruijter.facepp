@@ -78,6 +78,17 @@
 				</div>
 				<button id="saveSettingsCrop" class="homey-button-primary-full" onclick="saveSettingsCrop()" data-i18n="settings.tab3.saveSettingsCrop">SAVE FACE CROP SETTINGS</button>
 			</fieldset>
+
+			<fieldset class="homey-form-fieldset">
+				<legend class="homey-form-legend" data-i18n="settings.tab3.instructionsLegendDebounce">MINIMUM INTERVAL</legend>
+				<p data-i18n="settings.tab3.instructionsDebounce">Instructions</p>
+
+				<div class="homey-form-group">
+					<label class="homey-form-label" for="debounceSeconds" data-i18n="settings.tab3.debounceSeconds">WAIT TIME (S)</label>
+					<input class="homey-form-input" id="debounceSeconds" type="number" min="0" max="60" step="0.1" value="1">
+				</div>
+				<button id="saveSettingsDebounce" class="homey-button-primary-full" onclick="saveSettingsDebounce()" data-i18n="settings.tab3.saveSettingsDebounce">SAVE WAIT TIME SETTINGS</button>
+			</fieldset>
 		</div>
 
 		<!-- Manage Faces panel -->

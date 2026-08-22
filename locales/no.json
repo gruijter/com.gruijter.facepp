@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Ansiktsbeskjæring",
             "instructionsCrop": "Legger til et bilde av det oppdagede ansiktet i utløseren. Slå av for å redusere minne- og CPU-bruken på Homeyen din.",
             "cropEnabled": "Inkluder et ansiktsbilde i utløseren",
-            "saveSettingsCrop": "Lagre innstillinger for ansiktsbeskjæring"
+            "saveSettingsCrop": "Lagre innstillinger for ansiktsbeskjæring",
+            "instructionsLegendDebounce": "Minimumsintervall",
+            "instructionsDebounce": "Ignorerer et nytt ansiktssøk hvis det sendes for raskt etter det forrige fra en flow. Standard er 1s.",
+            "debounceSeconds": "Ventetid (s)",
+            "saveSettingsDebounce": "Lagre ventetid",
+            "debounceInvalid": "Ventetiden må være mellom 0 og 60"
         },
         "tab4": {
             "title": "Administrer ansikter",

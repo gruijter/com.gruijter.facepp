@@ -39,7 +39,12 @@
             "instructionsLegendCrop": "Gesichtsausschnitt",
             "instructionsCrop": "Fügt dem Trigger ein Foto des erkannten Gesichts hinzu. Schalte aus, um Speicher- und CPU-Auslastung auf deiner Homey zu reduzieren.",
             "cropEnabled": "Gesichtsfoto in den Trigger aufnehmen",
-            "saveSettingsCrop": "Gesichtsausschnitt-Einstellungen speichern"
+            "saveSettingsCrop": "Gesichtsausschnitt-Einstellungen speichern",
+            "instructionsLegendDebounce": "Mindestabstand",
+            "instructionsDebounce": "Ignoriert eine neue Gesichtssuche, wenn sie zu schnell nach der vorherigen aus einem Flow gesendet wird. Standard ist 1s.",
+            "debounceSeconds": "Wartezeit (s)",
+            "saveSettingsDebounce": "Wartezeit-Einstellungen speichern",
+            "debounceInvalid": "Wartezeit muss zwischen 0 und 60 liegen"
         },
         "tab4": {
             "title": "Gesichter verwalten",
